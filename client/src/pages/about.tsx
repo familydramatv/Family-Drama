@@ -562,9 +562,7 @@ function Slide2Difference() {
     };
 
     const applyAnimations = (s2p: number, scrollX: number, vw: number, isDesktop: boolean) => {
-      if (slide2StickyRef.current) {
-        slide2StickyRef.current.style.visibility = (s2p > 0 || scrollX > vw * 0.3) ? "visible" : "hidden";
-      }
+      
       if (isDesktop && imgRef.current) {
         const slideT = Math.max(0, Math.min(1, s2p / 0.4));
         const eased = slideT < 0.5 ? 2 * slideT * slideT : 1 - Math.pow(-2 * slideT + 2, 2) / 2;
@@ -670,7 +668,7 @@ function Slide2Difference() {
 
   return (
     <div ref={slide2ScrollRef} className="slide-lock-zone slide-lock-zone--slide2">
-      <div ref={slide2StickyRef} className="slide slide-2-sticky" style={{ overflow: "visible", visibility: "hidden" }} data-testid="slide-2-difference">
+      <div ref={slide2StickyRef} className="slide slide-2-sticky" style={{ overflow: "visible" }} data-testid="slide-2-difference">
         <div className="slide-2-bg-mobile" style={{ display: "none" }}>
           <img src="/images/about-abstract-3.png?v=2" alt="" />
         </div>
