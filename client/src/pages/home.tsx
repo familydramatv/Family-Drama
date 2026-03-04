@@ -1,0 +1,148 @@
+import { motion } from "framer-motion";
+import { Link } from "wouter";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
+import { projects, newsItems } from "@/lib/data";
+import ProjectCard from "@/components/project-card";
+
+const featuredProjects = projects.filter((p) => p.featured).slice(0, 8);
+
+const serviceAreas = [
+  { label: "Ideation", id: "ideation" },
+  { label: "Content", id: "content" },
+  { label: "Experience", id: "experience" },
+  { label: "Creative Technology", id: "creative-technology" },
+];
+
+export default function Home() {
+  return (
+    <div className="min-h-screen bg-black">
+      <section className="relative h-screen flex items-center justify-center overflow-hidden" data-testid="section-hero">
+        <div className="absolute inset-0">
+          <img
+            src="/images/hero-bg.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+        <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10">
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight tracking-tight"
+          >
+            We partner with brands and agencies to create{" "}
+            <span className="italic font-serif">breakthrough</span> content
+            and experiences that drive cultural conversation.
+          </motion.h1>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        >
+          <div className="w-px h-12 bg-white/30 animate-pulse" />
+        </motion.div>
+      </section>
+
+      <section className="py-20 md:py-32 px-6 md:px-10 max-w-7xl mx-auto" data-testid="section-featured-work">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {featuredProjects.slice(0, 2).map((project, i) => (
+            <ProjectCard key={project.id} project={project} index={i} size="large" />
+          ))}
+        </div>
+
+        <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {newsItems.map((item, i) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              className="group cursor-pointer"
+              data-testid={`card-news-${item.id}`}
+            >
+              <div className="relative aspect-[16/10] overflow-hidden rounded-md bg-white/5">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                  <span className="text-white/50 text-xs uppercase tracking-widest">{item.source}</span>
+                  <p className="text-white text-sm md:text-base font-medium mt-2 leading-relaxed line-clamp-3">
+                    {item.title}
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-white/60 text-sm mt-3 transition-opacity group-hover:opacity-70">
+                    Read Article <ArrowUpRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featuredProjects.slice(2, 8).map((project, i) => (
+            <ProjectCard key={project.id} project={project} index={i} size="medium" />
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-12 text-center"
+        >
+          <Link href="/work" data-testid="link-view-all-work">
+            <span className="inline-flex items-center gap-2 text-white/60 text-sm uppercase tracking-widest transition-opacity hover:opacity-70 duration-300">
+              View All Work <ArrowRight className="w-4 h-4" />
+            </span>
+          </Link>
+        </motion.div>
+      </section>
+
+      <section className="py-20 md:py-32 border-t border-white/5" data-testid="section-services">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-white/40 text-sm uppercase tracking-widest mb-12"
+          >
+            Working at the intersection of:
+          </motion.h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {serviceAreas.map((area, i) => (
+              <motion.div
+                key={area.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+              >
+                <Link href={`/about#${area.id}`}>
+                  <div className="group relative rounded-md border border-white/10 p-6 md:p-8 h-40 flex flex-col justify-end hover-elevate cursor-pointer" data-testid={`card-service-${area.id}`}>
+                    <h3 className="text-white text-xl md:text-2xl font-light">{area.label}</h3>
+                    <span className="inline-flex items-center gap-1.5 text-white/40 text-sm mt-2 transition-opacity group-hover:opacity-70">
+                      Explore <ArrowUpRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

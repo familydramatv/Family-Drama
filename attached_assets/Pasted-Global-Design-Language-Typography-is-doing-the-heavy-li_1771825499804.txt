@@ -1,0 +1,48 @@
+Global Design Language
+Typography is doing the heavy lifting here. Two typefaces: Neue Machina (geometric sans, used for display/headings — very mechanical, industrial feel) and Nouvelle Grotesk (softer sans for body). Display text goes large — we're talking 175px+ for section titles on desktop, scaling responsively. The type sizing is aggressive and confident, which is the right call for a production company trying to communicate craft authority.
+Color palette is restrained and intentional: predominantly black (#000) and white (#fff) with a warm grey (#f1f1f1) for section backgrounds. Accent colors are muted and earthy — a dusty teal (#688895), burnt red (#bf0e12), amber (#cb9551), and a warm tan (#cfccc6). These feel pulled from the abstract art imagery used throughout. The site uses CSS custom properties for a theme system, with theme-dark and theme-light classes that swap on scroll as you move between sections.
+
+Section-by-Section Breakdown
+1. Header / Navigation
+Fixed at 165px height, sits above everything at a high z-index. The logo wordmark and hamburger icon are the only persistent elements. On scroll, the header compresses via a transform: translateY tied to scroll position — it tucks up but doesn't fully disappear, keeping the hamburger always accessible. The nav itself is a full-screen overlay panel that slides down from behind the header. Menu items use staggered fade-in with incremental delays (roughly 25ms apart), creating a cascade effect. Submenu items for "Talent" and "Work" expand inline with a smooth height transition.
+2. Hero Section
+Full-viewport fixed-position section with a large abstract image (those painterly/sculptural pieces) behind the text. The hero copy — "We're a creative production partner that bridges the gap between agency and production company expertise." — is broken into individual word spans. Each word has its own clip-path: inset() animation that reveals it sequentially. The clip-path starts at inset(0 0 100% 0) (fully hidden from bottom) and transitions to inset(0) (fully visible), with each word getting an incrementally increasing transition-delay. This creates a cascading word-by-word reveal that reads almost like a teleprompter or kinetic typography piece. The easing is a custom cubic-bezier(0.4, 0, 0.2, 1) — a slightly aggressive ease-out that gives the motion a physical, weighted feel without being bouncy.
+The background image uses a subtle parallax effect driven by a CSS variable (--parallax-offset) updated on scroll, applied as translateY. It moves at maybe 30-40% of the scroll speed, creating just enough depth without feeling gimmicky.
+3. Two-Image Transitional Section
+After the hero, two abstract images sit side-by-side with asymmetric sizing — one roughly 60/40 split. These fade in via Intersection Observer when they cross the viewport threshold. The transition is straightforward opacity + slight translateY (maybe 20-30px upward drift). This section acts as a visual breather and palette-setter, bridging the hero into the content sections.
+4. Mission Statement Block
+"We specialize in helping brands and agencies craft memorable branded content..." — this is a large-format text block on a light background. The theme switches here from dark to light (background goes #f1f1f1, text goes dark). This transition is likely handled by the Intersection Observer flipping a class on the root element, which triggers CSS custom property swaps for background and text color. The transition between themes is smooth, timed to feel like the dark section scrolls away naturally.
+A single abstract image sits to the left with that same parallax-on-scroll treatment. The text itself animates in as a block — clip-path reveal on the whole paragraph rather than word-by-word.
+5. "Since 1995" / "As Makers" — Sticky Text + Image Panels
+This is the most architecturally interesting scroll section. The layout uses a sticky text column on the left that persists while the right column scrolls through paired image sets. As you scroll, three different image compositions cycle through on the right (1 image → 2 images → 3 images) while the corresponding text block on the left transitions. The text transitions use the same clip-path reveal system.
+The images have staggered entry — when the 3-image group enters, the first appears, then the second 100-150ms later, then the third. Each has a slight scale transform (starting at maybe 1.02 and settling to 1.0) combined with the opacity transition, which gives a subtle "settling into place" feeling.
+6. Services / "What We Do" Accordion Cards
+This is the main services showcase. Each service (AI Consulting, Ideation, Content, Experience, Creative Technology, 3D) is presented as a card with a video background. The layout is a vertically stacked series of panels.
+Each panel has a poster image that serves as the static state. On hover (or on scroll-into-view on mobile), the image cross-fades to an autoplaying looped video (served from Vimeo as progressive MP4s). The transition between still and video is a simple opacity crossfade — the video sits behind the image and the image fades to opacity: 0, revealing the playing video beneath. This is a smart performance pattern because the videos don't load until the section is near the viewport.
+The text content — service title, bullet list of capabilities, "Our Point of Differentiation" description — sits overlaid on the video/image. There's a text panel with sufficient contrast (likely a semi-transparent dark overlay or gradient on the media). The "OUR POINT OF DIFFERENTIATION" label is tracked-out uppercase in Neue Machina, smaller weight — functioning as an eyebrow/category label.
+7. Software IP / Hovercast Section
+A wider text block with call-to-action links, followed by another video card in the same pattern as the services. The CTAs ("Learn more", "Press Release", "Contact Us") use a minimal underline-on-hover treatment.
+8. "Word of Mouth" — Stats / Social Proof
+This section uses a sticky scroll mechanic. Two stat cards ("B+ PR impressions", "M People reached on social") are paired with video backgrounds and large animated counters. The numbers use a count-up animation — starting from 0 and incrementing to the target value when the section enters the viewport. The numbers are displayed at an oversized scale (probably 120-150px) in Neue Machina, giving them the weight of a billboard stat.
+Between/after the stats, there's a "1000+ Awards" callout that likely uses a similar scroll-triggered entrance.
+9. GoodBoyBob — Horizontal Drag Scroller
+This is their coffee shop side-business section, and it breaks the vertical scroll pattern with a horizontal drag-to-scroll gallery. The implementation is a CSS overflow-x container with cursor-based drag interaction (cursor changes to a grab hand, mousedown initiates drag tracking, mousemove translates the container). The gallery contains 4 photos of the coffee shop.
+Text content is duplicated on both sides of the gallery (visible in the markup), suggesting the layout puts descriptive copy flanking the scrollable images. The "As seen in" badge links to an Eater LA feature.
+10. Footer
+Minimal. Logo, nav links (Visit Us, Newsletter, Instagram, LinkedIn, Facebook), copyright. Dark theme. Clean grid. No surprises — just functional and well-spaced.
+
+Animation System Summary
+The entire animation choreography is built on a few reusable primitives:
+
+Clip-path reveals — inset(0 0 100% 0) → inset(0) with staggered delays. Used for text and some image entrances. This is cleaner than translateY fades because it clips rather than shifts, keeping layout stable.
+Opacity + translateY — Classic fade-up for secondary elements, images, cards.
+Parallax via CSS variables — --parallax-offset updated by JS scroll listener, applied as translateY on background images. Lightweight, no heavy libraries.
+Intersection Observer — Powers all scroll-triggered animations and theme switches. No scroll-hijacking, no GSAP ScrollTrigger dependency visible — this keeps it performant and respects native scroll behavior.
+Video crossfade — Poster → video swap on visibility/hover using layered opacity transitions.
+
+The global easing curve cubic-bezier(0.4, 0, 0.2, 1) is used consistently — it's essentially Material Design's "standard" easing, which gives everything a cohesive motion identity. Stagger timing ranges from 25ms (menu items) to 2.5s (end of hero word reveals), all proportional to the number of elements being revealed.
+
+What's Working Well
+The word-by-word clip-path reveal in the hero is the signature moment — it's memorable, ties into the production company's identity of "revealing" creative work, and the execution is technically clean. The theme-switching on scroll creates natural section boundaries without heavy visual dividers. The video-as-background pattern for service cards is production-company-appropriate and the progressive MP4 delivery keeps it performant. And the restraint in the color palette lets the abstract imagery and typography do the talking.
+What an Advanced Designer Should Note
+The site avoids scroll-jacking entirely — everything is native scroll with Intersection Observer triggers, which is the right call for a long-form page like this. The parallax is subtle (CSS variable–driven, not library-dependent). There's no GSAP, no Lenis, no Locomotive Scroll visible in the architecture — it's a surprisingly vanilla approach that achieves high-end results through careful timing and the quality of the easing curves rather than library complexity. The Nuxt/Vue SSR foundation means the initial paint is fast and the animations layer on progressively, which is good for both performance and perceived speed.

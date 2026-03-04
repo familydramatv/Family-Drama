@@ -1,0 +1,64 @@
+Implement Mux-powered portfolio grid with hover motion previews and custom Media Chrome video player.
+Data Model
+Each project should be stored as an object with this structure:
+js{
+  slug: "starburst-different-every-time",
+  client: "Starburst",
+  title: "Different Every Time",
+  category: "Featured",
+  playbackId: "UtaxZzqtYqW5h55ZZrEA8ba00OfBtt3Xe6Mny4UXSlE8",
+  thumbnailTime: 5,
+  gifStart: 2,
+  gifEnd: 6
+}
+All thumbnails and motion previews are generated automatically from Mux using the playback ID. No separate image uploads needed. Build the URLs dynamically:
+
+Static thumbnail: https://image.mux.com/{playbackId}/thumbnail.jpg?time={thumbnailTime}&width=800
+Animated GIF: https://image.mux.com/{playbackId}/animated.gif?start={gifStart}&end={gifEnd}&width=640
+
+Portfolio Grid Behavior
+Each card in the grid should:
+
+Default state: Show the static Mux thumbnail as the background image, with the client name (top-left) and project title (bottom-left) overlaid on the image
+Hover state: Swap to the animated GIF from Mux for a motion preview effect. The swap should feel seamless — preload the GIF on page load or on first hover so there's no flicker
+Click: Navigate to the project detail page with the full video player
+
+Video Player (Project Detail Page)
+Use Media Chrome + mux-video — NOT <mux-player>. Load via CDN:
+html<script src="https://cdn.jsdelivr.net/npm/media-chrome"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-video"></script>
+Player structure:
+html<media-controller>
+  <mux-video slot="media" playback-id="{playbackId}"></mux-video>
+  <media-control-bar>
+    <media-play-button></media-play-button>
+    <media-time-range></media-time-range>
+    <media-mute-button></media-mute-button>
+    <media-fullscreen-button></media-fullscreen-button>
+  </media-control-bar>
+</media-controller>
+Only these 4 controls. Nothing else — no time display, no skip buttons, no settings menu, no PiP, no playback rate.
+Player styling must match this exact look:
+
+All controls on a single row at the bottom of the video
+Layout left to right: play/pause → thin progress bar (fills remaining space) → volume → fullscreen
+Accent color: #e8a020 (gold/orange) for the progress bar fill and all icon colors
+Control bar background: fully transparent, with a subtle dark gradient behind it for legibility
+Progress bar track: very thin (2-3px), stretching edge to edge between the buttons
+No visible scrubber thumb/handle — just the thin gold line
+Controls should be hidden by default and fade in on hover over the player for a cinematic feel
+Add the noautohide attribute to <media-controller> and handle the hover show/hide with custom CSS on the wrapper
+
+Below the player, center-aligned:
+
+Client name in gold #e8a020, uppercase, letterspaced
+Project title in light gray italic below it
+
+Adding New Content
+The system should be set up so adding a new project only requires:
+
+Upload the video to Mux
+Copy the playback ID
+Add a new object to the projects array with the playback ID, client name, title, category, and optionally customize thumbnailTime, gifStart, gifEnd
+
+Everything else — thumbnails, motion previews, player — generates automatically from the playback ID.

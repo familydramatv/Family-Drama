@@ -1,0 +1,1577 @@
+# Family Drama — About Page Build Instructions
+
+## Project Overview
+
+Build a premium production company About page for **Family Drama** (rebrand of Bolt TV Studios). Family Drama is a full service production company specializing in commercials, branded content, documentaries, special projects, and director driven storytelling.
+
+This page uses a **horizontal scroll paradigm on desktop** (≥1025px) and collapses to **vertical scroll on mobile** (≤1024px). The design is bold, cinematic, and minimal. All visual richness comes from photography and video content, not UI decoration. The page tells a narrative story across 15 slides, building from identity to philosophy to proof to a project showcase finale.
+
+**Reference sites for feel and quality bar:**
+- https://prettybird.co/about/ (primary reference, same horizontal scroll paradigm)
+- https://toolofna.com/about/ (secondary reference, animation quality)
+
+**Tech stack:** React (Vite), CSS Modules or styled-components, no external animation libraries (no GSAP, no Lenis, no Framer Motion). All animations are CSS transitions triggered by Intersection Observer via JavaScript. This vanilla approach is intentional and non-negotiable.
+
+---
+
+## Table of Contents
+
+1. [Architecture & Scroll System](#1-architecture--scroll-system)
+2. [Typography System](#2-typography-system)
+3. [Color & Visual Identity](#3-color--visual-identity)
+4. [Global Navigation Chrome](#4-global-navigation-chrome)
+5. [Animation System](#5-animation-system)
+6. [Video Component Pattern](#6-video-component-pattern)
+7. [Slide-by-Slide Build Specs](#7-slide-by-slide-build-specs)
+8. [Mobile Responsive Behavior](#8-mobile-responsive-behavior)
+9. [Performance Requirements](#9-performance-requirements)
+10. [Content & Asset Placeholders](#10-content--asset-placeholders)
+
+---
+
+## 1. Architecture & Scroll System
+
+### Horizontal Scroll (Desktop ≥ 1025px)
+
+The entire About page is a single horizontal scroll container. The user scrolls vertically with their mouse wheel or trackpad, but the page moves horizontally. This is achieved by translating vertical scroll input into horizontal position via JavaScript.
+
+**DOM Structure:**
+
+```html
+<div class="page-about">
+  <div class="page-about__wrapper">
+    <div class="slide slide--1 slide--hero">...</div>
+    <div class="slide slide--2 slide--difference">...</div>
+    <div class="slide slide--3 slide--philosophy">...</div>
+    <!-- ... slides 4 through 14 ... -->
+    <div class="slide slide--15 slide--showcase">
+      <!-- This slide contains nested VERTICAL scroll -->
+      <div class="showcase__vertical-container">
+        <div class="showcase__card showcase__card--1">...</div>
+        <div class="showcase__card showcase__card--2">...</div>
+        <div class="showcase__card showcase__card--3">...</div>
+        <div class="showcase__card showcase__card--4">...</div>
+        <div class="showcase__card showcase__card--5">...</div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**CSS for horizontal layout:**
+
+```css
+.page-about {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.page-about__wrapper {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100vh;
+  will-change: transform;
+}
+
+.slide {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+```
+
+**JavaScript scroll translation:**
+
+```javascript
+// Core horizontal scroll logic
+class HorizontalScroller {
+  constructor() {
+    this.wrapper = document.querySelector('.page-about__wrapper');
+    this.currentX = 0;
+    this.targetX = 0;
+    this.maxScroll = 0;
+    this.ease = 0.08; // Smooth interpolation factor
+    this.isShowcaseActive = false;
+
+    this.init();
+  }
+
+  init() {
+    this.calculateMaxScroll();
+    window.addEventListener('wheel', this.onWheel.bind(this), { passive: false });
+    window.addEventListener('resize', this.calculateMaxScroll.bind(this));
+    this.animate();
+  }
+
+  calculateMaxScroll() {
+    // Total scrollable width minus one viewport
+    this.maxScroll = this.wrapper.scrollWidth - window.innerWidth;
+  }
+
+  onWheel(e) {
+    e.preventDefault();
+
+    // Check if we're in the showcase slide (slide 15) with nested vertical scroll
+    if (this.isShowcaseActive) {
+      // Let vertical scroll happen inside the showcase container
+      return;
+    }
+
+    // Translate vertical delta to horizontal movement
+    const delta = e.deltaY || e.deltaX;
+    this.targetX = Math.max(0, Math.min(this.maxScroll, this.targetX + delta));
+  }
+
+  animate() {
+    // Smooth interpolation between current and target
+    this.currentX += (this.targetX - this.currentX) * this.ease;
+    this.wrapper.style.transform = `translateX(${-this.currentX}px)`;
+
+    // Dispatch custom event for parallax and intersection calculations
+    window.dispatchEvent(new CustomEvent('horizontalscroll', {
+      detail: { scrollX: this.currentX, progress: this.currentX / this.maxScroll }
+    }));
+
+    requestAnimationFrame(this.animate.bind(this));
+  }
+}
+```
+
+**Critical details:**
+- The native scrollbar must be completely hidden. Use `scrollbar-width: none` and `::-webkit-scrollbar { display: none }`.
+- The `ease` value of 0.08 creates a buttery smooth scroll feel. Too high and it feels snappy. Too low and it feels laggy.
+- Touch events on mobile bypass this entirely (mobile uses native vertical scroll).
+- The `will-change: transform` on the wrapper enables GPU compositing.
+
+### Nested Vertical Scroll (Slide 15 only)
+
+Slide 15 contains a vertically scrolling container inside the horizontal page. When the user scrolls to slide 15, horizontal scrolling stops and vertical scrolling takes over inside the showcase container.
+
+```css
+.slide--showcase {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.showcase__vertical-container {
+  width: 100%;
+  height: 500vh; /* 5 cards × 100vh each */
+  position: relative;
+}
+
+.showcase__card {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+```
+
+**Detection logic:** When `scrollX` reaches the position of slide 15, set `isShowcaseActive = true` and allow vertical scrolling within `.showcase__vertical-container`. When the user scrolls back left past the threshold, set `isShowcaseActive = false` and resume horizontal scrolling.
+
+---
+
+## 2. Typography System
+
+### Font Family
+
+Use a single editorial sans-serif family with three weights. Choose one of these (in order of preference):
+
+1. **Söhne** by Klim Type Foundry (if licensed)
+2. **Neue Haas Grotesk** (if licensed)
+3. **Inter** (free, Google Fonts fallback)
+
+Three weights required:
+- **Book / Regular (400)** — body text, descriptions
+- **Medium (500)** — navigation, secondary headings, breadcrumbs
+- **Semibold / Bold (700)** — emphasis, kickers, uppercase callouts
+
+```css
+@font-face {
+  font-family: 'FamilyDrama';
+  src: url('/fonts/soehne-buch.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'FamilyDrama';
+  src: url('/fonts/soehne-kraftig.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'FamilyDrama';
+  src: url('/fonts/soehne-halbfett.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+```
+
+### Responsive Type Scale
+
+Display headings use `min(vw, vh)` to scale relative to the shorter viewport axis. This is critical for the horizontal layout because it prevents text from clipping on narrow or short screens.
+
+**Utility classes:**
+
+```css
+/* Display sizes — scale to shorter axis */
+.-t-200 { font-size: min(14.2857vw, 25vh); line-height: 0.85; }
+.-t-150 { font-size: min(10.7143vw, 18.75vh); line-height: 0.88; }
+.-t-125 { font-size: min(8.9286vw, 15.625vh); line-height: 0.9; }
+.-t-100 { font-size: min(7.1429vw, 12.5vh); line-height: 0.92; }
+.-t-80  { font-size: min(5.7143vw, 10vh); line-height: 0.95; }
+.-t-60  { font-size: min(4.2857vw, 7.5vh); line-height: 1.0; }
+
+/* Body sizes — fixed */
+.-t-24  { font-size: 24px; line-height: 1.4; }
+.-t-20  { font-size: 20px; line-height: 1.5; }
+.-t-18  { font-size: 18px; line-height: 1.55; }
+.-t-16  { font-size: 16px; line-height: 1.6; }
+
+/* Mobile overrides */
+@media (max-width: 1024px) {
+  .-t-200 { font-size: 66px; }
+  .-t-150 { font-size: 56px; }
+  .-t-125 { font-size: 48px; }
+  .-t-100 { font-size: 40px; }
+  .-t-80  { font-size: 34px; }
+  .-t-60  { font-size: 28px; }
+}
+```
+
+**Why `min(vw, vh)`:** On a standard 1920×1080 screen, `min(14.2857vw, 25vh)` resolves to `min(274px, 270px)` = 270px. On an ultrawide 2560×1080, it resolves to `min(366px, 270px)` = 270px. The `vh` cap prevents absurdly large text on wide monitors. On a tall portrait monitor, the `vw` value keeps it proportional.
+
+### Global Typography Defaults
+
+```css
+body {
+  font-family: 'FamilyDrama', 'Inter', -apple-system, sans-serif;
+  font-weight: 400;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* All display headings */
+.display-heading {
+  font-weight: 400; /* Book weight for display — counterintuitive but editorial */
+  letter-spacing: -0.02em;
+  text-transform: none; /* Never uppercase display headings */
+}
+
+/* Uppercase callouts and kickers */
+.text-uppercase {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+```
+
+---
+
+## 3. Color & Visual Identity
+
+### Palette
+
+The entire About page uses only three colors:
+
+```css
+:root {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-grey: #999999;
+
+  --bg-primary: var(--color-black);
+  --text-primary: var(--color-white);
+  --text-secondary: var(--color-grey);
+}
+```
+
+There is no accent color in the layouts. All visual richness comes from photography and video. The only exception is a signature gradient text effect used exclusively on navigation hover states:
+
+```css
+.nav-gradient-hover:hover {
+  background: linear-gradient(90deg, #9081fa, #1afffe, #eddd1b, #fd8f50, #fa3335);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+```
+
+This gradient is the ONLY color in the entire UI. It rewards interaction without cluttering the visual space.
+
+### Dark Mode
+
+The entire About page is in dark mode. `background: #000`, `color: #fff`. No theme switching. No light sections. The work (photos and video) provides all the light and color.
+
+---
+
+## 4. Global Navigation Chrome
+
+The navigation is fixed-position and floats above all slide content. It must remain visible and legible regardless of what imagery or video is behind it.
+
+### Logo
+
+```css
+.nav-logo {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  mix-blend-mode: difference;
+  /* mix-blend-mode: difference inverts the logo color against any background.
+     On white backgrounds it appears black. On black backgrounds it appears white.
+     On colored backgrounds it inverts to the complementary color. */
+}
+
+.nav-logo__icon {
+  /* Small icon mark, always visible */
+  width: 60px;
+  height: auto;
+  display: block;
+}
+
+.nav-logo__wordmark {
+  /* Full "FAMILY DRAMA" wordmark, hidden by default */
+  width: 160px;
+  height: auto;
+  display: none;
+}
+
+/* When menu panel is open, swap icon for full wordmark */
+.menu-open .nav-logo__icon { display: none; }
+.menu-open .nav-logo__wordmark { display: block; }
+```
+
+### Breadcrumb (Top Left)
+
+```css
+.nav-breadcrumb {
+  position: fixed;
+  top: 28px;
+  left: 32px;
+  z-index: 100;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  mix-blend-mode: difference;
+  text-decoration: none;
+  cursor: pointer;
+}
+```
+
+Text content: `about`
+
+On hover, apply the rainbow gradient text effect (same as `.nav-gradient-hover` above).
+
+### Menu Button (Top Right)
+
+```css
+.nav-menu-btn {
+  position: fixed;
+  top: 28px;
+  right: 32px;
+  z-index: 100;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  mix-blend-mode: difference;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+```
+
+Text content: `Menu`
+
+On hover, apply the rainbow gradient text effect.
+
+### Menu Panel
+
+When the Menu button is clicked, a full-height panel slides in from the left covering ~90vw. Simultaneously, the main page content scales down to approximately 33% of its size, creating a dramatic miniaturized preview effect.
+
+```css
+.menu-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 90vw;
+  height: 100vh;
+  background: var(--bg-primary);
+  z-index: 90;
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-panel.is-open {
+  transform: translateX(0);
+}
+
+/* Main content scales down when menu opens */
+.page-about.menu-open {
+  transform: scale(0.33);
+  transform-origin: right center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+```
+
+**Inside the menu panel**, display navigation links to other pages (Work, Directors, About, Contact) in large display type (.-t-80 or similar). Each link gets the gradient hover effect. Include social media links and contact info at the bottom of the panel.
+
+**`transform-origin: right center`** keeps the miniaturized page preview pinned to the right edge of the screen, visible beside the menu panel. This is a signature interaction.
+
+---
+
+## 5. Animation System
+
+### Global Easing
+
+Every animation and transition on the page uses a single easing curve:
+
+```css
+:root {
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+```
+
+This curve is slightly aggressive on entry and gentle on exit. It feels confident without being flashy. Do not use `ease`, `ease-in-out`, or `linear` anywhere.
+
+### In-View Reveal (Default Animation)
+
+Elements start invisible and translated down, then animate into position when they enter the viewport (via Intersection Observer in the horizontal scroll context).
+
+```css
+.reveal {
+  opacity: 0;
+  transform: translateY(100px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+**Intersection Observer setup for horizontal scroll:**
+
+Since the page scrolls horizontally, you cannot use a standard Intersection Observer with the viewport as root. Instead, calculate visibility based on each element's position relative to the current horizontal scroll offset.
+
+```javascript
+function checkVisibility() {
+  const scrollX = getCurrentScrollX();
+  const viewportLeft = scrollX;
+  const viewportRight = scrollX + window.innerWidth;
+
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const elLeft = rect.left + scrollX;
+    const elRight = elLeft + rect.width;
+
+    // Element is in viewport when any part overlaps
+    if (elRight > viewportLeft && elLeft < viewportRight) {
+      el.classList.add('is-visible');
+    }
+  });
+}
+
+// Call on every frame of the horizontal scroll animation
+window.addEventListener('horizontalscroll', checkVisibility);
+```
+
+### Cascade / Stagger Animation
+
+For lists and sequential items, each child gets an increasing transition delay:
+
+```css
+/* Generate stagger delays for up to 20 children */
+.cascade > *:nth-child(1)  { transition-delay: 0ms; }
+.cascade > *:nth-child(2)  { transition-delay: 50ms; }
+.cascade > *:nth-child(3)  { transition-delay: 100ms; }
+.cascade > *:nth-child(4)  { transition-delay: 150ms; }
+.cascade > *:nth-child(5)  { transition-delay: 200ms; }
+.cascade > *:nth-child(6)  { transition-delay: 250ms; }
+.cascade > *:nth-child(7)  { transition-delay: 300ms; }
+.cascade > *:nth-child(8)  { transition-delay: 350ms; }
+.cascade > *:nth-child(9)  { transition-delay: 400ms; }
+.cascade > *:nth-child(10) { transition-delay: 450ms; }
+/* Continue to nth-child(20) at 50ms increments */
+```
+
+Each child also needs the `.reveal` base class so it starts hidden and animates in with the stagger timing.
+
+### Parallax
+
+Parallax is driven by a CSS custom property `--parallax-value` that gets updated via JavaScript based on the element's position relative to the viewport center.
+
+```css
+.parallax-element {
+  transform: translateY(calc(var(--parallax-value, 0) * 1px));
+  will-change: transform;
+}
+```
+
+```javascript
+function updateParallax() {
+  const scrollX = getCurrentScrollX();
+  const viewportCenter = scrollX + window.innerWidth / 2;
+
+  document.querySelectorAll('[data-parallax]').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const elCenter = rect.left + scrollX + rect.width / 2;
+    const distance = viewportCenter - elCenter;
+    const speed = parseFloat(el.dataset.parallax) || 0.1;
+    el.style.setProperty('--parallax-value', distance * speed);
+  });
+}
+```
+
+Usage in HTML: `<div class="parallax-element" data-parallax="0.15">...</div>`
+
+The `data-parallax` value controls speed. `0.05` = subtle drift. `0.2` = pronounced movement. Most elements should use `0.08` to `0.15`.
+
+### Clip-Path Reveals
+
+Some images use clip-path polygon transitions to reveal:
+
+```css
+.clip-reveal {
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  transition: clip-path 1s var(--ease);
+}
+
+.clip-reveal.is-visible {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+```
+
+This reveals the image from bottom to top. For left-to-right reveals, adjust the polygon coordinates accordingly.
+
+### Slide-In From Off-Screen
+
+Elements that enter from off-screen (images, text blocks):
+
+```css
+.slide-in-right {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.8s var(--ease), transform 1s var(--ease);
+}
+
+.slide-in-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-in-left {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.8s var(--ease), transform 1s var(--ease);
+}
+
+.slide-in-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+```
+
+---
+
+## 6. Video Component Pattern
+
+Every video on the page follows the same pattern: a poster image loads first, then a muted autoplay video fades in over the poster when the element enters the viewport.
+
+```html
+<div class="media-container">
+  <img
+    class="media-image"
+    src="/assets/poster-image.jpg"
+    alt=""
+    loading="lazy"
+  />
+  <video
+    class="media-video"
+    src="/assets/video-clip.mp4"
+    muted
+    loop
+    playsinline
+    disablepictureinpicture
+    preload="none"
+    poster="/assets/poster-image.jpg"
+  ></video>
+</div>
+```
+
+```css
+.media-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.media-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  transition: opacity 0.6s var(--ease);
+}
+
+.media-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+
+/* When video is ready and playing, crossfade */
+.media-container.video-active .media-image {
+  opacity: 0;
+}
+
+.media-container.video-active .media-video {
+  opacity: 1;
+}
+```
+
+**JavaScript video activation:**
+
+```javascript
+function initVideoComponents() {
+  const containers = document.querySelectorAll('.media-container');
+
+  containers.forEach(container => {
+    const video = container.querySelector('.media-video');
+    if (!video) return;
+
+    // Only start playing when element is in viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          video.play().then(() => {
+            container.classList.add('video-active');
+          }).catch(() => {
+            // Autoplay failed (browser policy), keep poster visible
+          });
+        } else {
+          video.pause();
+          container.classList.remove('video-active');
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(container);
+  });
+}
+```
+
+---
+
+## 7. Slide-by-Slide Build Specs
+
+### SLIDE 1 — Hero / Identity Statement
+
+**Purpose:** First impression. Tell the visitor who Family Drama is and what they do in under 3 seconds.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  [breadcrumb: about]          [logo]   [Menu]   │
+│                                                 │
+│                                                 │
+│         FAMILY DRAMA is fluent in…              │
+│         ▸ Commercials          ← cycling word   │
+│                                                 │
+│                                                 │
+│                        ┌────────────────────┐   │
+│                        │                    │   │
+│                        │   HERO IMAGE       │   │
+│                        │   (slides in from  │   │
+│                        │    off-screen      │   │
+│                        │    right)          │   │
+│                        │                    │   │
+│                        └────────────────────┘   │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**Hero image:** Starts at `transform: translateX(100%)` and slides to `translateX(0)` on page load (not on scroll, on initial load). Use a 1.2s transition with the global easing. The inner image is scaled 1.05x to allow subtle parallax movement as the user starts scrolling.
+
+**Text positioning:** The line "FAMILY DRAMA is fluent in…" is `position: absolute; top: 42%; left: 8vw;`. "FAMILY DRAMA" is in the display heading class (.-t-80). "is fluent in…" is the same size but font-weight 400 (book).
+
+**Word cycling mechanic:**
+
+Below "is fluent in…" there is a container holding a stack of words, positioned absolutely. Only one word is visible at a time. As the user scrolls horizontally, the words swap out with a vertical translate animation.
+
+```html
+<div class="hero-cycling">
+  <div class="hero-cycling__track">
+    <span class="hero-cycling__word" data-index="0">Commercials</span>
+    <span class="hero-cycling__word" data-index="1">Branded Content</span>
+    <span class="hero-cycling__word" data-index="2">Documentaries</span>
+    <span class="hero-cycling__word" data-index="3">Director Driven Storytelling</span>
+    <span class="hero-cycling__word" data-index="4">Special Projects</span>
+    <span class="hero-cycling__word" data-index="5">Making It Personal</span>
+  </div>
+</div>
+```
+
+```css
+.hero-cycling {
+  position: relative;
+  overflow: hidden;
+  height: 1.2em; /* Match one line height */
+}
+
+.hero-cycling__track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s var(--ease);
+}
+
+.hero-cycling__word {
+  height: 1.2em;
+  display: flex;
+  align-items: center;
+  font-size: inherit;
+  font-weight: 400;
+  white-space: nowrap;
+}
+```
+
+**Cycling logic:** Divide slide 1's scroll range into 6 equal segments. As `scrollX` passes each threshold, update `transform: translateY(-${index * 1.2}em)` on `.hero-cycling__track`. The final word "Making It Personal" should align with the exit point of slide 1.
+
+---
+
+### SLIDE 2 — "The Family Drama Difference"
+
+**Purpose:** Brand manifesto. Three-layer parallax imagery with sequential text reveals.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│     ┌──────────┐                                │
+│     │ IMAGE 1  │  ← translateX from -40%        │
+│     │ bottom   │                                │
+│     │ left     │    The Family Drama            │
+│     └──────────┘    Difference                  │
+│                      ↑ display heading           │
+│              ┌──────────┐  mix-blend-mode:diff   │
+│              │ IMAGE 2  │                        │
+│              │ top right│  ← translateX from +60%│
+│              │ (inner   │                        │
+│              │  1.4x)   │                        │
+│              └──────────┘                        │
+│                                                 │
+│  [text 1 — reveals first]                       │
+│  [text 2 — reveals second]                      │
+│  [text 3 — reveals third]        ┌─────────┐   │
+│                                  │ IMAGE 3 │   │
+│                                  │ bleeds  │→  │
+│                                  │ into    │   │
+│                                  │ slide 3 │   │
+│                                  └─────────┘   │
+└─────────────────────────────────────────────────┘
+```
+
+**Heading:** "The Family Drama Difference" in .-t-125 (display size). Applied with `mix-blend-mode: difference` so it composites through overlapping imagery. `line-height: 0.9` for tight stacking of the two lines.
+
+**Three images:**
+1. Bottom-left: starts translated -40% horizontally from its natural position. As the slide enters view, it slides to 0. Apply `data-parallax="0.12"`.
+2. Top-right: starts translated +60% horizontally. Inner image is scaled 1.4x (the container clips overflow). The over-scaling gives room for parallax movement within the frame. Apply `data-parallax="-0.08"` (negative moves opposite direction).
+3. Right edge: positioned with `right: -15vw` so it extends past the slide boundary into the next slide's space. This creates visual continuity between slides.
+
+**Text stack (sequential reveal):**
+
+Three paragraphs, each wrapped in a `.reveal` element. They share a parent with `.cascade` class. The paragraphs are:
+
+1. > Whatever a traditional production company looks like, we've never been that…
+2. > We're a different kind of company. Intentionally.
+3. > A company that treats every project like it's personal, every director like they're family, and every frame like it's the one people remember.
+
+Font size: .-t-20. Font weight: 400. Color: var(--text-primary). Max-width: 480px.
+
+The paragraphs are stacked vertically with 24px gap. They use `position: absolute` stacking so they occupy the same space and reveal one at a time, or they can stack normally with the cascade stagger handling the sequencing.
+
+---
+
+### SLIDE 3 — Philosophy / Origin Story
+
+**Purpose:** Tell the rebrand story. Bolt TV Studios → Family Drama.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│                                                 │
+│            ┌─────────────────────┐              │
+│            │                     │              │
+│            │    CENTERED IMAGE   │              │
+│            │    (overflow hidden  │              │
+│            │     inner 1.3x for  │              │
+│            │     parallax crop)  │              │
+│            │                     │              │
+│            └─────────────────────┘              │
+│                                                 │
+│   We started as Bolt TV Studios with a          │
+│   camera, a roster, and a point of view.        │
+│   We rebranded as Family Drama because          │
+│   that's what we've always been. A tight        │
+│   crew that fights for the work, shows up       │
+│   for each other, and treats every              │
+│   production like it matters. Because it does.  │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**No heading on this slide.** The text alone carries it. This creates a deliberate rhythm change after the large display type on slide 2.
+
+**Image:** Centered horizontally, top third of the viewport. Container is `overflow: hidden` with fixed dimensions. Inner image is scaled 1.3x (`transform: scale(1.3)`) with `data-parallax="0.1"` for vertical drift within the crop frame. Behind-the-scenes production image (crew, monitors, gear).
+
+**Text:** .-t-20, max-width: 560px, centered horizontally below the image with `margin: 0 auto`. Text has `.reveal` class.
+
+---
+
+### SLIDE 4 — "It Starts with Directors"
+
+**Purpose:** Position Family Drama as director-first. This is the core differentiator.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│                                                 │
+│                                                 │
+│   It Starts with                                │
+│   Directors                                     │
+│   ↑ .-t-100 display heading                     │
+│                                     ┌─────────┐ │
+│   We don't assign directors to      │         │ │
+│   projects. We build relationships  │  IMAGE  │ │
+│   with filmmakers who have a voice, │  right  │ │
+│   a vision, and something to prove. │  30%    │ │
+│   Then we put the full weight of    │  width  │ │
+│   the company behind them.          │  bleed  │ │
+│                                     │         │ │
+│                                     └─────────┘ │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**Heading:** "It Starts with Directors" in .-t-100. Left aligned at `left: 8vw`. `.reveal` class.
+
+**Body text:** .-t-20, max-width: 440px, positioned below heading with 40px gap. `.reveal` class with slight delay (100ms after heading).
+
+**Image:** `position: absolute; right: 0; top: 10%; height: 80%; width: 30vw;`. Overflow hidden. Inner image scaled 1.2x with `transform-origin: top center` so parallax drifts the image downward, revealing different crop areas. Director at work: on a monitor, on set, in a DIT tent. Not a posed headshot.
+
+---
+
+### SLIDE 5 — Craft / Approach
+
+**Purpose:** Show that Family Drama stays involved from concept to final color.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│                                                 │
+│            ┌───────────────┐                    │
+│            │               │                    │
+│            │  SQUARE IMAGE │                    │
+│            │  (centered)   │                    │
+│            │               │                    │
+│            └───────────────┘                    │
+│                                                 │
+│        From concept to color, we're in the      │
+│        room. We don't hand off. We stay         │
+│        involved because the gap between a       │
+│        good spot and a great one is the         │
+│        hundred decisions nobody sees.           │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**Image:** Square aspect ratio, centered, approximately 45vh × 45vh. Production craft image (lighting, dolly, set design). Overflow hidden, inner scaled 1.15x for subtle parallax.
+
+**Text:** .-t-20, max-width: 500px. Offset to approximately 28% from the left edge (not centered, not full-left, an intentional asymmetric position). The text starts translated `translateX(60px)` and slides to `translateX(0)` on reveal.
+
+---
+
+### SLIDE 6 — "Core Beliefs"
+
+**Purpose:** Six principles that define how Family Drama works. Builds to a bold climax line.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  ┌─────────────────────────────────────────────┐│
+│  │                                             ││
+│  │         FULL VIEWPORT                       ││
+│  │         BACKGROUND IMAGE                    ││
+│  │                                             ││
+│  │                                             ││
+│  │   Core Beliefs                              ││
+│  │   ↑ .-t-100 display heading                 ││
+│  │                                             ││
+│  │   • The best work comes from trust,         ││
+│  │     not timelines.              ← reveal 1  ││
+│  │   • Directors aren't interchangeable.  ← 2  ││
+│  │   • Brands deserve a partner,               ││
+│  │     not a vendor.                      ← 3  ││
+│  │   • We don't hide behind the treatment.← 4  ││
+│  │   • We don't play it safe.             ← 5  ││
+│  │   • WE MAKE IT PERSONAL.              ← 6  ││
+│  │     ↑ bold, uppercase, .-t-24                ││
+│  │                                             ││
+│  └─────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────┘
+```
+
+**Background:** Full-bleed image behind all content. `position: absolute; inset: 0;`. Apply a `background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%)` overlay on top of the image so white text is legible.
+
+**Heading:** "Core Beliefs" in .-t-100, positioned at approximately `bottom: 50%; left: 8vw`. `.reveal` class.
+
+**List items:** No bullet characters. Each belief is a `<p>` element inside a `.cascade` container. They reveal one at a time with 50ms stagger intervals. Font size .-t-20. Max-width: 500px. Positioned at `bottom: 8vh; left: 8vw`.
+
+**Final item** — "WE MAKE IT PERSONAL." — uses `.text-uppercase` class (font-weight: 700, letter-spacing: 0.05em, text-transform: uppercase). Same font size as the other items but the weight and casing make it visually distinct as the climax.
+
+---
+
+### SLIDE 7 — "Beyond the Brief" (Typography Only)
+
+**Purpose:** A breath. A single phrase that reframes the conversation from what Family Drama is to what they deliver.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│                                                 │
+│                                                 │
+│   Beyond          ← offset upward by ~22vh      │
+│   the Brief       ← .-t-125 display heading     │
+│                                                 │
+│                            ┌──────────────┐     │
+│                            │              │     │
+│                            │   IMAGE      │     │
+│                            │   (half      │     │
+│                            │   viewport   │     │
+│                            │   height)    │     │
+│                            │              │     │
+│                            └──────────────┘     │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**Heading:** "Beyond the Brief" in .-t-125. Two lines (break after "Beyond"). Positioned at `left: 8vw; top: calc(50% - 22vh)`. The `-22vh` offset creates asymmetric visual tension, the heading floats higher than center while the image sits lower than center.
+
+**Image:** `position: absolute; right: 8vw; top: 50%; transform: translateY(-30%); width: 40vw; height: 50vh;`. A strong visual from a commercial or branded content shoot. `.reveal` class with `slide-in-right` animation.
+
+---
+
+### SLIDE 8 — Capabilities (Transparent Text Reveal)
+
+**Purpose:** State what Family Drama does across four verticals, using a reading experience that forces the eye to find the keywords first.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│                                                 │
+│                                                 │
+│   Family Drama is a full service production     │
+│   company creating work across COMMERCIALS,     │
+│   BRANDED CONTENT, DOCUMENTARIES, and           │
+│   SPECIAL PROJECTS for agencies, brands,        │
+│   and platforms that expect more than            │
+│   just execution.                               │
+│                                                 │
+│   ↑ Keywords start white.                       │
+│     Everything else starts transparent.   ┌───┐ │
+│     Full text reveals on scroll.          │IMG│ │
+│                                           └───┘ │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**Implementation:**
+
+```html
+<p class="transparent-reveal">
+  <span class="tr-context">Family Drama is a full service production company creating work across </span>
+  <span class="tr-keyword">Commercials</span>
+  <span class="tr-context">, </span>
+  <span class="tr-keyword">Branded Content</span>
+  <span class="tr-context">, </span>
+  <span class="tr-keyword">Documentaries</span>
+  <span class="tr-context">, and </span>
+  <span class="tr-keyword">Special Projects</span>
+  <span class="tr-context"> for agencies, brands, and platforms that expect more than just execution.</span>
+</p>
+```
+
+```css
+.transparent-reveal {
+  font-size: clamp(24px, 3vw, 42px);
+  line-height: 1.3;
+  max-width: 700px;
+  position: relative;
+  left: 8vw;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tr-context {
+  color: transparent;
+  transition: color 0.6s var(--ease);
+}
+
+.tr-keyword {
+  color: var(--text-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* When slide is scrolled into reveal zone */
+.transparent-reveal.is-revealed .tr-context {
+  color: var(--text-primary);
+}
+```
+
+**Trigger:** When the slide is approximately 60% scrolled into view, add `.is-revealed` to the paragraph. The context words fade from transparent to white while the keywords remain static.
+
+**Image:** Positioned absolutely at `right: 6vw; bottom: 15vh; width: 25vw;`. Enters with `.slide-in-right`.
+
+---
+
+### SLIDE 9 — Reach / Availability
+
+**Purpose:** Signal that Family Drama is Texas-based but not Texas-limited.
+
+Same transparent text reveal mechanic as Slide 8.
+
+```html
+<p class="transparent-reveal">
+  <span class="tr-context">Based in </span>
+  <span class="tr-keyword">Texas</span>
+  <span class="tr-context">, shooting </span>
+  <span class="tr-keyword">everywhere</span>
+  <span class="tr-context">, with a director roster that spans coasts, styles, and sensibilities. </span>
+  <span class="tr-keyword tr-kicker">The work goes wherever the story is.</span>
+</p>
+```
+
+The `.tr-kicker` class is the final phrase. It starts hidden (both transparent and `transform: translateY(20px)`) and reveals last with a slight upward slide:
+
+```css
+.tr-kicker {
+  display: block;
+  margin-top: 24px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s var(--ease) 0.3s, transform 0.6s var(--ease) 0.3s, color 0.6s var(--ease) 0.3s;
+}
+
+.transparent-reveal.is-revealed .tr-kicker {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--text-primary);
+}
+```
+
+---
+
+### SLIDE 10 — "One Roster, Every Register"
+
+**Purpose:** Demonstrate range through a list of capability hints.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│                         │                       │
+│   One Roster            │                       │
+│   ↑ secondary size      │     IMAGE             │
+│                         │     (50% width,       │
+│   Every Register        │      full height,     │
+│   ↑ .-t-100 display     │      absolute)        │
+│                         │                       │
+│   • From Super Bowl     │                       │
+│     spots to startup    │                       │
+│     launch films…       │                       │
+│   • To athlete driven   │                       │
+│     docuseries…         │                       │
+│   • To brand campaigns  │                       │
+│     that live beyond    │                       │
+│     the media buy…      │                       │
+│   • To passion projects │                       │
+│     that win festivals… │                       │
+│   • To content that     │                       │
+│     earns press, not    │                       │
+│     just placement…     │                       │
+│   • To work that makes  │                       │
+│     the reel and the    │                       │
+│     culture             │                       │
+│                         │                       │
+└─────────────────────────────────────────────────┘
+```
+
+**Left column:**
+- "One Roster" in .-t-60 (secondary heading). `.reveal` class.
+- "Every Register" in .-t-100 (display heading), 16px below. `.reveal` class with 100ms delay.
+- List of 6 items, each a `<p>` inside a `.cascade` container. .-t-20. No bullets. Each item reveals sequentially.
+
+**Right column:**
+- Image: `position: absolute; right: 0; top: 0; width: 50vw; height: 100vh;`. Single strong production image. Overflow hidden, inner scaled 1.15x. `.clip-reveal` class (reveals from bottom on entry).
+
+---
+
+### SLIDE 11 — "The Work" (Fixed Background Reveal)
+
+**Purpose:** A dramatic visual transition. The heading "The Work" appears at maximum scale over a fixed background image.
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  ╔═══════════════════════════════════════════╗   │
+│  ║                                           ║   │
+│  ║         FIXED POSITION IMAGE              ║   │
+│  ║         (fades in from opacity 0           ║   │
+│  ║          as slide enters view)            ║   │
+│  ║                                           ║   │
+│  ║              The Work                     ║   │
+│  ║              ↑ .-t-200 (largest size)     ║   │
+│  ║                                           ║   │
+│  ║    We don't just deliver.                 ║   │
+│  ║    We make things people talk about.      ║   │
+│  ║                                           ║   │
+│  ╚═══════════════════════════════════════════╝   │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**Background image:** `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; opacity: 0; visibility: hidden; z-index: -1;`. As slide 11 enters the viewport, transition to `opacity: 1; visibility: visible;`. Apply a dark overlay (50% black) so text is legible.
+
+**Important:** Because this is `position: fixed`, it stays locked to the viewport while the horizontal scroll continues. The image appears to hold still while the next slides pass over it. Remove the image when the user scrolls past slide 12.
+
+**Heading:** "The Work" in .-t-200. Centered in the viewport. `.reveal` class.
+
+**Subtext:** "We don't just deliver. We make things people talk about." in .-t-24. Centered below heading. `.reveal` class with 200ms delay.
+
+---
+
+### SLIDE 12 — Proof Points (Sequential Phrases)
+
+**Purpose:** Build credibility through a rhythmic sequence of proof claims.
+
+**Layout:** Text left, image right. Each phrase appears one at a time as the user scrolls.
+
+**Text:**
+
+Three phrases, each a separate element with `.reveal` and `.cascade` stagger:
+
+1. > From national broadcast campaigns,
+2. > to series that changed how brands tell stories,
+3. > to projects that put new directors on the map…
+
+Font size: .-t-24. Positioned at `left: 8vw; top: 50%; transform: translateY(-50%)`. Max-width: 500px.
+
+**Image:** Small portrait orientation (30vw × 45vh). `.slide-in-right` animation. Positioned at `right: 12vw; top: 50%; transform: translateY(-50%)`.
+
+---
+
+### SLIDE 13 — Flagship Proof (Grit & Glory)
+
+**Purpose:** Name the biggest proof point. This is where credibility becomes specific.
+
+**Layout:** Image left, text right. Text reveals phrase by phrase.
+
+**Image:** `position: absolute; left: 8vw; top: 15vh; width: 35vw; height: 70vh;`. Starts `opacity: 0` with oversized inner image. Fades in and inner image has slight scale-down animation (`transform: scale(1.1)` → `scale(1.0)` over 1.2s).
+
+**Text:**
+
+Three phrases, cascade reveal:
+
+1. > From "Grit & Glory," a docuseries that followed Bo Nix from draft prep to the NFL,
+2. > to branded content partnerships with [Client / League],
+3. > to commercial work seen by millions.
+
+Font size: .-t-24. Positioned at `right: 8vw; top: 50%; transform: translateY(-50%); text-align: right;`. Max-width: 480px.
+
+---
+
+### SLIDE 14 — Culture Statement (Emotional Climax)
+
+**Purpose:** The peak emotional moment of the page. Everything builds to the word "MATTERS."
+
+**Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│                                                 │
+│  ┌────────────┐                                 │
+│  │            │                                 │
+│  │   IMAGE    │  We measure success the same    │
+│  │   (clip    │  way we pick projects. By gut.  │
+│  │    path)   │  Does it move people? Does it   │
+│  │            │  hold up? Does it make our      │
+│  │            │  directors proud?               │
+│  └────────────┘                                 │
+│                                                 │
+│                That's the only metric that      │
+│                                                 │
+│                MATTERS.                         │
+│                ↑ .-t-100, hidden until scroll    │
+│                  reveals with dramatic entrance  │
+│                                                 │
+└─────────────────────────────────────────────────┘
+```
+
+**Image:** Left positioned with `.clip-reveal` (bottom-to-top polygon reveal). `left: 6vw; top: 15vh; width: 30vw; height: 65vh;`.
+
+**Body text:** .-t-20, max-width: 440px. Positioned center-right. `.reveal` class.
+
+**Climax text:**
+
+The line "That's the only metric that" is .-t-24, appears with `.reveal` after the body text (200ms delay).
+
+"MATTERS." is in .-t-100, font-weight: 700, text-transform: uppercase. It starts completely hidden (`opacity: 0; transform: translateY(40px) scale(0.95)`) and reveals with a slightly more dramatic transition than standard reveals:
+
+```css
+.climax-word {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.6s var(--ease) 0.4s, transform 0.8s var(--ease) 0.4s;
+}
+
+.climax-word.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+```
+
+The `scale(0.95)` → `scale(1)` adds a subtle "landing" feel, as if the word is slamming into position.
+
+---
+
+### SLIDE 15 — Project Showcase (Nested Vertical Scroll)
+
+**Purpose:** The finale. A gallery of Family Drama's best work, presented as full-viewport video cards.
+
+**Structure:** This slide is special. It contains a vertically scrolling container with 5 cards (each 100vw × 100vh). When the horizontal scroll reaches slide 15, scrolling switches to vertical within this container.
+
+**Card structure:**
+
+```html
+<div class="showcase__card">
+  <div class="media-container showcase__bg">
+    <img class="media-image" src="poster.jpg" alt="" />
+    <video class="media-video" src="clip.mp4" muted loop playsinline></video>
+  </div>
+
+  <div class="showcase__overlay">
+    <!-- Dark gradient overlay for text legibility -->
+  </div>
+
+  <div class="showcase__stats">
+    <p class="showcase__stat-number -t-150">3 Part Docuseries</p>
+    <p class="showcase__stat-label -t-24">Original Production</p>
+  </div>
+
+  <div class="showcase__credits">
+    <p class="showcase__credit-title">Grit & Glory: Journey to the Draft</p>
+    <p class="showcase__credit-detail">Directed by [Director] / Produced by Family Drama</p>
+  </div>
+</div>
+```
+
+```css
+.showcase__card {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase__bg {
+  position: absolute;
+  inset: 0;
+}
+
+.showcase__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.3) 0%,
+    rgba(0,0,0,0.0) 40%,
+    rgba(0,0,0,0.0) 60%,
+    rgba(0,0,0,0.5) 100%
+  );
+  z-index: 1;
+}
+
+.showcase__stats {
+  position: absolute;
+  top: 12vh;
+  left: 8vw;
+  z-index: 2;
+}
+
+.showcase__stat-number {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.showcase__stat-label {
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.showcase__credits {
+  position: absolute;
+  bottom: 8vh;
+  left: 8vw;
+  z-index: 2;
+  mix-blend-mode: difference;
+}
+
+.showcase__credit-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.showcase__credit-detail {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+```
+
+**Card content (5 cards):**
+
+**Card 1: Grit & Glory: Journey to the Draft**
+- Video: Hero clip from the series
+- Stat: "3 Part Docuseries" / "Original Production"
+- Sub-stat: "Bo Nix" / "From Auburn to Oregon to the Denver Broncos"
+- Credit: Directed by [Director] / Produced by Family Drama
+
+**Card 2: [Flagship Commercial Placeholder]**
+- Video: Placeholder commercial clip
+- Stat: "National Broadcast" / "[Network or Platform]"
+- Credit: [Brand Name], [Campaign Title] / Directed by [Director]
+
+**Card 3: [Branded Content Placeholder]**
+- Video: Placeholder branded content clip
+- Stat: "[X] Million" / "Views"
+- Credit: [Brand] × Family Drama / Directed by [Director]
+
+**Card 4: [Documentary Placeholder]**
+- Video: Placeholder documentary clip
+- Stat: "[Festival / Platform]" / "Official Selection"
+- Credit: [Title] / A Family Drama Production
+
+**Card 5: [Director Spotlight Placeholder]**
+- Video: Placeholder director reel moment
+- Stat: "[Director Name]" / "Family Drama Roster"
+- Credit: [Project Title] / [Recognition]
+
+---
+
+## 8. Mobile Responsive Behavior (≤ 1024px)
+
+On screens 1024px wide or narrower, the entire horizontal scroll system is disabled. The page becomes a standard vertically scrolling document.
+
+### Key changes:
+
+```css
+@media (max-width: 1024px) {
+  .page-about {
+    position: relative; /* Not fixed */
+    height: auto; /* Not 100vh */
+    overflow-y: auto; /* Allow normal vertical scroll */
+    overflow-x: hidden;
+  }
+
+  .page-about__wrapper {
+    flex-direction: column; /* Stack slides vertically */
+    width: 100%;
+    height: auto;
+  }
+
+  .slide {
+    width: 100%;
+    height: auto;
+    min-height: 100vh; /* Each slide is at least full viewport height */
+    padding: 80px 24px; /* Horizontal padding for text */
+  }
+
+  /* Fixed-position elements become relative */
+  .hero-text-fixed {
+    position: relative;
+    top: auto;
+  }
+
+  /* Display type scales down to fixed pixel values */
+  .-t-200 { font-size: 66px; }
+  .-t-150 { font-size: 56px; }
+  .-t-125 { font-size: 48px; }
+  .-t-100 { font-size: 40px; }
+
+  /* Sequential reveal items show all at once */
+  .cascade > * {
+    transition-delay: 0ms !important;
+  }
+
+  /* Hidden/transparent text becomes visible */
+  .tr-context {
+    color: var(--text-primary);
+  }
+
+  .tr-kicker {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Absolutely positioned images become relative stacked blocks */
+  .slide img[style*="position: absolute"] {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-bottom: 32px;
+  }
+
+  /* Showcase nested scroll becomes normal vertical stack */
+  .showcase__vertical-container {
+    height: auto;
+  }
+
+  .showcase__card {
+    height: 80vh; /* Slightly shorter on mobile */
+  }
+}
+```
+
+### Mobile navigation:
+
+The menu panel takes `width: 100vw` on mobile (full screen, not 90vw). The main content scale effect still works but scales to 20% instead of 33%.
+
+---
+
+## 9. Performance Requirements
+
+### Image Optimization
+- All images served as WebP with JPEG fallbacks
+- Hero images: max 1920px wide, compressed to <200KB
+- Thumbnail/secondary images: max 1200px wide, compressed to <120KB
+- All images use `loading="lazy"` except the slide 1 hero (which loads eagerly)
+
+### Video Optimization
+- All videos compressed to H.264 MP4, max 8MB per clip
+- Videos use `preload="none"` and only load when their slide approaches the viewport
+- Poster images load first (JPEG, <100KB each)
+- Maximum 2 videos playing simultaneously (pause distant videos)
+
+### Animation Performance
+- All animations use `transform` and `opacity` only (GPU-composited properties)
+- No animations on `width`, `height`, `top`, `left`, `margin`, or `padding`
+- `will-change: transform` on the main wrapper and any parallax elements
+- Remove `will-change` from elements that have finished animating (via JavaScript)
+
+### Loading Strategy
+- Critical CSS inlined in `<head>`
+- Fonts preloaded: `<link rel="preload" href="/fonts/..." as="font" crossorigin>`
+- Slides 1 through 3 load assets eagerly, all others load lazily as they approach
+
+---
+
+## 10. Content & Asset Placeholders
+
+Until final assets are provided, use these placeholders:
+
+### Images
+Use high-quality cinematic stock photography from Unsplash or Pexels. Search terms:
+- "film production behind the scenes"
+- "director on set"
+- "commercial shoot"
+- "camera crew cinematography"
+- "production studio lighting"
+
+All placeholder images should be dark, warm-toned, and cinematic. No stock photo smiling. No corporate feel.
+
+### Videos
+Use royalty-free production B-roll. Sources:
+- Pexels Videos (search "film production", "behind the scenes")
+- Coverr.co (search "cinematic", "filmmaking")
+
+Each video clip should be 5 to 15 seconds, looping, and cropped/graded to feel consistent.
+
+### Logo
+Use "FAMILY DRAMA" set in the chosen font (weight 700, letter-spacing: 0.05em, uppercase) as a text-based logo until the actual brand mark is provided.
+
+### Colors for Gradient Hover
+Use this gradient until brand colors are finalized:
+```css
+linear-gradient(90deg, #9081fa, #1afffe, #eddd1b, #fd8f50, #fa3335)
+```
+
+---
+
+## Summary of Deliverables
+
+1. **Single page application** with 15 horizontal slides (desktop) / 15 vertical sections (mobile)
+2. **Horizontal scroll engine** that translates wheel input to horizontal movement with smooth interpolation
+3. **Nested vertical scroll** on slide 15 with 5 full-viewport video cards
+4. **Navigation chrome** (logo, breadcrumb, menu button, slide-out menu panel with scale effect)
+5. **Animation system** using only CSS transitions + Intersection Observer (no animation libraries)
+6. **Video component** pattern with poster-to-autoplay crossfade
+7. **Typography scale** using min(vw, vh) for display sizes
+8. **Responsive mobile layout** at ≤1024px breakpoint
+9. **All copy written and ready** (see slide specs for exact text)
+10. **Placeholder assets** for images and videos until real content is provided

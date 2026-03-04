@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Video Player Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      font-family: 'Instrument Serif', Georgia, serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .page-header {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .header-actions span {
+      font-size: 20px;
+      opacity: 0.5;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .header-actions span:hover { opacity: 1; }
+
+    /* ============ VIDEO PLAYER CONTAINER ============ */
+    .player-wrapper {
+      width: 100%;
+      max-width: 1100px;
+      position: relative;
+      background: #000;
+      border-radius: 0;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* Fake video poster / thumbnail */
+    .video-poster {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-gradient {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* ============ CONTROLS BAR ============ */
+    .controls-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 12px 10px 12px;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    /* ============ PROGRESS BAR ============ */
+    .progress-container {
+      flex: 1;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 2.5px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 15%;
+      height: 100%;
+      background: #e8a020;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    /* Scrubber thumb — hidden by default, appears on hover */
+    .progress-thumb {
+      position: absolute;
+      left: 15%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      background: #e8a020;
+      border-radius: 50%;
+      transition: width 0.2s, height 0.2s;
+      pointer-events: none;
+    }
+
+    .progress-container:hover .progress-thumb {
+      width: 10px;
+      height: 10px;
+    }
+
+    .progress-container:hover .progress-track {
+      height: 4px;
+    }
+
+    /* ============ CONTROL BUTTONS ============ */
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: #e8a020;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.85;
+      transition: opacity 0.25s;
+    }
+
+    .ctrl-btn:hover {
+      opacity: 1;
+    }
+
+    .ctrl-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* ============ PROJECT INFO ============ */
+    .project-info {
+      width: 100%;
+      max-width: 1100px;
+      text-align: center;
+      padding: 20px 0 40px;
+    }
+
+    .project-info .client {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #e8a020;
+      margin-bottom: 4px;
+    }
+
+    .project-info .title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 13px;
+      font-style: italic;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.05em;
+    }
+
+    /* ============ ANNOTATIONS ============ */
+    .annotations {
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 32px;
+      padding: 28px 32px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+    }
+
+    .annotations h3 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 18px;
+      font-weight: 400;
+      font-style: italic;
+      color: #e8a020;
+      margin-bottom: 16px;
+    }
+
+    .annotation-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+
+    .annotation-label {
+      font-family: monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #e8a020;
+      background: rgba(232, 160, 32, 0.1);
+      padding: 3px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .annotation-text {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.5;
+    }
+
+    /* ============ INTERACTIVE STATES ============ */
+    .player-wrapper .controls-bar {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .player-wrapper:hover .controls-bar {
+      opacity: 1;
+    }
+
+    .player-wrapper .video-gradient {
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .player-wrapper:hover .video-gradient {
+      opacity: 1;
+    }
+
+    /* Demo state: show controls */
+    .player-wrapper.demo-show .controls-bar,
+    .player-wrapper.demo-show .video-gradient {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Tool</h1>
+    <div class="header-actions">
+      <span>✕</span>
+      <span>☰</span>
+    </div>
+  </div>
+
+  <!-- Video Player -->
+  <div class="player-wrapper demo-show" id="player">
+    <!-- Thumbnail image simulating video frame -->
+    <img
+      class="video-poster"
+      src="https://image.mux.com/rR8P8mSaKDzz02TsftugTUdI00cQPJX00oy/thumbnail.jpg?time=5"
+      alt="Video thumbnail"
+      onerror="this.style.background='linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)'; this.style.height='100%';"
+    />
+
+    <!-- Subtle bottom gradient for control visibility -->
+    <div class="video-gradient"></div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <!-- Play -->
+      <button class="ctrl-btn" title="Play" onclick="togglePlay()">
+        <svg id="play-icon" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21" /></svg>
+        <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;">
+          <rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/>
+        </svg>
+      </button>
+
+      <!-- Progress Bar -->
+      <div class="progress-container" onclick="scrub(event)">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-thumb" id="progressThumb"></div>
+      </div>
+
+      <!-- Volume -->
+      <button class="ctrl-btn" title="Volume">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+          <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" opacity="0.7"/>
+        </svg>
+      </button>
+
+      <!-- Fullscreen -->
+      <button class="ctrl-btn" title="Fullscreen">
+        <svg viewBox="0 0 24 24">
+          <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Project Info -->
+  <div class="project-info">
+    <div class="client">STARBURST</div>
+    <div class="title">Different Every Time</div>
+  </div>
+
+  <!-- Annotations -->
+  <div class="annotations">
+    <h3>Player Anatomy</h3>
+
+    <div class="annotation-row">
+      <span class="annotation-label">Play/Pause</span>
+      <span class="annotation-text">Left-aligned. Gold icon, minimal size. Toggles between ▶ and ❚❚</span>
+    </div>
+
+    <div class="annotation-row">
+      <span class="annotation-label">Progress</span>
+      <span class="annotation-text">Thin 2.5px track, gold fill (#e8a020). No visible thumb — appears as 10px circle on hover. Track expands to 4px on hover.</span>
+    </div>
+
+    <div class="annotation-row">
+      <span class="annotation-label">Volume</span>
+      <span class="annotation-text">Right-side speaker icon in gold. No volume slider visible — click to mute/unmute.</span>
+    </div>
+
+    <div class="annotation-row">
+      <span class="annotation-label">Fullscreen</span>
+      <span class="annotation-text">Far right. Standard expand icon in gold.</span>
+    </div>
+
+    <div class="annotation-row">
+      <span class="annotation-label">Background</span>
+      <span class="annotation-text">Fully transparent control bar. Subtle gradient fade at bottom edge for legibility on light video frames.</span>
+    </div>
+
+    <div class="annotation-row">
+      <span class="annotation-label">Hover</span>
+      <span class="annotation-text">Controls hidden by default — entire bar fades in on player hover. Cinematic, unobtrusive.</span>
+    </div>
+  </div>
+
+  <script>
+    let playing = false;
+    let progress = 15;
+
+    function togglePlay() {
+      playing = !playing;
+      document.getElementById('play-icon').style.display = playing ? 'none' : 'block';
+      document.getElementById('pause-icon').style.display = playing ? 'block' : 'none';
+
+      if (playing) {
+        animateProgress();
+      }
+    }
+
+    function animateProgress() {
+      if (!playing) return;
+      progress += 0.15;
+      if (progress > 100) { progress = 0; }
+      updateProgress();
+      requestAnimationFrame(animateProgress);
+    }
+
+    function updateProgress() {
+      document.getElementById('progressFill').style.width = progress + '%';
+      document.getElementById('progressThumb').style.left = progress + '%';
+    }
+
+    function scrub(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      progress = ((e.clientX - rect.left) / rect.width) * 100;
+      updateProgress();
+    }
+
+    // Toggle hover demo
+    const player = document.getElementById('player');
+    let demoTimeout;
+    player.addEventListener('mouseenter', () => {
+      clearTimeout(demoTimeout);
+      player.classList.add('demo-show');
+    });
+    player.addEventListener('mouseleave', () => {
+      demoTimeout = setTimeout(() => {
+        player.classList.remove('demo-show');
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

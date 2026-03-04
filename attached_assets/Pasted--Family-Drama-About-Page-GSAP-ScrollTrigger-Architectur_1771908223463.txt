@@ -1,0 +1,1260 @@
+# Family Drama About Page — GSAP ScrollTrigger Architecture
+
+## READ THIS FIRST: Why the Previous Approach Failed
+
+The previous implementation used a **single master timeline** that translated a wrapper element horizontally. This is the wrong architecture. It creates a single monolithic scroll where every animation must be manually timed relative to every other animation, and it makes per-slide "locking" (holding the viewport on a slide while animations play) extremely fragile.
+
+The correct architecture, reverse-engineered from PRETTYBIRD's production site, uses **individual ScrollTrigger instances per slide** with native horizontal body scroll. Each slide that needs animation hold time gets its own `pin: true` ScrollTrigger, which locks the slide in the viewport while the user scrolls, then releases it to scroll away. This is the fundamental architecture that creates the "locked viewport with internal animations" feel.
+
+**Do not deviate from this architecture. Do not use a single master timeline. Do not translate a wrapper with JavaScript. The body scrolls natively in the horizontal direction.**
+
+---
+
+## Architecture Overview
+
+```
+┌─ document.body ─────────────────────────────────────────────────────────┐
+│  overflow: visible (browser handles horizontal scroll natively)         │
+│  scrollWidth: ~30× viewport width (created by pin-spacers)             │
+│  scrollbar: hidden via CSS                                              │
+│                                                                         │
+│  ┌─ .page-about_wrapper ───────────────────────────────────────────────┐│
+│  │  display: flex; flex-wrap: nowrap; height: 100vh;                   ││
+│  │  width: auto (expands to fit all children + pin-spacer padding)     ││
+│  │  overflow: hidden;                                                   ││
+│  │                                                                      ││
+│  │  ┌──pin-spacer──┐ ┌──pin-spacer──┐ ┌──slide──┐ ┌──pin-spacer──┐   ││
+│  │  │ [slide-1]    │ │ [slide-2]    │ │ slide-3 │ │ [slide-4]    │   ││
+│  │  │ pinned 1.5vw │ │ pinned 3.0vw │ │ no pin  │ │ pinned 1.0vw │   ││
+│  │  └──────────────┘ └──────────────┘ └─────────┘ └──────────────┘   ││
+│  └──────────────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**How it works:**
+
+1. The wrapper is a horizontal flex row. Each slide is `100vw × 100vh`.
+2. When GSAP pins a slide (`pin: true`), it wraps that slide in a `.pin-spacer` div and adds padding-right equal to the pin duration. This widens the document.
+3. The browser natively scrolls horizontally through this wider document.
+4. While the user scrolls through a pin-spacer's padding, the slide stays `position: fixed` in the viewport. Animations inside play during this "hold" period.
+5. When the scroll passes the pin range, the slide unpins and scrolls away normally.
+6. A wheel event listener converts vertical mouse wheel input into horizontal scroll.
+
+---
+
+## Required Dependencies
+
+```html
+<!-- GSAP Core + ScrollTrigger (use CDN or npm) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+```
+
+**No other animation libraries.** No Lenis. No Locomotive Scroll. No Framer Motion. GSAP ScrollTrigger handles everything.
+
+---
+
+## HTML Structure
+
+```html
+<body class="hide-scrollbar theme-black">
+
+  <!-- Fixed navigation (always visible, above everything) -->
+  <nav class="nav-chrome" style="position: fixed; z-index: 100;">
+    <a class="nav-breadcrumb">about</a>
+    <div class="nav-logo">FAMILY DRAMA</div>
+    <button class="nav-menu-btn">Menu</button>
+  </nav>
+
+  <!-- Main horizontal scroll container -->
+  <div class="page-about">
+    <div class="page-about_wrapper">
+
+      <div class="slide-1 c-slide"><!-- Hero --></div>
+      <div class="slide-2 c-slide"><!-- The Difference --></div>
+      <div class="slide-3 c-slide"><!-- Philosophy --></div>
+      <div class="slide-4 c-slide"><!-- Directors --></div>
+      <div class="slide-5 c-slide"><!-- Craft --></div>
+      <div class="slide-6 c-slide"><!-- Core Beliefs --></div>
+      <div class="slide-7 c-slide"><!-- Beyond the Brief --></div>
+      <div class="slide-8 c-slide"><!-- Capabilities --></div>
+      <div class="slide-9 c-slide"><!-- Reach --></div>
+      <div class="slide-10 c-slide"><!-- Range --></div>
+      <div class="slide-11 c-slide"><!-- The Work --></div>
+      <div class="slide-12 c-slide"><!-- Proof 1 --></div>
+      <div class="slide-13 c-slide"><!-- Proof 2 --></div>
+      <div class="slide-14 c-slide"><!-- Climax --></div>
+      <div class="slide-15 c-slide"><!-- Showcase --></div>
+
+    </div>
+  </div>
+
+</body>
+```
+
+---
+
+## Base CSS
+
+```css
+/* ============================================
+   SCROLLBAR HIDING
+   The body scrolls horizontally natively.
+   We hide the scrollbar but keep scroll functional.
+   ============================================ */
+.hide-scrollbar {
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* IE/Edge */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;                   /* Chrome/Safari */
+}
+
+/* ============================================
+   BODY & HTML
+   Both overflow: visible so the browser handles
+   horizontal scroll naturally. Height locked to
+   viewport to prevent vertical scroll.
+   ============================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: visible;               /* CRITICAL: let browser scroll horizontally */
+  background: #000;
+  color: #fff;
+}
+
+/* ============================================
+   WRAPPER
+   Horizontal flex row. Width is auto and expands
+   to fit all slides + pin-spacer padding.
+   overflow: hidden prevents internal scroll.
+   ============================================ */
+.page-about_wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============================================
+   SLIDES
+   Each slide is one viewport wide and tall.
+   flex-shrink: 0 prevents compression.
+   ============================================ */
+.c-slide {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================================
+   GSAP PIN-SPACER OVERRIDES
+   When GSAP pins a slide, it wraps it in a
+   .pin-spacer div. These styles ensure the
+   pin-spacer integrates into the flex layout.
+   ============================================ */
+.pin-spacer {
+  flex-shrink: 0 !important;
+}
+```
+
+---
+
+## Core JavaScript: Scroll Engine
+
+```javascript
+// ============================================
+// REGISTER PLUGINS
+// ============================================
+gsap.registerPlugin(ScrollTrigger);
+
+// ============================================
+// CONFIGURE SCROLLTRIGGER FOR HORIZONTAL SCROLL
+// ============================================
+// CRITICAL: Tell ScrollTrigger that scrolling is horizontal.
+// This makes all start/end calculations use scrollLeft instead of scrollTop.
+ScrollTrigger.defaults({
+  horizontal: true,    // ALL ScrollTriggers measure horizontal scroll
+  scroller: window     // Use the window/body as the scroll container
+});
+
+// ============================================
+// WHEEL → HORIZONTAL SCROLL CONVERSION
+// The user scrolls with their mousewheel (vertical deltaY).
+// We convert that into horizontal scroll on the body.
+// ============================================
+const SCROLL_SPEED = 1.2;  // Multiplier for wheel sensitivity. 1.0 = 1:1 ratio.
+
+function initWheelScroll() {
+  let isScrolling = false;
+
+  window.addEventListener('wheel', (e) => {
+    // Prevent default vertical scroll
+    e.preventDefault();
+
+    // Use deltaY (vertical wheel) as horizontal scroll delta
+    // Also respect deltaX for trackpad horizontal swipes
+    const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+
+    // Smooth scroll by the delta amount
+    window.scrollBy({
+      left: delta * SCROLL_SPEED,
+      behavior: 'auto'  // Use 'auto' not 'smooth' — GSAP handles easing
+    });
+
+  }, { passive: false });
+
+  // Also handle touch events for mobile (though mobile uses vertical layout)
+  // Trackpad momentum is handled natively by the browser
+}
+
+initWheelScroll();
+
+// ============================================
+// UTILITY: Create a pinned slide with internal animations
+// ============================================
+// This is the core pattern. For each slide that needs "hold" time:
+// 1. Pin the slide (locks it in viewport while user scrolls)
+// 2. Create a timeline of animations that play during the pin
+// 3. Scrub the timeline to scroll progress
+//
+// pinDurationVW = how many viewport widths of scroll the slide holds for.
+// A value of 1.5 means the user scrolls 1.5 viewports while this slide is locked.
+// Higher values = more scroll budget = slower internal animations relative to scroll speed.
+//
+function createPinnedSlide(slideSelector, pinDurationVW, buildAnimations) {
+  const slide = document.querySelector(slideSelector);
+  if (!slide) return;
+
+  const vw = window.innerWidth;
+  const pinDistance = vw * pinDurationVW;
+
+  // Create the internal animation timeline
+  const tl = gsap.timeline();
+
+  // Let the caller build their animations on this timeline
+  buildAnimations(tl, slide);
+
+  // Create the ScrollTrigger that pins this slide and scrubs the timeline
+  ScrollTrigger.create({
+    trigger: slide,
+    pin: true,                        // Lock this slide in the viewport
+    pinSpacing: true,                  // Add spacer to push subsequent content right
+    start: 'left left',               // Pin starts when slide's left edge hits viewport's left edge
+    end: () => `+=${pinDistance}`,     // Pin lasts for this many pixels of scroll
+    scrub: 0.5,                        // Smooth 0.5s interpolation between scroll and animation
+    animation: tl,                     // Attach the timeline to this trigger
+    anticipatePin: 1,                  // Prevents jank at pin start
+    // horizontal: true is inherited from defaults
+  });
+}
+
+// ============================================
+// UTILITY: Create a pass-through slide (no pin, just scroll-triggered reveals)
+// ============================================
+// For slides that scroll through without locking, use containerAnimation-style
+// triggers or simple appear-on-enter animations.
+//
+function createRevealSlide(slideSelector, buildAnimations) {
+  const slide = document.querySelector(slideSelector);
+  if (!slide) return;
+
+  buildAnimations(slide);
+}
+```
+
+---
+
+## Slide-by-Slide GSAP Implementation
+
+### SLIDE 1 — Hero (Pinned for 1.5 VW)
+
+The slide locks in the viewport while the cycling words play through. The hero image has a subtle parallax drift during the pin.
+
+```javascript
+createPinnedSlide('.slide-1', 1.5, (tl, slide) => {
+  // ---- ELEMENTS ----
+  const words = slide.querySelectorAll('.hero-cycling__word');
+  const heroImage = slide.querySelector('.slide-1_image');
+  const heroImageInner = slide.querySelector('.slide-1_image img');
+
+  // ---- WORD CYCLING ----
+  // Each word fades in, holds, then fades out.
+  // The last word ("Making It Personal") stays visible as the slide unpins.
+  const wordCount = words.length;
+  const wordDuration = 1 / wordCount;  // Each word gets equal share of timeline
+
+  words.forEach((word, i) => {
+    const startTime = i * wordDuration;
+
+    // Set initial state
+    gsap.set(word, { opacity: 0, y: 30 });
+
+    // Fade in
+    tl.to(word, {
+      opacity: 1,
+      y: 0,
+      duration: wordDuration * 0.25,
+      ease: 'power2.out'
+    }, startTime);
+
+    // Hold (implicitly holds between this tween and the next)
+
+    // Fade out (except the last word, which stays)
+    if (i < wordCount - 1) {
+      tl.to(word, {
+        opacity: 0,
+        y: -20,
+        duration: wordDuration * 0.2,
+        ease: 'power2.in'
+      }, startTime + wordDuration * 0.75);
+    }
+  });
+
+  // ---- HERO IMAGE PARALLAX ----
+  // Image drifts slowly leftward during the entire pin duration.
+  // This creates a subtle Ken Burns effect while words cycle.
+  tl.to(heroImage, {
+    x: '-8%',
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  // Inner image parallax (opposite direction for depth)
+  tl.to(heroImageInner, {
+    x: '4%',
+    scale: 1.02,
+    duration: 1,
+    ease: 'none'
+  }, 0);
+});
+```
+
+**HTML for Slide 1:**
+```html
+<div class="slide-1 c-slide">
+  <div class="slide-1_content">
+    <p class="slide-1_intro -t-80">FAMILY DRAMA is fluent in…</p>
+    <div class="hero-cycling">
+      <span class="hero-cycling__word -t-80">Commercials</span>
+      <span class="hero-cycling__word -t-80">Branded Content</span>
+      <span class="hero-cycling__word -t-80">Documentaries</span>
+      <span class="hero-cycling__word -t-80">Director Driven Storytelling</span>
+      <span class="hero-cycling__word -t-80">Special Projects</span>
+      <span class="hero-cycling__word -t-80">Making It Personal</span>
+    </div>
+  </div>
+  <div class="slide-1_image">
+    <img src="/assets/hero.jpg" alt="" />
+  </div>
+</div>
+```
+
+---
+
+### SLIDE 2 — "The Family Drama Difference" (Pinned for 3.0 VW)
+
+This is the most complex slide. It has three phases within its pin:
+- **Phase 1 (0% → 25%):** Images slide in from opposite sides with parallax
+- **Phase 2 (25% → 50%):** Display heading drops into position, mix-blend-mode reveals it against the images
+- **Phase 3 (50% → 100%):** Three text paragraphs reveal sequentially from bottom
+
+```javascript
+createPinnedSlide('.slide-2', 3.0, (tl, slide) => {
+  // ---- ELEMENTS ----
+  const imgBottom = slide.querySelector('.img-bottom');
+  const imgTop = slide.querySelector('.img-top');
+  const imgTopInner = slide.querySelector('.img-top img');
+  const imgRight = slide.querySelector('.img-right');
+  const heading = slide.querySelector('.slide-2_heading');
+  const headingLetters = slide.querySelectorAll('.slide-2_heading .letter');
+  const textBlocks = slide.querySelectorAll('.slide-2_texts p');
+
+  // ---- SET INITIAL STATES ----
+  gsap.set(imgBottom, { x: '-40%', opacity: 0 });
+  gsap.set(imgTop, { x: '60%', opacity: 0 });
+  gsap.set(imgRight, { x: '100%', opacity: 0 });
+  gsap.set(heading, { y: '200%' });
+  gsap.set(textBlocks, { y: 100, opacity: 0 });
+
+  // ---- PHASE 1: IMAGES ENTER (0 → 0.25) ----
+  tl.to(imgBottom, {
+    x: '0%',
+    opacity: 1,
+    duration: 0.2,
+    ease: 'power3.out'
+  }, 0);
+
+  tl.to(imgTop, {
+    x: '0%',
+    opacity: 1,
+    duration: 0.2,
+    ease: 'power3.out'
+  }, 0.05);  // Slight offset for stagger
+
+  tl.to(imgRight, {
+    x: '0%',
+    opacity: 1,
+    duration: 0.2,
+    ease: 'power3.out'
+  }, 0.1);
+
+  // Image parallax during entire pin (subtle continuous drift)
+  tl.to(imgBottom, {
+    x: '-15%',
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  tl.to(imgTop, {
+    x: '10%',
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  // Inner image on top container (overscaled for parallax crop)
+  tl.to(imgTopInner, {
+    x: '-8%',
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  // ---- PHASE 2: HEADING DROPS IN (0.2 → 0.45) ----
+  // The heading "The Family Drama Difference" drops from above into position.
+  // If using split text (letter by letter), stagger the letters:
+  if (headingLetters.length > 0) {
+    gsap.set(headingLetters, { y: '-200%', opacity: 0 });
+    tl.to(headingLetters, {
+      y: '0%',
+      opacity: 1,
+      duration: 0.15,
+      stagger: 0.003,  // Very tight stagger for a "rain" effect
+      ease: 'power3.out'
+    }, 0.22);
+  } else {
+    tl.to(heading, {
+      y: '0%',
+      duration: 0.2,
+      ease: 'power3.out'
+    }, 0.22);
+  }
+
+  // ---- PHASE 3: TEXT REVEALS (0.5 → 0.9) ----
+  textBlocks.forEach((block, i) => {
+    tl.to(block, {
+      y: 0,
+      opacity: 1,
+      duration: 0.12,
+      ease: 'power2.out'
+    }, 0.5 + (i * 0.1));  // 0.5, 0.6, 0.7
+  });
+
+  // ---- HOLD at end (0.9 → 1.0) ----
+  // Empty space at end of timeline = brief pause before slide scrolls away.
+  // This gives the reader a moment to absorb the text.
+  tl.to({}, { duration: 0.1 });
+});
+```
+
+**Critical animation detail:** The images start translated OFF-SCREEN in opposite directions. During Phase 1 they slide TO their resting positions. Then during the entire pin, they CONTINUE to drift slowly via parallax. The initial slide-in is a fast motion (0.2 of timeline). The parallax is a full-timeline-length slow drift. These are separate tweens on the same element — GSAP composites them.
+
+---
+
+### SLIDE 3 — Philosophy / Origin (No Pin, Scroll-Through)
+
+This slide has no hold time. Elements reveal as the slide enters the viewport.
+
+```javascript
+createRevealSlide('.slide-3', (slide) => {
+  const image = slide.querySelector('.slide-3_image');
+  const imageInner = slide.querySelector('.slide-3_image img');
+  const text = slide.querySelector('.slide-3_text');
+
+  // Image clip-path reveal (bottom to top)
+  gsap.set(image, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' });
+  gsap.set(imageInner, { scale: 1.3 });
+  gsap.set(text, { y: 80, opacity: 0 });
+
+  // Image reveals as slide enters viewport
+  gsap.to(image, {
+    clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+    duration: 1.2,
+    ease: 'power3.inOut',
+    scrollTrigger: {
+      trigger: slide,
+      start: 'left 80%',     // Starts when slide's left edge is at 80% of viewport
+      end: 'left 20%',
+      scrub: 0.5,
+    }
+  });
+
+  // Inner image parallax (slow scale-down during scroll)
+  gsap.to(imageInner, {
+    scale: 1.0,
+    duration: 1,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: slide,
+      start: 'left 100%',
+      end: 'right 0%',
+      scrub: true,
+    }
+  });
+
+  // Text reveals after image
+  gsap.to(text, {
+    y: 0,
+    opacity: 1,
+    duration: 0.8,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: slide,
+      start: 'left 40%',
+      toggleActions: 'play none none reverse',
+    }
+  });
+});
+```
+
+---
+
+### SLIDE 4 — "It Starts with Directors" (Pinned for 1.0 VW)
+
+Short pin. Heading and text reveal sequentially, then the slide releases.
+
+```javascript
+createPinnedSlide('.slide-4', 1.0, (tl, slide) => {
+  const heading = slide.querySelector('.slide-4_heading');
+  const body = slide.querySelector('.slide-4_body');
+  const image = slide.querySelector('.slide-4_image');
+  const imageInner = slide.querySelector('.slide-4_image img');
+
+  gsap.set(heading, { y: 120, opacity: 0 });
+  gsap.set(body, { y: 80, opacity: 0 });
+  gsap.set(image, { x: '30%', opacity: 0 });
+  gsap.set(imageInner, { scale: 1.2 });
+
+  // Heading drops in
+  tl.to(heading, {
+    y: 0, opacity: 1,
+    duration: 0.25,
+    ease: 'power3.out'
+  }, 0.05);
+
+  // Body text follows
+  tl.to(body, {
+    y: 0, opacity: 1,
+    duration: 0.2,
+    ease: 'power2.out'
+  }, 0.2);
+
+  // Image slides in from right
+  tl.to(image, {
+    x: '0%', opacity: 1,
+    duration: 0.3,
+    ease: 'power3.out'
+  }, 0.1);
+
+  // Image parallax during pin
+  tl.to(imageInner, {
+    scale: 1.0,
+    y: '-5%',
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  // Hold at end
+  tl.to({}, { duration: 0.15 });
+});
+```
+
+---
+
+### SLIDE 5 — Craft (Pinned for 0.8 VW)
+
+Short pin. Image and text enter, brief hold.
+
+```javascript
+createPinnedSlide('.slide-5', 0.8, (tl, slide) => {
+  const image = slide.querySelector('.slide-5_image');
+  const imageInner = slide.querySelector('.slide-5_image img');
+  const text = slide.querySelector('.slide-5_text');
+
+  gsap.set(image, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', scale: 0.95 });
+  gsap.set(imageInner, { scale: 1.15 });
+  gsap.set(text, { x: 60, opacity: 0 });
+
+  // Image clip reveal
+  tl.to(image, {
+    clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+    scale: 1,
+    duration: 0.4,
+    ease: 'power3.inOut'
+  }, 0);
+
+  // Text slides in
+  tl.to(text, {
+    x: 0, opacity: 1,
+    duration: 0.25,
+    ease: 'power2.out'
+  }, 0.25);
+
+  // Parallax
+  tl.to(imageInner, {
+    scale: 1.0,
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  tl.to({}, { duration: 0.15 });
+});
+```
+
+---
+
+### SLIDE 6 — Core Beliefs (Pinned for 1.5 VW)
+
+The six beliefs reveal one at a time. The final belief "WE MAKE IT PERSONAL." has a distinct animation.
+
+```javascript
+createPinnedSlide('.slide-6', 1.5, (tl, slide) => {
+  const heading = slide.querySelector('.slide-6_heading');
+  const beliefs = slide.querySelectorAll('.slide-6_belief');
+  const kicker = slide.querySelector('.slide-6_kicker');  // "WE MAKE IT PERSONAL."
+  const bgImage = slide.querySelector('.slide-6_bg');
+
+  // Background image fades in from dark
+  gsap.set(bgImage, { opacity: 0, scale: 1.1 });
+  gsap.set(heading, { y: 80, opacity: 0 });
+  gsap.set(beliefs, { y: 40, opacity: 0 });
+  gsap.set(kicker, { y: 40, opacity: 0, scale: 0.95 });
+
+  // Background fades in
+  tl.to(bgImage, {
+    opacity: 1,
+    duration: 0.2,
+    ease: 'power2.out'
+  }, 0);
+
+  // Background slow zoom during entire pin
+  tl.to(bgImage, {
+    scale: 1.0,
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  // Heading reveals
+  tl.to(heading, {
+    y: 0, opacity: 1,
+    duration: 0.15,
+    ease: 'power3.out'
+  }, 0.08);
+
+  // Beliefs reveal sequentially
+  beliefs.forEach((belief, i) => {
+    tl.to(belief, {
+      y: 0, opacity: 1,
+      duration: 0.1,
+      ease: 'power2.out'
+    }, 0.2 + (i * 0.08));
+  });
+
+  // Kicker reveals last with slightly more dramatic animation
+  tl.to(kicker, {
+    y: 0, opacity: 1, scale: 1,
+    duration: 0.15,
+    ease: 'power2.out'
+  }, 0.7);
+
+  // Hold to let the reader absorb
+  tl.to({}, { duration: 0.15 });
+});
+```
+
+---
+
+### SLIDE 7 — "Beyond the Brief" (No Pin, Scroll-Through)
+
+A breath slide. Single heading and image. No pin needed, just reveals on enter.
+
+```javascript
+createRevealSlide('.slide-7', (slide) => {
+  const heading = slide.querySelector('.slide-7_heading');
+  const image = slide.querySelector('.slide-7_image');
+
+  gsap.set(heading, { y: 100, opacity: 0 });
+  gsap.set(image, { x: '20%', opacity: 0 });
+
+  gsap.to(heading, {
+    y: 0, opacity: 1,
+    duration: 1,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: slide,
+      start: 'left 60%',
+      toggleActions: 'play none none reverse',
+    }
+  });
+
+  gsap.to(image, {
+    x: '0%', opacity: 1,
+    duration: 1.2,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: slide,
+      start: 'left 50%',
+      toggleActions: 'play none none reverse',
+    }
+  });
+});
+```
+
+---
+
+### SLIDE 8 — Capabilities / Transparent Text Reveal (Pinned for 1.0 VW)
+
+Keywords start visible. Context words are transparent. During pin, context fades to white.
+
+```javascript
+createPinnedSlide('.slide-8', 1.0, (tl, slide) => {
+  const contextWords = slide.querySelectorAll('.tr-context');
+  const image = slide.querySelector('.slide-8_image');
+
+  gsap.set(contextWords, { color: 'transparent' });
+  gsap.set(image, { x: '40%', opacity: 0 });
+
+  // Context words fade from transparent to white across first 60% of pin
+  tl.to(contextWords, {
+    color: '#ffffff',
+    duration: 0.5,
+    stagger: 0.02,
+    ease: 'power2.out'
+  }, 0.05);
+
+  // Image enters from right
+  tl.to(image, {
+    x: '0%', opacity: 1,
+    duration: 0.3,
+    ease: 'power3.out'
+  }, 0.2);
+
+  // Hold
+  tl.to({}, { duration: 0.2 });
+});
+```
+
+---
+
+### SLIDE 9 — Reach (Pinned for 0.8 VW)
+
+Same transparent text reveal pattern. The kicker phrase has a delayed entrance.
+
+```javascript
+createPinnedSlide('.slide-9', 0.8, (tl, slide) => {
+  const contextWords = slide.querySelectorAll('.tr-context');
+  const kicker = slide.querySelector('.tr-kicker');
+
+  gsap.set(contextWords, { color: 'transparent' });
+  gsap.set(kicker, { y: 20, opacity: 0 });
+
+  // Context reveals
+  tl.to(contextWords, {
+    color: '#ffffff',
+    duration: 0.4,
+    stagger: 0.02,
+    ease: 'power2.out'
+  }, 0.05);
+
+  // Kicker phrase reveals last with a slide-up
+  tl.to(kicker, {
+    y: 0, opacity: 1,
+    duration: 0.2,
+    ease: 'power2.out'
+  }, 0.55);
+
+  tl.to({}, { duration: 0.15 });
+});
+```
+
+---
+
+### SLIDE 10 — "One Roster, Every Register" (Pinned for 2.0 VW)
+
+Heading reveals, then the six range items cascade in one at a time. Image clip-reveals on the right.
+
+```javascript
+createPinnedSlide('.slide-10', 2.0, (tl, slide) => {
+  const subheading = slide.querySelector('.slide-10_subheading');
+  const heading = slide.querySelector('.slide-10_heading');
+  const items = slide.querySelectorAll('.slide-10_item');
+  const image = slide.querySelector('.slide-10_image');
+  const imageInner = slide.querySelector('.slide-10_image img');
+
+  gsap.set(subheading, { y: 60, opacity: 0 });
+  gsap.set(heading, { y: 80, opacity: 0 });
+  gsap.set(items, { y: 40, opacity: 0 });
+  gsap.set(image, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' });
+  gsap.set(imageInner, { scale: 1.15 });
+
+  // Image clip-reveal (full timeline for slow dramatic reveal)
+  tl.to(image, {
+    clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+    duration: 0.6,
+    ease: 'power3.inOut'
+  }, 0);
+
+  tl.to(imageInner, {
+    scale: 1.0,
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  // Subheading
+  tl.to(subheading, {
+    y: 0, opacity: 1,
+    duration: 0.15,
+    ease: 'power3.out'
+  }, 0.05);
+
+  // Main heading
+  tl.to(heading, {
+    y: 0, opacity: 1,
+    duration: 0.15,
+    ease: 'power3.out'
+  }, 0.12);
+
+  // List items cascade (the signature moment of this slide)
+  items.forEach((item, i) => {
+    tl.to(item, {
+      y: 0, opacity: 1,
+      duration: 0.1,
+      ease: 'power2.out'
+    }, 0.25 + (i * 0.08));  // Staggered at 0.08 intervals
+  });
+
+  // Hold at end for reading
+  tl.to({}, { duration: 0.2 });
+});
+```
+
+---
+
+### SLIDE 11 — "The Work" (Pinned for 1.5 VW)
+
+The biggest visual moment. Background image fades in with a zoom, display heading scales up dramatically, subtext reveals.
+
+```javascript
+createPinnedSlide('.slide-11', 1.5, (tl, slide) => {
+  const bgImage = slide.querySelector('.slide-11_bg');
+  const overlay = slide.querySelector('.slide-11_overlay');
+  const heading = slide.querySelector('.slide-11_heading');
+  const subtext = slide.querySelector('.slide-11_subtext');
+
+  gsap.set(bgImage, { opacity: 0, scale: 1.15 });
+  gsap.set(overlay, { opacity: 0 });
+  gsap.set(heading, { y: 60, opacity: 0, scale: 0.9 });
+  gsap.set(subtext, { y: 40, opacity: 0 });
+
+  // Background image fades in with slow zoom
+  tl.to(bgImage, {
+    opacity: 1,
+    duration: 0.3,
+    ease: 'power2.out'
+  }, 0);
+
+  tl.to(bgImage, {
+    scale: 1.0,
+    duration: 1,
+    ease: 'none'
+  }, 0);
+
+  // Dark overlay fades in over image for text legibility
+  tl.to(overlay, {
+    opacity: 0.5,
+    duration: 0.25,
+    ease: 'power2.out'
+  }, 0.1);
+
+  // "The Work" heading — scale + fade + translate
+  tl.to(heading, {
+    y: 0, opacity: 1, scale: 1,
+    duration: 0.3,
+    ease: 'power3.out'
+  }, 0.2);
+
+  // Subtext
+  tl.to(subtext, {
+    y: 0, opacity: 1,
+    duration: 0.2,
+    ease: 'power2.out'
+  }, 0.45);
+
+  tl.to({}, { duration: 0.2 });
+});
+```
+
+---
+
+### SLIDES 12 & 13 — Proof Points (Pinned for 1.0 VW each)
+
+Sequential phrase reveals with an image on the opposite side.
+
+```javascript
+// SLIDE 12
+createPinnedSlide('.slide-12', 1.0, (tl, slide) => {
+  const phrases = slide.querySelectorAll('.slide-12_phrase');
+  const image = slide.querySelector('.slide-12_image');
+
+  gsap.set(phrases, { y: 40, opacity: 0 });
+  gsap.set(image, { x: '30%', opacity: 0 });
+
+  // Image enters
+  tl.to(image, {
+    x: '0%', opacity: 1,
+    duration: 0.3,
+    ease: 'power3.out'
+  }, 0);
+
+  // Phrases cascade
+  phrases.forEach((phrase, i) => {
+    tl.to(phrase, {
+      y: 0, opacity: 1,
+      duration: 0.12,
+      ease: 'power2.out'
+    }, 0.15 + (i * 0.15));
+  });
+
+  tl.to({}, { duration: 0.15 });
+});
+
+// SLIDE 13
+createPinnedSlide('.slide-13', 1.0, (tl, slide) => {
+  const phrases = slide.querySelectorAll('.slide-13_phrase');
+  const image = slide.querySelector('.slide-13_image');
+  const imageInner = slide.querySelector('.slide-13_image img');
+
+  gsap.set(phrases, { y: 40, opacity: 0 });
+  gsap.set(image, { opacity: 0 });
+  gsap.set(imageInner, { scale: 1.1 });
+
+  // Image fades in with scale settle
+  tl.to(image, {
+    opacity: 1,
+    duration: 0.3,
+    ease: 'power2.out'
+  }, 0);
+
+  tl.to(imageInner, {
+    scale: 1.0,
+    duration: 0.8,
+    ease: 'power3.out'
+  }, 0);
+
+  // Phrases cascade (right-aligned text for this slide)
+  phrases.forEach((phrase, i) => {
+    tl.to(phrase, {
+      y: 0, opacity: 1,
+      duration: 0.12,
+      ease: 'power2.out'
+    }, 0.2 + (i * 0.15));
+  });
+
+  tl.to({}, { duration: 0.15 });
+});
+```
+
+---
+
+### SLIDE 14 — Climax / "MATTERS." (Pinned for 1.5 VW)
+
+The emotional peak. Everything builds toward the word "MATTERS." appearing at massive display size.
+
+```javascript
+createPinnedSlide('.slide-14', 1.5, (tl, slide) => {
+  const image = slide.querySelector('.slide-14_image');
+  const bodyText = slide.querySelector('.slide-14_body');
+  const bridge = slide.querySelector('.slide-14_bridge');  // "That's the only metric that"
+  const climaxWord = slide.querySelector('.slide-14_climax');  // "MATTERS."
+
+  gsap.set(image, { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)' });
+  gsap.set(bodyText, { y: 60, opacity: 0 });
+  gsap.set(bridge, { y: 30, opacity: 0 });
+  gsap.set(climaxWord, { y: 50, opacity: 0, scale: 0.92 });
+
+  // Image clip-reveal
+  tl.to(image, {
+    clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+    duration: 0.35,
+    ease: 'power3.inOut'
+  }, 0);
+
+  // Body text
+  tl.to(bodyText, {
+    y: 0, opacity: 1,
+    duration: 0.2,
+    ease: 'power2.out'
+  }, 0.15);
+
+  // Bridge line
+  tl.to(bridge, {
+    y: 0, opacity: 1,
+    duration: 0.15,
+    ease: 'power2.out'
+  }, 0.4);
+
+  // ---- THE MOMENT ----
+  // "MATTERS." arrives with weight.
+  // Slight scale-up creates a "landing" feeling.
+  // The 0.15 delay after the bridge creates a dramatic pause.
+  tl.to(climaxWord, {
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    duration: 0.25,
+    ease: 'power3.out'
+  }, 0.6);
+
+  // Hold after the climax lands — this is the breath before the showcase
+  tl.to({}, { duration: 0.25 });
+});
+```
+
+---
+
+### SLIDE 15 — Project Showcase (Pinned for 5.0 VW, Internal Vertical Scroll)
+
+This slide locks in the viewport for an extended period. Inside, 5 project cards scroll vertically. The horizontal scroll drives the vertical position of the internal container.
+
+```javascript
+createPinnedSlide('.slide-15', 5.0, (tl, slide) => {
+  const verticalContainer = slide.querySelector('.showcase__vertical-container');
+  const cards = slide.querySelectorAll('.showcase__card');
+
+  // The vertical container is 500vh tall (5 cards × 100vh).
+  // During the 5.0 VW pin, we translate it from 0 to -400vh (showing all 5 cards).
+  const totalTravel = (cards.length - 1) * window.innerHeight;
+
+  // Scroll the vertical container upward
+  tl.to(verticalContainer, {
+    y: -totalTravel,
+    duration: 1,
+    ease: 'none'  // Linear — 1:1 relationship between scroll and vertical position
+  }, 0);
+
+  // Individual card entrance animations
+  cards.forEach((card, i) => {
+    const stats = card.querySelector('.showcase__stats');
+    const credits = card.querySelector('.showcase__credits');
+    const video = card.querySelector('video');
+
+    gsap.set(stats, { y: 40, opacity: 0 });
+    gsap.set(credits, { y: 20, opacity: 0 });
+
+    // Each card occupies 1/5 of the timeline
+    const cardStart = i / cards.length;
+    const cardMid = cardStart + (0.5 / cards.length);
+
+    // Stats reveal
+    tl.to(stats, {
+      y: 0, opacity: 1,
+      duration: 0.05,
+      ease: 'power2.out'
+    }, cardStart + 0.02);
+
+    // Credits reveal
+    tl.to(credits, {
+      y: 0, opacity: 1,
+      duration: 0.04,
+      ease: 'power2.out'
+    }, cardStart + 0.04);
+
+    // Video play/pause based on visibility
+    if (video) {
+      // Play when card is in view
+      tl.call(() => video.play().catch(() => {}), [], cardStart);
+      // Pause when card scrolls away
+      if (i < cards.length - 1) {
+        tl.call(() => video.pause(), [], cardStart + (1 / cards.length));
+      }
+    }
+  });
+});
+```
+
+---
+
+## Pin Duration Summary
+
+| Slide | Pin Duration (VW) | Reason |
+|-------|-------------------|--------|
+| 1     | 1.5               | Word cycling (6 words need scroll time) |
+| 2     | 3.0               | Most complex: 3-phase image + heading + text |
+| 3     | 0 (scroll-through) | Simple reveal, no need to hold |
+| 4     | 1.0               | Heading + body + image entry |
+| 5     | 0.8               | Image clip + text, brief |
+| 6     | 1.5               | 6 beliefs cascade + background |
+| 7     | 0 (scroll-through) | Breath slide, simple reveal |
+| 8     | 1.0               | Transparent text reveal |
+| 9     | 0.8               | Transparent text + kicker |
+| 10    | 2.0               | 6-item cascade list + image reveal |
+| 11    | 1.5               | Big visual moment, dramatic entrance |
+| 12    | 1.0               | Sequential phrases |
+| 13    | 1.0               | Sequential phrases + image |
+| 14    | 1.5               | Build to "MATTERS." climax |
+| 15    | 5.0               | 5 vertical cards driven by horizontal scroll |
+
+**Total scroll budget:** ~20.7 VW of pin time + 15 VW of actual slides = ~35.7 viewport widths of total scroll. This matches the scale of PRETTYBIRD's 28.7 VW total.
+
+---
+
+## Animation Easing Reference
+
+Use ONLY these easings across the entire page:
+
+```javascript
+// PRIMARY: Most animations use this. Aggressive in, gentle out.
+'power3.out'     // Elements entering / appearing
+
+// SECONDARY: Softer entrance for text reveals
+'power2.out'     // Text fading in, subtle movements
+
+// CLIP-PATH: For image reveals that have a geometric quality
+'power3.inOut'   // Clip-path transitions (symmetrical ease)
+
+// PARALLAX: For continuous background drift during pins
+'none'           // Linear. 1:1 scroll-to-movement ratio.
+```
+
+**Never use:** `'bounce'`, `'elastic'`, `'back'`, or any other playful easing. This is a production company site. The animations should feel confident and controlled, not bouncy.
+
+---
+
+## Mobile Behavior (≤ 1024px)
+
+On mobile, the entire horizontal scroll system is disabled. The page becomes vertical.
+
+```javascript
+function initMobile() {
+  // Kill all ScrollTriggers
+  ScrollTrigger.getAll().forEach(st => st.kill());
+
+  // Reset the wrapper to vertical
+  document.querySelector('.page-about_wrapper').style.cssText = `
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+  `;
+
+  // Reset all slides to vertical stacking
+  document.querySelectorAll('.c-slide').forEach(slide => {
+    slide.style.cssText = `
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      padding: 80px 24px;
+    `;
+  });
+
+  // Remove all GSAP inline styles (reveals everything)
+  document.querySelectorAll('[style*="opacity"], [style*="transform"], [style*="clip-path"]').forEach(el => {
+    gsap.set(el, { clearProps: 'all' });
+  });
+
+  // Simple fade-up on scroll for mobile
+  document.querySelectorAll('.c-slide').forEach(slide => {
+    const elements = slide.querySelectorAll('h2, p, img, .showcase__card');
+    elements.forEach(el => {
+      gsap.from(el, {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          // NOTE: No horizontal:true here, mobile scrolls vertically
+          horizontal: false,
+        }
+      });
+    });
+  });
+}
+
+// ============================================
+// INIT: Check viewport and run appropriate setup
+// ============================================
+function init() {
+  ScrollTrigger.matchMedia({
+    // Desktop: horizontal scroll with pins
+    '(min-width: 1025px)': function() {
+      initWheelScroll();
+      // Initialize all slide animations (the createPinnedSlide calls above)
+      initSlide1();
+      initSlide2();
+      initSlide3();
+      initSlide4();
+      initSlide5();
+      initSlide6();
+      initSlide7();
+      initSlide8();
+      initSlide9();
+      initSlide10();
+      initSlide11();
+      initSlide12();
+      initSlide13();
+      initSlide14();
+      initSlide15();
+    },
+    // Mobile: vertical scroll with simple reveals
+    '(max-width: 1024px)': function() {
+      initMobile();
+    }
+  });
+}
+
+// Run after DOM is ready and fonts are loaded
+document.fonts.ready.then(() => {
+  init();
+  // Refresh ScrollTrigger after layout is stable
+  ScrollTrigger.refresh();
+});
+```
+
+---
+
+## Debugging Checklist
+
+If animations aren't working correctly, check these in order:
+
+1. **Are pin-spacers being created?** Open DevTools → Elements panel. Each pinned slide should be wrapped in a `<div class="pin-spacer">`. If not, the pin isn't working.
+
+2. **Is the body scrolling horizontally?** Check `document.body.scrollWidth` in console. It should be much larger than `window.innerWidth` (20x+). If it's equal, pin-spacers aren't expanding the document.
+
+3. **Is `horizontal: true` set?** Without this, ScrollTrigger measures vertical scroll instead of horizontal. The `ScrollTrigger.defaults({ horizontal: true })` line at the top handles this globally.
+
+4. **Is the wheel listener working?** Scroll with mousewheel. If nothing happens, check that `e.preventDefault()` is being called and `window.scrollBy` is working. Check console for errors.
+
+5. **Are animations playing?** Scroll to a pinned slide. Open GSAP DevTools or check the timeline progress. The `scrub: 0.5` setting means animations interpolate over 0.5s, so they won't be instant.
+
+6. **Pin-spacer flex issues?** If pin-spacers break the flex layout, ensure `.pin-spacer { flex-shrink: 0 !important; }` is set.
+
+7. **Slide 15 vertical scroll not working?** The vertical container inside slide 15 must have `overflow: hidden` and the vertical movement is driven by the timeline's `y` tween, not by actual scroll events.
+
+8. **`anticipatePin: 1` causing jump?** This can sometimes over-compensate. Try removing it or reducing to `0.5`.
+
+---
+
+## Performance Notes
+
+- All animations use `transform` and `opacity` only (GPU composited)
+- Use `will-change: transform` on the wrapper and any parallax images
+- Videos use `preload="none"` and are played/paused via timeline callbacks
+- `scrub: 0.5` (not `scrub: true`) provides smooth interpolation without being too loose
+- Pin-spacers with `pinSpacing: true` is more performant than manual spacer management
+- `ScrollTrigger.refresh()` should be called after any layout change (font load, image load, resize)

@@ -1,0 +1,170 @@
+# Replit Prompt: Dr Teal's x Aaron Donald Project Details Page
+
+## What I Need
+
+Build a single project details page for a video production company called Family Drama. This is a project details page for a commercial campaign we produced for Dr Teal's featuring Aaron Donald. The page sits underneath a primary video player (which I'll add later) and showcases the project through a mix of written content and behind the scenes photography.
+
+## Design References
+
+This page should follow the layout patterns used by Tool of North America on their project detail pages. Here are reference URLs for structure and visual tone:
+
+- https://toolofna.com/work/featured/verizon-verizon-5g-stadium/
+- https://toolofna.com/work/featured/land-rover-defender-who-says-cars-cant-dream/
+- https://toolofna.com/work/featured/milkpep-every-womans-marathon/
+
+Key design patterns from these references:
+- Clean, dark or neutral background
+- Large section headers
+- Body text in a readable column width (not full bleed)
+- Images break out wider than the text column, some go full bleed, some sit in 2-up grids
+- Smooth scroll, generous whitespace between sections
+- Sections flow vertically with alternating text and media blocks
+- No sidebar, no complex navigation, just a clean vertical scroll
+
+## Design Direction
+
+- Background: dark (near black or very dark gray)
+- Text: white or light gray for body, slightly larger/bolder for section headers
+- Typography: clean sans-serif (Inter, Helvetica Neue, or similar)
+- Image treatment: no borders, no rounded corners, images should feel cinematic
+- Layout: centered content column for text (~700-800px max), images can go wider (~1100-1200px) or full bleed
+- Spacing: generous padding between sections (80-120px)
+- Mobile responsive
+
+## Page Structure and Content
+
+Build the page in this exact order with these sections:
+
+### 1. PROJECT HEADER
+Small metadata block at top:
+- Client: Dr Teal's
+- Title: Stay Hungry  
+- Talent: Aaron Donald
+- Services: Commercial Production, Virtual Production Design, Still Photography
+
+Style this as a clean grid or inline list, subtle and understated.
+
+### 2. HEADLINE
+Large display text, should feel like a statement:
+
+"What does it take to stay on top? For Aaron Donald, it starts with pushing your body to the limit and knowing how to bring it back."
+
+### 3. OVERVIEW
+Body text paragraph:
+
+"After 8 seasons in the league, Aaron Donald solidified himself as one of the most dominant forces the game has ever seen. Pro Bowler every season, 3x Defensive Player of the Year, and Super Bowl champion. But staying at the top requires more than talent. It demands relentless training, elite-level recovery, and an unwavering commitment to the process. We partnered with Dr Teal's to produce a series of commercial spots that gave viewers a window into Aaron's world. The grind, the toll, and the ritual that keeps him performing at the highest level."
+
+### 4. THE BRIEF
+Section header: "The Brief"
+
+Body text:
+
+"We were tasked with producing a series of commercial spots for Dr Teal's featuring Aaron Donald of the Los Angeles Rams. As an elite athlete, Aaron needs to train at the highest level and recover fast to maintain the physical requirements of professional football. Our goal was to give the viewer a brief glimpse into Aaron's world and what it takes to stay on top."
+
+No images in this section yet (video placeholder will go here later).
+
+### 5. THE APPROACH
+Section header: "The Approach"
+
+Body text:
+
+"The concept centered on the physical demands placed on athletes like Aaron Donald and the restorative properties of Dr Teal's Epsom Salt. We wanted to create a powerful visual narrative that blended the worlds of sports, health, and wellness in a way that would resonate with consumers."
+
+"Working with an athlete who actually uses Dr Teal's products daily gave us the opportunity to build a world that was authentic to Aaron's routine. This wasn't a manufactured endorsement. It was a genuine extension of his recovery process."
+
+After the text, display these 2 images in a side by side grid (2 columns, equal width):
+- IMG_2574.jpg (gym shoot, camera crew filming talent training)
+- IMG_6749.jpg (bathroom set with talent, crew, slider track in foreground)
+
+### 6. VIRTUAL PRODUCTION DESIGN
+Section header: "Virtual Production Design"
+
+Body text:
+
+"Going into production, our team began in pre-viz, designing a virtual bathroom set in Unreal Engine. We needed enough room to bring in cameras, support, and lighting while also building an environment that felt elevated and served as a natural extension of the Dr Teal's brand."
+
+"Designing the set in Unreal Engine allowed our Director of Photography, Hiram Borges-Barrios, to place virtual cameras in the space before construction began. This gave us precise control over framing, lighting, and shot planning well ahead of the shoot day."
+
+After the text, display these 2 images in a side by side grid (2 columns, equal width):
+- UE5_1.png (Unreal Engine pre-viz, wide shot of virtual bathroom set)
+- UE5_3.png (Unreal Engine pre-viz, mannequin in bathtub for camera angle testing)
+
+### 7. THE BUILD
+Section header: "The Build"
+
+Body text:
+
+"From virtual to physical. Our art department brought the pre-viz to life on stage, constructing the bathroom set from the ground up. Every detail from the shelving and sconces to the plants and window dressing was designed to feel like a real, lived in space while still giving our camera and lighting teams the room they needed to work."
+
+After the text, display these 2 images in a side by side grid (2 columns, equal width):
+- IMG_5626.jpg (backside of set walls during construction, lighting rigs being positioned)
+- 67960816106__B02D6DC2-FD75-4103-B695-06BB1BF423B1.jpg (set during pre-light/setup, crew working inside the bathroom set)
+
+### 8. THE SHOOT
+Section header: "The Shoot"
+
+Body text:
+
+"With the set built and the pre-viz locked, our team brought Aaron's world to life on the stage. The production blended the intensity of Aaron's training environment with the calm, restorative ritual of his recovery. Two contrasting worlds unified through a single narrative arc."
+
+After the text, display this image full width (single image, wider than text column):
+- IMG_2604_2.jpg (completed bathroom set with bathtub, Dr Teal's product on display, crew in position)
+
+### 9. THE RESULT
+Section header: "The Result"
+
+Body text:
+
+"The campaign delivered a series of commercial spots and still assets designed to be utilized across all platforms including web, social, and strategic brand partnerships. Each piece captured the authenticity of Aaron's daily routine while elevating the Dr Teal's brand within the health and wellness space."
+
+No images in this section yet (will add final stills and spots later).
+
+### 10. AWARDS
+Section header: "Awards"
+
+Single line item:
+"2022 NYX Awards, Grand Winner, Commercial & Marketing / Health & Wellness"
+
+### 11. CREDITS
+Section header: "Credits"
+
+Display as a clean two column layout (label on left, value on right):
+- Production Company: Family Drama
+- Client: Dr Teal's
+- Talent: Aaron Donald
+- Director of Photography: Hiram Borges-Barrios
+- Virtual Production Design: Unreal Engine
+
+## Available Image Files
+
+These are the 7 images I will upload to the project. Use these exact filenames:
+
+1. IMG_2574.jpg — BTS gym shoot, camera crew filming talent on workout equipment
+2. IMG_2604_2.jpg — BTS completed bathroom set, bathtub with Dr Teal's product, crew in position  
+3. IMG_5626.jpg — BTS backside of set walls during construction, lighting rigs
+4. IMG_6749.jpg — BTS bathroom set with talent and crew, slider track visible in foreground
+5. 67960816106__B02D6DC2-FD75-4103-B695-06BB1BF423B1.jpg — BTS set during pre-light, crew inside bathroom set
+6. UE5_1.png — Unreal Engine pre-viz, wide shot of virtual bathroom set design
+7. UE5_3.png — Unreal Engine pre-viz, mannequin figure in bathtub for camera angle testing
+
+Place all images in a /public/images/ folder.
+
+## Technical Requirements
+
+- HTML/CSS (vanilla or with a lightweight framework like Tailwind)
+- No JavaScript frameworks needed, this is a static page
+- All images should lazy load
+- Images should be responsive and maintain aspect ratio
+- Smooth scroll behavior
+- Mobile responsive (single column on mobile, image grids stack vertically)
+- Use CSS Grid or Flexbox for the image pair layouts
+- Add subtle fade-in animation on scroll for each section (CSS only or lightweight JS intersection observer)
+
+## What NOT to Build
+
+- No navigation bar or header (this will be part of a larger site later)
+- No footer
+- No video players yet (I'll add those later)
+- No hover effects on images
+- No lightbox or modal functionality
+- No contact forms or CTAs
