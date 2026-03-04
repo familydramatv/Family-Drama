@@ -570,9 +570,6 @@ function Slide2Difference() {
         const eased = slideT < 0.5 ? 2 * slideT * slideT : 1 - Math.pow(-2 * slideT + 2, 2) / 2;
         const offsetX = (1 - eased) * vw * 0.6;
         imgRef.current.style.transform = `translateX(${offsetX}px)`;
-        imgRef.current.style.opacity = String(eased);
-        const overlay = imgRef.current.querySelector('.slide2-img-overlay') as HTMLElement;
-        if (overlay) overlay.style.opacity = String(1 - eased);
       }
 
       if (!isDesktop && imgRef.current) {
@@ -681,10 +678,9 @@ function Slide2Difference() {
         <div
           ref={imgRef}
           className="absolute top-[8vh] left-[6vw] w-[37.5vw] h-[28vh] overflow-hidden slide-2-desktop-only slide-2-img-top"
-          style={{ transform: `translateX(${0.6 * 100}vw)`, transition: "none", willChange: "transform", zIndex: 0, opacity: 0 }}
+          style={{ transform: `translateX(${0.6 * 100}vw)`, transition: "none", willChange: "transform", zIndex: 0 }}
         >
           <img src="/images/about-slide2-camera.jpg" alt="" className="w-full h-full object-cover" style={{ transform: "scale(1.2)" }} />
-          <div className="slide2-img-overlay" style={{ position: "absolute", inset: 0, background: "black", pointerEvents: "none" }} />
         </div>
 
         <div className="absolute left-[-5vw] top-[20%] w-[35vw] h-[60vh] overflow-hidden slide-2-desktop-only slide-2-img-bottom" style={{ zIndex: -1 }}>
