@@ -675,13 +675,13 @@ function Slide2Difference() {
 
         <div
           ref={imgRef}
-          className="absolute top-[8vh] left-[6vw] w-[37.5vw] h-[28vh] overflow-hidden slide-2-desktop-only slide-2-img-top"
+          className="absolute top-[8vh] left-[calc(6vw+300px)] w-[37.5vw] h-[28vh] overflow-hidden slide-2-desktop-only slide-2-img-top"
           style={{ transform: `translateX(${0.6 * 100}vw)`, transition: "none", willChange: "transform", zIndex: 0 }}
         >
           <img src="/images/about-slide2-camera.jpg" alt="" className="w-full h-full object-cover" style={{ transform: "scale(1.2)" }} />
         </div>
 
-        <div className="absolute left-[calc(-5vw+300px)] top-[20%] w-[35vw] h-[60vh] overflow-hidden slide-2-desktop-only slide-2-img-bottom" style={{ zIndex: -1 }}>
+        <div className="absolute left-[-5vw] top-[20%] w-[35vw] h-[60vh] overflow-hidden slide-2-desktop-only slide-2-img-bottom" style={{ zIndex: -1 }}>
           <img src="/images/about-abstract-3.png?v=2" alt="" className="w-full h-full object-cover clip-reveal" />
         </div>
 
