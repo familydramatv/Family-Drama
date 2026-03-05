@@ -1264,7 +1264,7 @@ function Slide6Mission() {
 
       const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
 
-      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.7) / (vr * 0.5)));
+      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 1.4) / (vr * 0.5)));
 
       textRef.current.querySelectorAll<HTMLElement>(".context-word").forEach((el) => {
         const revealColor = Math.round(contextRevealP * 255);
