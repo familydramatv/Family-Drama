@@ -1046,7 +1046,7 @@ function Slide4Manifesto() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "calc(150vw - 250px)", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "calc(150vw - 550px)", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="Capabilities Manifesto"
       data-testid="slide-4-manifesto"
     >
