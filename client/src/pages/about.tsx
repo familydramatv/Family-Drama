@@ -1399,6 +1399,7 @@ function Slide7Reach() {
   const slideRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
+  const img2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (window.innerWidth <= 1024) return;
@@ -1418,6 +1419,12 @@ function Slide7Reach() {
       if (imgRef.current) {
         const enterP = Math.max(0, Math.min(1, p / (vr * 0.3)));
         imgRef.current.style.opacity = String(Math.min(1, enterP * 2));
+      }
+
+      if (img2Ref.current) {
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.15) / (vr * 0.3)));
+        img2Ref.current.style.opacity = String(Math.min(1, enterP * 2));
+        img2Ref.current.style.transform = `translateY(${(1 - Math.min(1, enterP)) * 30}px)`;
       }
 
       const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
@@ -1459,9 +1466,6 @@ function Slide7Reach() {
         flexShrink: 0,
         position: "relative",
         overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
       }}
       aria-label="The Reach"
       data-testid="slide-7-reach"
@@ -1470,16 +1474,14 @@ function Slide7Reach() {
         ref={imgRef}
         style={{
           position: "absolute",
-          width: "60vw",
-          height: "auto",
-          aspectRatio: "16/9",
-          top: "50%",
-          left: "50%",
-          marginTop: "-16.875vw",
-          marginLeft: "-30vw",
-          zIndex: 0,
-          willChange: "transform, opacity",
+          width: "45vw",
+          height: "55vh",
+          top: "3vh",
+          right: "5vw",
+          zIndex: 1,
+          willChange: "opacity",
           opacity: 0,
+          overflow: "hidden",
         }}
       >
         <img
@@ -1490,17 +1492,40 @@ function Slide7Reach() {
       </div>
 
       <div
+        ref={img2Ref}
+        style={{
+          position: "absolute",
+          width: "35vw",
+          height: "55vh",
+          top: "25vh",
+          left: "3vw",
+          zIndex: 1,
+          willChange: "transform, opacity",
+          opacity: 0,
+          overflow: "hidden",
+        }}
+      >
+        <PlaceholderImage
+          label="PRODUCTION: On-location shoot"
+          color="#1A2B0D"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      <div
         ref={textRef}
         style={{
-          maxWidth: "65vw",
+          position: "absolute",
+          bottom: "8vh",
+          right: "5vw",
+          maxWidth: "42vw",
           fontSize: "clamp(19px, 2.8vw, 42px)",
           lineHeight: 1.3,
-          textAlign: "center",
+          textAlign: "left",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 400,
           zIndex: 2,
           willChange: "opacity",
-          position: "relative",
         }}
       >
         <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>Based in </span>
