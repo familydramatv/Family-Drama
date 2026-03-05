@@ -1368,6 +1368,7 @@ function Slide6Mission() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        paddingRight: "30vw",
       }}
       aria-label="The Mission"
       data-testid="slide-6-mission"
