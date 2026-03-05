@@ -1470,10 +1470,12 @@ function Slide7Reach() {
         ref={imgRef}
         style={{
           position: "absolute",
-          width: "100%",
-          height: "100%",
-          top: 0,
-          left: 0,
+          width: "65vw",
+          height: "auto",
+          aspectRatio: "16/9",
+          top: "50%",
+          left: "-5vw",
+          marginTop: "-18.28vw",
           zIndex: 0,
           willChange: "transform, opacity",
           opacity: 0,
@@ -1482,16 +1484,8 @@ function Slide7Reach() {
         <img
           src="/images/reach-bg.jpg"
           alt="Production scene"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
         />
-        <div style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: "rgba(0,0,0,0.55)",
-        }} />
       </div>
 
       <div
