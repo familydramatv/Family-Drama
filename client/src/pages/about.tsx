@@ -1235,7 +1235,7 @@ function Slide5CoreBeliefs() {
         <h2
           ref={headlineRef}
           style={{
-            fontSize: "clamp(48px, 7vw, 120px)",
+            fontSize: "clamp(60px, 9vw, 160px)",
             lineHeight: 0.95,
             color: "#FFFFFF",
             fontFamily: "'Ritmica', sans-serif",
