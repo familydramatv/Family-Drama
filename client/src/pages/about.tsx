@@ -456,10 +456,10 @@ function Slide1Hero() {
             : "translateY(-50%)",
         }}
       >
-        <h1 className="-t-80 font-normal text-white">
-          <span className="font-bold">FAMILY DRAMA</span> is fluent in…
+        <h1 className="-t-80 text-white" style={{ fontFamily: "'Ritmica', Inter, sans-serif", fontWeight: 400 }}>
+          <span style={{ fontWeight: 600 }}>FAMILY DRAMA</span> is fluent in…
         </h1>
-        <div className="hero-cycling -t-80" style={{ marginTop: "0.1em" }}>
+        <div className="hero-cycling -t-80" style={{ marginTop: "0.1em", fontFamily: "'Ritmica', Inter, sans-serif", fontWeight: 400 }}>
           <div
             className="hero-cycling__track"
             style={{ transform: `translateY(-${wordIndex * 1.2}em)` }}
