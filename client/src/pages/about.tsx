@@ -1182,7 +1182,7 @@ function Slide5CoreBeliefs() {
       const entryP = Math.max(0, Math.min(1, (scrollX - (slideLeft - vw)) / vw));
 
       if (headlineRef.current) {
-        const hP = Math.max(0, Math.min(1, entryP / 0.5));
+        const hP = Math.max(0, Math.min(1, entryP / 0.3));
         headlineRef.current.style.opacity = String(hP);
         headlineRef.current.style.transform = `translateY(${(1 - hP) * 40}px)`;
       }
@@ -1191,8 +1191,8 @@ function Slide5CoreBeliefs() {
       coreBeliefLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
-        const lineStart = (i / totalItems) * 0.8;
-        const lineEnd = lineStart + (1 / totalItems) * 1.2;
+        const lineStart = (i / totalItems) * 0.5;
+        const lineEnd = lineStart + (1 / totalItems) * 0.8;
         const lineP = Math.max(0, Math.min(1, (stickyP - lineStart) / (lineEnd - lineStart)));
         el.style.opacity = String(lineP);
         el.style.transform = `translateY(${(1 - lineP) * 20}px)`;
@@ -1278,7 +1278,7 @@ function Slide5CoreBeliefs() {
               ref={(el) => { lineRefs.current[i] = el; }}
               style={{
                 fontSize: "clamp(18px, 2.5vw, 36px)",
-                lineHeight: 1.5,
+                lineHeight: 1.2,
                 color: "#FFFFFF",
                 fontFamily: "'Ritmica', sans-serif",
                 fontWeight: 400,
