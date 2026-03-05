@@ -925,10 +925,10 @@ function Slide3WorkSpeaks() {
           opacity: 0,
         }}
       >
-        <PlaceholderImage
-          label="HERO: Full crew on active commercial set — lights, camera, action"
-          color="#0D3B3B"
-          style={{ width: "100%", height: "100%" }}
+        <img
+          src="/images/work-speaks.jpg"
+          alt="Production shot"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
       <h2
