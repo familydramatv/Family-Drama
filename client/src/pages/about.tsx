@@ -1231,7 +1231,7 @@ function Slide5CoreBeliefs() {
         }}
       />
 
-      <div style={{ position: "absolute", bottom: "15vh", left: "5vw", zIndex: 2, maxWidth: "70vw" }}>
+      <div style={{ position: "absolute", bottom: "30vh", left: "5vw", zIndex: 2, maxWidth: "70vw" }}>
         <h2
           ref={headlineRef}
           style={{
