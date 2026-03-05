@@ -1264,7 +1264,7 @@ function Slide6Mission() {
 
       const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
 
-      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.3) / (vr * 0.6)));
+      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.7) / (vr * 0.5)));
 
       textRef.current.querySelectorAll<HTMLElement>(".context-word").forEach((el) => {
         const revealColor = Math.round(contextRevealP * 255);
@@ -1291,7 +1291,7 @@ function Slide6Mission() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "150vw",
+        width: "200vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
