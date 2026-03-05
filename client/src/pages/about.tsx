@@ -1323,24 +1323,30 @@ function Slide6Mission() {
       const p = Math.max(0, localScroll / slideWidth);
       const vr = vw / slideWidth;
 
-      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+      let contextOpacity;
+      if (p < 0.15) {
+        contextOpacity = 0;
+      } else if (p < 0.5) {
+        contextOpacity = (p - 0.15) / 0.35;
+      } else if (p < 0.85) {
+        contextOpacity = 1 - (p - 0.5) / 0.35;
+      } else {
+        contextOpacity = 0;
+      }
 
-      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 1.26) / (vr * 0.5)));
-
+      const c = Math.round(contextOpacity * 255);
       textRef.current.querySelectorAll<HTMLElement>(".context-word").forEach((el) => {
-        const revealColor = Math.round(contextRevealP * 255);
-        el.style.color = `rgb(${revealColor}, ${revealColor}, ${revealColor})`;
+        el.style.color = `rgb(${c}, ${c}, ${c})`;
         el.style.opacity = "1";
       });
 
       textRef.current.querySelectorAll<HTMLElement>(".keyword").forEach((el) => {
         el.style.color = "#FFFFFF";
         el.style.fontWeight = "700";
-        el.style.opacity = String(1 - exitP);
+        el.style.opacity = "1";
       });
 
       textRef.current.style.opacity = "1";
-      textRef.current.style.transform = `translateX(${-exitP * 15}%)`;
     };
 
     window.addEventListener("horizontalscroll", onHScroll);

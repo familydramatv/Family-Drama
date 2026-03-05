@@ -1,0 +1,41 @@
+Fix the Mission slide (Slide 6) text animation. Here's exactly what I want:
+The keywords ("PLATFORMS", "LIVES", "branded entertainment,", "culture,", "sports,", "technology", "storytelling.") should be white (#FFFFFF) and bold (fontWeight: 700) at ALL times. They never fade. They are always fully visible from the moment they enter the viewport to the moment they exit. Their opacity is always 1.
+The context words ("Family Drama is a full-service production company that creates content which transcends... and... at the intersection of... and") fade in and out symmetrically based on their horizontal position in the viewport. Here are the exact parameters:
+Phase 1 — Fade In:
+
+When the text block is 0–15% into the viewport (entering from the right edge), context words are rgb(0,0,0) — invisible against the black background.
+From 15% to 50% of the viewport, context words animate from rgb(0,0,0) to rgb(255,255,255). This is a linear interpolation tied to scroll position: at 15% = fully black, at 50% = fully white.
+The text should be WHITE, not gray. The target color is rgb(255,255,255), not a mid-gray.
+
+Phase 2 — Fully Visible:
+
+At 50% (center of viewport), ALL text — keywords and context words — is fully white. This is the peak. Everything readable.
+
+Phase 3 — Fade Out (mirror of fade in):
+
+From 50% to 85% of the viewport, context words animate from rgb(255,255,255) back to rgb(0,0,0). Same linear interpolation, reversed.
+At 85%+ (exiting left edge), context words are fully invisible again.
+Keywords remain white (#FFFFFF) through this entire phase. They only disappear when they physically scroll off the left edge of the viewport.
+
+The math for context word color at any scroll position:
+js// p = horizontal position of text block center relative to viewport
+// 0 = right edge of viewport, 1 = left edge of viewport
+// 0.5 = dead center
+
+let contextOpacity;
+if (p < 0.15) {
+  contextOpacity = 0; // not yet visible
+} else if (p < 0.5) {
+  contextOpacity = (p - 0.15) / 0.35; // fade in: 0 at 15%, 1 at 50%
+} else if (p < 0.85) {
+  contextOpacity = 1 - (p - 0.5) / 0.35; // fade out: 1 at 50%, 0 at 85%
+} else {
+  contextOpacity = 0; // fully exited
+}
+
+// Apply as white color (NOT gray — the color is always white, the intensity changes)
+const c = Math.round(contextOpacity * 255);
+contextWord.style.color = `rgb(${c}, ${c}, ${c})`;
+Do NOT use a gray target color. The context words go from black (invisible) → white (fully visible) → black (invisible). The only intermediate colors are shades of dark gray during the transitions, which is a natural result of interpolating between black and white. The PEAK color is always pure white.
+Do NOT shift the text container left on exit. Remove the exitP * 15% left shift. The text should stay in its natural position within the horizontal scroll — the horizontal scroll itself handles moving it off screen. No extra transform needed.
+Keywords need no animation at all. Set them to color: #FFFFFF; fontWeight: 700; opacity: 1 and leave them alone. They ride with the horizontal scroll and disappear only when they physically leave the viewport.
