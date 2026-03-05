@@ -1153,6 +1153,7 @@ function Slide5CoreBeliefs() {
   const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if (window.innerWidth <= 1024) return;
@@ -1180,6 +1181,11 @@ function Slide5CoreBeliefs() {
 
       const stickyP = Math.max(0, Math.min(1, (scrollX - lockStart) / lockRange));
       const entryP = Math.max(0, Math.min(1, (scrollX - (slideLeft - vw)) / vw));
+
+      if (imgRef.current) {
+        const parallaxX = stickyP * -150;
+        imgRef.current.style.transform = `translateX(${parallaxX}px)`;
+      }
 
       if (headlineRef.current) {
         const hP = Math.max(0, Math.min(1, entryP / 0.3));
@@ -1235,17 +1241,19 @@ function Slide5CoreBeliefs() {
         }}
       >
         <img
+          ref={imgRef}
           src="/images/core-beliefs-bg.jpg"
           alt=""
           style={{
             position: "absolute",
             top: 0,
             left: 0,
-            width: "100%",
+            width: "calc(100% + 150px)",
             height: "100%",
             objectFit: "cover",
             zIndex: 0,
             pointerEvents: "none",
+            willChange: "transform",
           }}
         />
 
