@@ -837,7 +837,7 @@ function FilmstripSlides() {
     <div ref={containerRef} style={{ display: "contents" }}>
       <Slide3WorkSpeaks />
       <Slide4Manifesto />
-      <Slide5Ticker />
+      <Slide5CoreBeliefs />
       <Slide6Mission />
       <Slide7Reach />
       <Slide8Roster />
@@ -1162,12 +1162,58 @@ function Slide4Manifesto() {
             </p>
           </div>
         </div>
+
+        <div
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            left: 0,
+            width: "100vw",
+            zIndex: 3,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              whiteSpace: "nowrap",
+              animation: "marquee-scroll 30s linear infinite",
+              willChange: "transform",
+            }}
+          >
+            {[0, 1].map((k) => (
+              <span
+                key={k}
+                style={{
+                  fontSize: "clamp(14px, 1.8vw, 24px)",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.35)",
+                  fontFamily: "'Ritmica', sans-serif",
+                  fontWeight: 500,
+                  paddingRight: "0.5em",
+                }}
+              >
+                {marqueeText}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function Slide5Ticker() {
+const coreBeliefLines = [
+  "Creativity isn't produced in a factory.",
+  "We're active partners.",
+  "Your problems are our problems.",
+];
+
+function Slide5CoreBeliefs() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -1176,20 +1222,56 @@ function Slide5Ticker() {
     }
   }, []);
 
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
+
+      if (headlineRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.3)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
+        headlineRef.current.style.opacity = String(enterP * (1 - exitP));
+        headlineRef.current.style.transform = `translateY(${(1 - enterP) * 40}px)`;
+      }
+
+      coreBeliefLines.forEach((_, i) => {
+        const el = lineRefs.current[i];
+        if (!el) return;
+        const delay = vr * 0.15 + i * vr * 0.12;
+        const enterP = Math.max(0, Math.min(1, (p - delay) / (vr * 0.25)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
+        el.style.opacity = String(enterP * (1 - exitP));
+        el.style.transform = `translateY(${(1 - enterP) * 20}px)`;
+      });
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
   return (
     <section
+      ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "100vw",
+        width: "150vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
         overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
       }}
-      aria-label="Capabilities Ticker"
-      data-testid="slide-5-ticker"
+      aria-label="Core Beliefs"
+      data-testid="slide-5-core-beliefs"
     >
       <video
         ref={videoRef}
@@ -1199,44 +1281,65 @@ function Slide5Ticker() {
         playsInline
         style={{
           position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          top: 0,
+          left: 0,
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          opacity: 0.15,
+          opacity: 0.3,
           zIndex: 0,
           pointerEvents: "none",
         }}
       >
         <source src="https://stream.mux.com/YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA/high.mp4" type="video/mp4" />
       </video>
+
       <div
         style={{
-          display: "flex",
-          whiteSpace: "nowrap",
-          animation: "marquee-scroll 30s linear infinite",
-          willChange: "transform",
-          position: "relative",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%)",
           zIndex: 1,
         }}
-      >
-        {[0, 1].map((k) => (
-          <span
-            key={k}
+      />
+
+      <div style={{ position: "absolute", bottom: "15vh", left: "5vw", zIndex: 2, maxWidth: "70vw" }}>
+        <h2
+          ref={headlineRef}
+          style={{
+            fontSize: "clamp(48px, 7vw, 120px)",
+            lineHeight: 0.95,
+            color: "#FFFFFF",
+            fontFamily: "'Ritmica', sans-serif",
+            fontWeight: 600,
+            opacity: 0,
+            willChange: "transform, opacity",
+            marginBottom: "30px",
+          }}
+        >
+          Core Beliefs
+        </h2>
+
+        {coreBeliefLines.map((line, i) => (
+          <p
+            key={i}
+            ref={(el) => { lineRefs.current[i] = el; }}
             style={{
-              fontSize: "clamp(28px, 4.5vw, 64px)",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
+              fontSize: "clamp(18px, 2.5vw, 36px)",
+              lineHeight: 1.5,
               color: "#FFFFFF",
               fontFamily: "'Ritmica', sans-serif",
               fontWeight: 500,
-              paddingRight: "0.5em",
+              opacity: 0,
+              willChange: "transform, opacity",
+              marginBottom: "6px",
             }}
           >
-            {marqueeText}
-          </span>
+            {line}
+          </p>
         ))}
       </div>
     </section>
