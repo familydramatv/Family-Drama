@@ -999,9 +999,10 @@ function Slide4Manifesto() {
 
       if (imgRef.current) {
         const imgEnter = Math.max(0, Math.min(1, p / (vr * 0.4)));
-        const scale = 0.4 + imgEnter * 0.6 - exitP * 0.4;
+        const imgExit = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.5)));
+        const scale = 0.4 + imgEnter * 0.6 - imgExit * 0.4;
         imgRef.current.style.transform = `scale(${scale})`;
-        imgRef.current.style.opacity = String(Math.min(1, imgEnter * 2) * (1 - exitP));
+        imgRef.current.style.opacity = String(Math.min(1, imgEnter * 2) * (1 - imgExit));
       }
 
       if (labelRef.current) {
