@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import logoImg from "@assets/fd-logo-2025_1771706568573.png";
 
@@ -28,6 +28,15 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
+  const [location] = useLocation();
+
+  const handleLinkClick = (href: string) => {
+    setIsOpen(false);
+    if (location === href) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.dispatchEvent(new Event("page-transition"));
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -117,7 +126,7 @@ export default function Navigation() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ delay: isOpen ? 0.1 + i * 0.06 : (menuLinks.length - 1 - i) * 0.04, duration: 0.3 }}
                     >
-                      <Link href={link.href} onClick={() => setIsOpen(false)} data-testid={`link-menu-${link.label.toLowerCase()}`}>
+                      <Link href={link.href} onClick={() => handleLinkClick(link.href)} data-testid={`link-menu-${link.label.toLowerCase()}`}>
                         <span className="text-white font-bold uppercase text-5xl sm:text-5xl md:text-6xl lg:text-7xl block py-3 sm:py-1 md:py-2 transition-opacity hover:opacity-50 duration-300 tracking-tight leading-none cursor-pointer">
                           {link.label}
                         </span>
