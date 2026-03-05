@@ -961,7 +961,7 @@ function Slide3WorkSpeaks() {
           fontSize: "clamp(16px, 2vw, 28px)",
           color: "#B0B0B0",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 500,
+          fontWeight: 400,
           opacity: 0,
           willChange: "transform, opacity",
         }}
@@ -1080,7 +1080,7 @@ function Slide4Manifesto() {
             opacity: 0,
             willChange: "transform, opacity",
             fontFamily: "'Ritmica', sans-serif",
-            fontWeight: 500,
+            fontWeight: 400,
           }}
         >
           What We Do
@@ -1111,7 +1111,7 @@ function Slide4Manifesto() {
                 lineHeight: 1.6,
                 color: "#FFFFFF",
                 fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 500,
+                fontWeight: 400,
                 opacity: 0,
                 willChange: "transform, opacity",
                 marginBottom: "8px",
@@ -1257,7 +1257,7 @@ function Slide5CoreBeliefs() {
               lineHeight: 1.5,
               color: "#FFFFFF",
               fontFamily: "'Ritmica', sans-serif",
-              fontWeight: 500,
+              fontWeight: 400,
               opacity: 0,
               willChange: "transform, opacity",
               marginBottom: "0px",
@@ -1339,7 +1339,7 @@ function Slide6Mission() {
           lineHeight: 1.3,
           textAlign: "center",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 500,
+          fontWeight: 400,
           willChange: "transform, opacity",
         }}
       >
@@ -1464,7 +1464,7 @@ function Slide7Reach() {
           lineHeight: 1.3,
           textAlign: "center",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 500,
+          fontWeight: 400,
           zIndex: 2,
           willChange: "opacity",
         }}
@@ -1616,7 +1616,7 @@ function Slide8Roster() {
             letterSpacing: "0.2em",
             color: "#FFFFFF",
             fontFamily: "'Ritmica', sans-serif",
-            fontWeight: 500,
+            fontWeight: 400,
             opacity: 0,
           }}
         >
@@ -1659,7 +1659,7 @@ function Slide8Roster() {
                 lineHeight: 1.4,
                 color: "#FFFFFF",
                 fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 500,
+                fontWeight: 400,
                 opacity: 0,
                 willChange: "transform, opacity",
                 marginBottom: "12px",
@@ -1835,7 +1835,7 @@ function Slide9Impact() {
           fontSize: "clamp(16px, 2vw, 28px)",
           color: "#FFFFFF",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 500,
+          fontWeight: 400,
           textShadow: "0 2px 20px rgba(0,0,0,0.4)",
           opacity: 0,
           willChange: "transform, opacity",
@@ -1854,7 +1854,7 @@ function Slide9Impact() {
               lineHeight: 1.4,
               color: "#FFFFFF",
               fontFamily: "'Ritmica', sans-serif",
-              fontWeight: 500,
+              fontWeight: 400,
               opacity: 0,
               willChange: "transform, opacity",
               marginBottom: "8px",
@@ -2113,7 +2113,7 @@ function Slide11Closing() {
           color: "#FFFFFF",
           letterSpacing: "0.1em",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 500,
+          fontWeight: 400,
           marginTop: "60px",
           opacity: 0,
           willChange: "opacity",
