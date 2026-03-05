@@ -40,15 +40,15 @@ A creative production company portfolio website inspired by toolofna.com and pre
 - **Slide 1 (Hero)**: Image slides in from right on mount, word cycling via track translateY driven by heroProgress
 - **Slide 2 (Difference)**: Letter rain (translateY + clipPath), image parallax entry, banner exit animation, rolodex
 - **Filmstrip Slides 3-11**: FilmstripSlides container component with individual slide components, each listening to `horizontalscroll` custom events for scroll-driven animations
-  - Slide 3: "The Work Speaks" (250vw) — image grow/settle/shrink, headline overlay
-  - Slide 4: "Capabilities Manifesto" (400vw) — stacking line reveals, image behavior A
-  - Slide 5: "Capabilities Ticker" (120vw) — CSS marquee, dark gray on black
-  - Slide 6: "The Mission" (250vw) — keyword emphasis (context dims, keywords stay bright)
-  - Slide 7: "The Reach" (250vw) — multi-phase staggered city emphasis
-  - Slide 8: "The Roster" (450vw) — kinetic letter scatter, cycling text, pinned image
-  - Slide 9: "The Impact" (500vw) — full-bleed image, awards cascade, image shrink+swap
-  - Slide 10: "Select Partners" (200vw) — staggered client grid reveal
-  - Slide 11: "The Closing" (200vw) — materialization (no directional entrance)
+  - Slide 3: "The Work Speaks" (150vw) — image grow/settle/shrink, headline overlay
+  - Slide 4: "Capabilities Manifesto" (250vw) — stacking line reveals, image alongside text
+  - Slide 5: "Capabilities Ticker" (100vw) — CSS marquee, dark gray on black
+  - Slide 6: "The Mission" (150vw) — keyword emphasis (context dims, keywords stay bright)
+  - Slide 7: "The Reach" (150vw) — multi-phase staggered city emphasis
+  - Slide 8: "The Roster" (250vw) — kinetic letter scatter, cycling text, image alongside
+  - Slide 9: "The Impact" (300vw) — full-bleed image, awards cascade, image shrink+swap
+  - Slide 10: "Select Partners" (150vw) — staggered client grid reveal
+  - Slide 11: "The Closing" (150vw) — materialization (no directional entrance)
 - **Parallax System**: 3 layers — headlines (1.15x), body text (1.0x), images (0.78x)
 - **Placeholder Images**: Colored divs with SVG grain texture + descriptive labels
 - **Mobile (≤1024px)**: Filmstrip slides become full-width vertical sections, all animations disabled, content visible by default

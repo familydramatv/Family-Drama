@@ -867,10 +867,11 @@ function Slide3WorkSpeaks() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / 0.4));
-        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
         const scale = 0.5 + enterP * 0.5 - exitP * 0.35;
         const xP = (1 - enterP) * 25 - exitP * 25;
         const opacity = Math.min(1, enterP * 1.5) * (1 - exitP * 0.5);
@@ -879,8 +880,8 @@ function Slide3WorkSpeaks() {
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.15) / 0.3));
-        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.15) / (vr * 0.35)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         const opacity = enterP * (1 - exitP);
         const y = (1 - enterP) * 60;
         const xExit = exitP * -40;
@@ -889,8 +890,8 @@ function Slide3WorkSpeaks() {
       }
 
       if (subtitleRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.3) / 0.2));
-        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.3) / (vr * 0.3)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         const opacity = enterP * (1 - exitP);
         const y = (1 - enterP) * 20;
         subtitleRef.current.style.transform = `translateY(${y}px) translateX(${exitP * -30}%)`;
@@ -906,7 +907,7 @@ function Slide3WorkSpeaks() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "250vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "150vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="The Work Speaks"
       data-testid="slide-3-workspeaks"
     >
@@ -992,32 +993,33 @@ function Slide4Manifesto() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / 0.25));
-        const exitP = Math.max(0, Math.min(1, (p - 0.75) / 0.25));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.6)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
         const scale = 0.4 + enterP * 0.6 - exitP * 0.4;
-        const xP = (1 - enterP) * 40 - exitP * 20;
+        const xP = (1 - enterP) * 30 - exitP * 20;
         imgRef.current.style.transform = `scale(${scale}) translateX(${xP}%)`;
         imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
       }
 
       if (labelRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.02) / 0.12));
-        const exitP = Math.max(0, Math.min(1, (p - 0.75) / 0.25));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         labelRef.current.style.opacity = String(enterP * (1 - exitP));
         labelRef.current.style.transform = `translateX(${(1 - enterP) * 40 - exitP * 40}px)`;
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.05) / 0.15));
-        const exitP = Math.max(0, Math.min(1, (p - 0.75) / 0.25));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.05) / (vr * 0.35)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
         headlineRef.current.style.transform = `translateX(${(1 - enterP) * 60 - exitP * 60}px)`;
       }
 
-      const manifestoStart = 0.25;
-      const manifestoEnd = 0.75;
+      const manifestoStart = vr * 0.5;
+      const manifestoEnd = 1 - vr * 0.15;
       const manifestoP = Math.max(0, Math.min(1, (p - manifestoStart) / (manifestoEnd - manifestoStart)));
 
       manifestoLines.forEach((_, i) => {
@@ -1049,7 +1051,7 @@ function Slide4Manifesto() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "400vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "250vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="Capabilities Manifesto"
       data-testid="slide-4-manifesto"
     >
@@ -1059,11 +1061,11 @@ function Slide4Manifesto() {
           position: "absolute",
           width: "42vw",
           height: "75vh",
-          right: "4vw",
+          left: "52vw",
           top: "12vh",
           zIndex: 1,
           willChange: "transform, opacity",
-          transform: "scale(0.4) translateX(40%)",
+          transform: "scale(0.4) translateX(30%)",
           opacity: 0,
         }}
       >
@@ -1152,7 +1154,7 @@ function Slide5Ticker() {
     <section
       className="filmstrip-slide"
       style={{
-        width: "120vw",
+        width: "100vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
@@ -1209,14 +1211,15 @@ function Slide6Mission() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
-      const enterP = Math.max(0, Math.min(1, p / 0.3));
-      const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+      const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
+      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
       textRef.current.style.opacity = String(enterP * (1 - exitP));
-      textRef.current.style.transform = `translateX(${(1 - enterP) * 15 - exitP * 20}%)`;
+      textRef.current.style.transform = `translateX(${(1 - enterP) * 10 - exitP * 15}%)`;
 
-      const emphasisStart = 0.4;
-      const emphasisEnd = 0.7;
+      const emphasisStart = vr * 0.6;
+      const emphasisEnd = 1 - vr * 0.3;
       const emphP = Math.max(0, Math.min(1, (p - emphasisStart) / (emphasisEnd - emphasisStart)));
 
       textRef.current.querySelectorAll<HTMLElement>(".context-word").forEach((el) => {
@@ -1238,7 +1241,7 @@ function Slide6Mission() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "250vw",
+        width: "150vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
@@ -1300,29 +1303,30 @@ function Slide7Reach() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / 0.25));
-        const exitP = Math.max(0, Math.min(1, (p - 0.6) / 0.3));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
         const scale = 0.5 + enterP * 0.5;
         imgRef.current.style.transform = `scale(${scale})`;
         imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
       }
 
-      const enterP = Math.max(0, Math.min(1, (p - 0.1) / 0.2));
-      const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+      const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
+      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
       textRef.current.style.opacity = String(enterP * (1 - exitP));
 
-      const emphStart = 0.3;
+      const emphStart = vr * 0.4;
       const cities = textRef.current.querySelectorAll<HTMLElement>(".city-name");
       cities.forEach((el, i) => {
-        const cityStart = emphStart + i * 0.07;
-        const cityP = Math.max(0, Math.min(1, (p - cityStart) / 0.1));
+        const cityStart = emphStart + i * (vr * 0.15);
+        const cityP = Math.max(0, Math.min(1, (p - cityStart) / (vr * 0.2)));
         el.style.fontWeight = String(400 + cityP * 300);
       });
 
-      const contextDimStart = 0.55;
-      const contextP = Math.max(0, Math.min(1, (p - contextDimStart) / 0.15));
+      const contextDimStart = vr * 0.9;
+      const contextP = Math.max(0, Math.min(1, (p - contextDimStart) / (vr * 0.3)));
       textRef.current.querySelectorAll<HTMLElement>(".reach-context").forEach((el) => {
         const dimColor = Math.round(255 - contextP * (255 - 68));
         el.style.color = `rgb(${dimColor}, ${dimColor}, ${dimColor})`;
@@ -1330,7 +1334,7 @@ function Slide7Reach() {
 
       const crescendo = textRef.current.querySelector<HTMLElement>(".reach-crescendo");
       if (crescendo) {
-        const cP = Math.max(0, Math.min(1, (p - 0.65) / 0.15));
+        const cP = Math.max(0, Math.min(1, (p - (1 - vr * 0.5)) / (vr * 0.3)));
         crescendo.style.fontWeight = String(400 + cP * 300);
         crescendo.style.letterSpacing = `${0.02 - cP * 0.01}em`;
       }
@@ -1345,7 +1349,7 @@ function Slide7Reach() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "250vw",
+        width: "150vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
@@ -1426,24 +1430,25 @@ function Slide8Roster() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / 0.22));
-        const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
         const scale = 0.4 + enterP * 0.6;
         imgRef.current.style.transform = `scale(${scale})`;
         imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
       }
 
       if (labelRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / 0.15));
-        const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         labelRef.current.style.opacity = String(enterP * (1 - exitP));
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.03) / 0.15));
-        const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
 
         const letters = headlineRef.current.querySelectorAll<HTMLElement>(".headline-letter");
@@ -1467,8 +1472,8 @@ function Slide8Roster() {
         });
       }
 
-      const cycleStart = 0.22;
-      const cycleEnd = 0.78;
+      const cycleStart = vr * 0.5;
+      const cycleEnd = 1 - vr * 0.15;
       const cycleP = Math.max(0, Math.min(1, (p - cycleStart) / (cycleEnd - cycleStart)));
 
       rosterLines.forEach((_, i) => {
@@ -1504,7 +1509,7 @@ function Slide8Roster() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "450vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "250vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="The Roster"
       data-testid="slide-8-roster"
     >
@@ -1512,7 +1517,7 @@ function Slide8Roster() {
         ref={imgRef}
         style={{
           position: "absolute",
-          right: "4vw",
+          left: "52vw",
           width: "42vw",
           height: "78vh",
           top: "11vh",
@@ -1617,11 +1622,12 @@ function Slide9Impact() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
       if (fullBleedRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / 0.16));
-        const shrinkStart = 0.5;
-        const shrinkEnd = 0.78;
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
+        const shrinkStart = vr * 0.8;
+        const shrinkEnd = 1 - vr * 0.3;
         const shrinkP = Math.max(0, Math.min(1, (p - shrinkStart) / (shrinkEnd - shrinkStart)));
 
         const w = 100 - shrinkP * 72;
@@ -1637,33 +1643,33 @@ function Slide9Impact() {
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.16) / 0.08));
-        const exitP = Math.max(0, Math.min(1, (p - 0.32) / 0.08));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.1) / (vr * 0.25)));
+        const exitP = Math.max(0, Math.min(1, (p - vr * 0.6) / (vr * 0.2)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
         headlineRef.current.style.transform = `translateY(${(1 - enterP) * 40}px) translateX(${exitP * -50}%)`;
       }
 
       if (subtitleRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.2) / 0.08));
-        const exitP = Math.max(0, Math.min(1, (p - 0.34) / 0.08));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.2) / (vr * 0.25)));
+        const exitP = Math.max(0, Math.min(1, (p - vr * 0.7) / (vr * 0.2)));
         subtitleRef.current.style.opacity = String(enterP * (1 - exitP));
         subtitleRef.current.style.transform = `translateY(${(1 - enterP) * 20}px) translateX(${exitP * -40}%)`;
       }
 
-      const awardsStart = 0.36;
-      const awardsEnd = 0.7;
+      const awardsStart = vr * 0.8;
+      const awardsEnd = 1 - vr * 0.2;
       impactLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
         const lineStart = awardsStart + (i / (impactLines.length + 1)) * (awardsEnd - awardsStart);
-        const lineP = Math.max(0, Math.min(1, (p - lineStart) / 0.06));
+        const lineP = Math.max(0, Math.min(1, (p - lineStart) / (vr * 0.15)));
         el.style.opacity = String(lineP);
         el.style.transform = `translateY(${(1 - lineP) * 20}px)`;
 
         if (i > 0) {
           const prevEl = lineRefs.current[i - 1];
           if (prevEl) {
-            const dimP = Math.max(0, Math.min(1, (p - (lineStart + 0.03)) / 0.05));
+            const dimP = Math.max(0, Math.min(1, (p - (lineStart + vr * 0.08)) / (vr * 0.12)));
             const color = Math.round(255 - dimP * 34);
             prevEl.style.color = `rgb(${color}, ${color}, ${color})`;
           }
@@ -1672,7 +1678,7 @@ function Slide9Impact() {
 
       if (crescendoRef.current) {
         const cStart = awardsStart + (impactLines.length / (impactLines.length + 1)) * (awardsEnd - awardsStart);
-        const cP = Math.max(0, Math.min(1, (p - cStart) / 0.06));
+        const cP = Math.max(0, Math.min(1, (p - cStart) / (vr * 0.15)));
         crescendoRef.current.style.opacity = String(cP);
         crescendoRef.current.style.transform = `translateY(${(1 - cP) * 25}px)`;
 
@@ -1686,7 +1692,7 @@ function Slide9Impact() {
       }
 
       if (newImgRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.6) / 0.2));
+        const enterP = Math.max(0, Math.min(1, (p - (1 - vr * 0.8)) / (vr * 0.5)));
         const scale = 0.3 + enterP * 0.7;
         newImgRef.current.style.transform = `scale(${scale}) translateX(${(1 - enterP) * 40}%)`;
         newImgRef.current.style.opacity = String(enterP);
@@ -1701,7 +1707,7 @@ function Slide9Impact() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "500vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "300vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="The Impact"
       data-testid="slide-9-impact"
     >
@@ -1807,7 +1813,7 @@ function Slide9Impact() {
         ref={newImgRef}
         style={{
           position: "absolute",
-          right: "4vw",
+          left: "52vw",
           top: "15vh",
           width: "38vw",
           height: "70vh",
@@ -1844,10 +1850,11 @@ function Slide10Partners() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / 0.2));
-        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
         headlineRef.current.style.transform = `translateY(${(1 - enterP) * 30}px)`;
       }
@@ -1858,9 +1865,9 @@ function Slide10Partners() {
           const el = items[i] as HTMLElement;
           const row = Math.floor(i / 3);
           const col = i % 3;
-          const delay = row * 0.04 + col * 0.025;
-          const enterP = Math.max(0, Math.min(1, (p - 0.1 - delay) / 0.15));
-          const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+          const delay = row * (vr * 0.08) + col * (vr * 0.05);
+          const enterP = Math.max(0, Math.min(1, (p - vr * 0.15 - delay) / (vr * 0.35)));
+          const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
           el.style.opacity = String(enterP * (1 - exitP));
           el.style.transform = `translateY(${(1 - enterP) * 15}px)`;
         }
@@ -1876,7 +1883,7 @@ function Slide10Partners() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "200vw",
+        width: "150vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
@@ -1954,19 +1961,20 @@ function Slide11Closing() {
       const slideWidth = slideRef.current.offsetWidth;
       const localScroll = scrollX - slideLeft + vw;
       const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
       if (line1Ref.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.15) / 0.2));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.1) / (vr * 0.4)));
         line1Ref.current.style.opacity = String(enterP);
       }
 
       if (line2Ref.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.3) / 0.15));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.3) / (vr * 0.35)));
         line2Ref.current.style.opacity = String(enterP);
       }
 
       if (emailRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - 0.4) / 0.15));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.5) / (vr * 0.3)));
         emailRef.current.style.opacity = String(enterP);
       }
     };
@@ -1980,7 +1988,7 @@ function Slide11Closing() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "200vw",
+        width: "150vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
