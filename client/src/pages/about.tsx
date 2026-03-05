@@ -1470,12 +1470,13 @@ function Slide7Reach() {
         ref={imgRef}
         style={{
           position: "absolute",
-          width: "65vw",
+          width: "75vw",
           height: "auto",
           aspectRatio: "16/9",
           top: "50%",
-          left: "-5vw",
-          marginTop: "-18.28vw",
+          left: "50%",
+          marginTop: "-21.09vw",
+          marginLeft: "-37.5vw",
           zIndex: 0,
           willChange: "transform, opacity",
           opacity: 0,
