@@ -974,7 +974,6 @@ function Slide3WorkSpeaks() {
 
 function Slide4Manifesto() {
   const slideRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLParagraphElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -988,63 +987,50 @@ function Slide4Manifesto() {
       const detail = (e as CustomEvent).detail;
       const scrollX = detail.scrollX as number;
       const vw = window.innerWidth;
-      if (!slideRef.current || !contentRef.current) return;
+      if (!slideRef.current) return;
 
       const slideLeft = slideRef.current.offsetLeft;
       const slideWidth = slideRef.current.offsetWidth;
-      const lockRange = Math.max(1, slideWidth - vw);
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
 
-      const lockStart = slideLeft;
-      const lockEnd = slideLeft + lockRange;
-
-      let counterX = 0;
-      if (scrollX >= lockStart && scrollX <= lockEnd) {
-        counterX = scrollX - lockStart;
-      } else if (scrollX > lockEnd) {
-        counterX = lockRange;
-      }
-      contentRef.current.style.transform = `translateX(${counterX}px)`;
-
-      const stickyP = Math.max(0, Math.min(1, (scrollX - lockStart) / lockRange));
-
-      const entryP = Math.max(0, Math.min(1, (scrollX - (slideLeft - vw)) / vw));
+      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.3)));
 
       if (imgRef.current) {
-        const imgEnter = Math.max(0, Math.min(1, entryP / 0.6));
-        const imgExit = Math.max(0, Math.min(1, (stickyP - 0.85) / 0.15));
-        const scale = 0.4 + imgEnter * 0.6 - imgExit * 0.4;
+        const imgEnter = Math.max(0, Math.min(1, p / (vr * 0.4)));
+        const scale = 0.4 + imgEnter * 0.6 - exitP * 0.4;
         imgRef.current.style.transform = `scale(${scale})`;
-        imgRef.current.style.opacity = String(Math.min(1, imgEnter * 2) * (1 - imgExit));
+        imgRef.current.style.opacity = String(Math.min(1, imgEnter * 2) * (1 - exitP));
       }
 
       if (labelRef.current) {
-        const lP = Math.max(0, Math.min(1, entryP / 0.4));
-        labelRef.current.style.opacity = String(lP);
+        const lP = Math.max(0, Math.min(1, p / (vr * 0.25)));
+        labelRef.current.style.opacity = String(lP * (1 - exitP));
         labelRef.current.style.transform = `translateX(${(1 - lP) * 40}px)`;
       }
 
       if (headlineRef.current) {
-        const hP = Math.max(0, Math.min(1, entryP / 0.5));
-        headlineRef.current.style.opacity = String(hP);
+        const hP = Math.max(0, Math.min(1, p / (vr * 0.3)));
+        headlineRef.current.style.opacity = String(hP * (1 - exitP));
         headlineRef.current.style.transform = `translateX(${(1 - hP) * 60}px)`;
       }
 
       const totalItems = manifestoLines.length + 1;
+      const revealEnd = 0.7;
       manifestoLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
-        const lineStart = (i / totalItems) * 0.85;
-        const lineEnd = lineStart + (1 / totalItems) * 1.2;
-        const lineP = Math.max(0, Math.min(1, (stickyP - lineStart) / (lineEnd - lineStart)));
-        el.style.opacity = String(lineP);
+        const lineStart = vr * 0.15 + (i / totalItems) * (revealEnd - vr * 0.15);
+        const lineP = Math.max(0, Math.min(1, (p - lineStart) / (vr * 0.2)));
+        el.style.opacity = String(lineP * (1 - exitP));
         el.style.transform = `translateY(${(1 - lineP) * 25}px)`;
-        el.style.color = "#FFFFFF";
       });
 
       if (crescendoRef.current) {
-        const cStart = (manifestoLines.length / totalItems) * 0.85;
-        const cP = Math.max(0, Math.min(1, (stickyP - cStart) / (1 - cStart)));
-        crescendoRef.current.style.opacity = String(cP);
+        const cStart = vr * 0.15 + (manifestoLines.length / totalItems) * (revealEnd - vr * 0.15);
+        const cP = Math.max(0, Math.min(1, (p - cStart) / (vr * 0.2)));
+        crescendoRef.current.style.opacity = String(cP * (1 - exitP));
         crescendoRef.current.style.transform = `translateY(${(1 - cP) * 25}px)`;
       }
     };
@@ -1056,148 +1042,136 @@ function Slide4Manifesto() {
   return (
     <section
       ref={slideRef}
-      className="filmstrip-slide filmstrip-slide--sticky"
-      style={{ width: "300vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      className="filmstrip-slide"
+      style={{ width: "150vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="Capabilities Manifesto"
       data-testid="slide-4-manifesto"
     >
       <div
-        ref={contentRef}
+        ref={imgRef}
         style={{
           position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          willChange: "transform",
+          width: "42vw",
+          height: "75vh",
+          left: "52vw",
+          top: "12vh",
+          zIndex: 1,
+          willChange: "transform, opacity",
+          transform: "scale(0.4)",
+          opacity: 0,
         }}
       >
-        <div
-          ref={imgRef}
+        <PlaceholderImage
+          label="ACTION: Camera operator tracking shot through set"
+          color="#3B2A0D"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      <div style={{ position: "absolute", top: "18vh", left: "5vw", zIndex: 2 }}>
+        <p
+          ref={labelRef}
           style={{
-            position: "absolute",
-            width: "42vw",
-            height: "75vh",
-            left: "52vw",
-            top: "12vh",
-            zIndex: 1,
-            willChange: "transform, opacity",
-            transform: "scale(0.4)",
+            fontSize: "clamp(11px, 1.2vw, 16px)",
+            textTransform: "uppercase",
+            letterSpacing: "0.2em",
+            color: "#FFFFFF",
             opacity: 0,
+            willChange: "transform, opacity",
+            fontFamily: "'Ritmica', sans-serif",
+            fontWeight: 500,
           }}
         >
-          <PlaceholderImage
-            label="ACTION: Camera operator tracking shot through set"
-            color="#3B2A0D"
-            style={{ width: "100%", height: "100%" }}
-          />
-        </div>
+          What We Do
+        </p>
+        <h2
+          ref={headlineRef}
+          style={{
+            fontSize: "clamp(60px, 9vw, 160px)",
+            lineHeight: 0.95,
+            color: "#FFFFFF",
+            fontFamily: "'Ritmica', sans-serif",
+            fontWeight: 600,
+            marginTop: "12px",
+            opacity: 0,
+            willChange: "transform, opacity",
+          }}
+        >
+          Full Service
+        </h2>
 
-        <div style={{ position: "absolute", top: "18vh", left: "5vw", zIndex: 2 }}>
-          <p
-            ref={labelRef}
-            style={{
-              fontSize: "clamp(11px, 1.2vw, 16px)",
-              textTransform: "uppercase",
-              letterSpacing: "0.2em",
-              color: "#FFFFFF",
-              opacity: 0,
-              willChange: "transform, opacity",
-              fontFamily: "'Ritmica', sans-serif",
-              fontWeight: 500,
-            }}
-          >
-            What We Do
-          </p>
-          <h2
-            ref={headlineRef}
-            style={{
-              fontSize: "clamp(60px, 9vw, 160px)",
-              lineHeight: 0.95,
-              color: "#FFFFFF",
-              fontFamily: "'Ritmica', sans-serif",
-              fontWeight: 600,
-              marginTop: "12px",
-              opacity: 0,
-              willChange: "transform, opacity",
-            }}
-          >
-            Full Service
-          </h2>
-
-          <div style={{ marginTop: "40px" }}>
-            {manifestoLines.map((line, i) => (
-              <p
-                key={i}
-                ref={(el) => { lineRefs.current[i] = el; }}
-                style={{
-                  fontSize: "clamp(18px, 2.5vw, 36px)",
-                  lineHeight: 1.6,
-                  color: "#FFFFFF",
-                  fontFamily: "'Ritmica', sans-serif",
-                  fontWeight: 500,
-                  opacity: 0,
-                  willChange: "transform, opacity",
-                  marginBottom: "8px",
-                }}
-              >
-                {line}
-              </p>
-            ))}
+        <div style={{ marginTop: "40px" }}>
+          {manifestoLines.map((line, i) => (
             <p
-              ref={crescendoRef}
+              key={i}
+              ref={(el) => { lineRefs.current[i] = el; }}
               style={{
-                fontSize: "clamp(22px, 3vw, 40px)",
+                fontSize: "clamp(18px, 2.5vw, 36px)",
                 lineHeight: 1.6,
                 color: "#FFFFFF",
                 fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 700,
-                letterSpacing: "0.05em",
+                fontWeight: 500,
                 opacity: 0,
                 willChange: "transform, opacity",
-                marginTop: "8px",
+                marginBottom: "8px",
               }}
             >
-              {manifestoCrescendo}
+              {line}
             </p>
-          </div>
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            bottom: "20px",
-            left: 0,
-            width: "100vw",
-            zIndex: 3,
-            overflow: "hidden",
-          }}
-        >
-          <div
+          ))}
+          <p
+            ref={crescendoRef}
             style={{
-              display: "flex",
-              whiteSpace: "nowrap",
-              animation: "marquee-scroll 30s linear infinite",
-              willChange: "transform",
+              fontSize: "clamp(22px, 3vw, 40px)",
+              lineHeight: 1.6,
+              color: "#FFFFFF",
+              fontFamily: "'Ritmica', sans-serif",
+              fontWeight: 700,
+              letterSpacing: "0.05em",
+              opacity: 0,
+              willChange: "transform, opacity",
+              marginTop: "8px",
             }}
           >
-            {[0, 1].map((k) => (
-              <span
-                key={k}
-                style={{
-                  fontSize: "clamp(14px, 1.8vw, 24px)",
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.35)",
-                  fontFamily: "'Ritmica', sans-serif",
-                  fontWeight: 500,
-                  paddingRight: "0.5em",
-                }}
-              >
-                {marqueeText}
-              </span>
-            ))}
-          </div>
+            {manifestoCrescendo}
+          </p>
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          left: 0,
+          width: "100%",
+          zIndex: 3,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            whiteSpace: "nowrap",
+            animation: "marquee-scroll 30s linear infinite",
+            willChange: "transform",
+          }}
+        >
+          {[0, 1].map((k) => (
+            <span
+              key={k}
+              style={{
+                fontSize: "clamp(14px, 1.8vw, 24px)",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.35)",
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 500,
+                paddingRight: "0.5em",
+              }}
+            >
+              {marqueeText}
+            </span>
+          ))}
         </div>
       </div>
     </section>
