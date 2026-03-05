@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Ritmica';
+  src: url('/fonts/Ritmica-Semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ritmica';
+  src: url('/fonts/Ritmica-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
@@ -349,6 +365,21 @@
   --color-white: #ffffff;
   --color-black: #000000;
   --color-grey: #999999;
+}
+
+.page-about h1,
+.page-about h2 {
+  font-family: 'Ritmica', Inter, sans-serif;
+  font-weight: 600;
+}
+
+.page-about p,
+.page-about span {
+  font-family: 'Ritmica', Inter, sans-serif;
+  font-weight: 500;
+}
+
+.page-about {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
