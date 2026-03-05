@@ -646,37 +646,41 @@
   100% { background-position: 0% 50%; }
 }
 
-/* Showcase (Slide 15) */
-.showcase__card {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
+/* Placeholder image system */
+.placeholder-image {
+  position: absolute;
   overflow: hidden;
 }
-
-.showcase__overlay {
+.placeholder-image::before {
+  content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.5) 100%);
-  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.placeholder-image::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  font-family: 'Ritmica', sans-serif;
 }
 
-/* Fixed background for Slide 11 */
-.slide-11-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  opacity: 0;
-  visibility: hidden;
-  z-index: -1;
-  transition: opacity 0.8s var(--ease), visibility 0.8s var(--ease);
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-.slide-11-bg.is-active {
-  opacity: 1;
-  visibility: visible;
+/* Filmstrip slide base */
+.filmstrip-slide {
+  will-change: transform;
 }
 
 /* Lock zone: transparent on desktop */
@@ -883,316 +887,195 @@
     transform: none;
   }
 
-  .slide .mob-bleed {
-    margin-left: -24px !important;
-    margin-right: -24px !important;
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-  }
-
-  [data-testid="slide-3-philosophy"] {
-    min-height: auto !important;
-    padding-top: 40px !important;
-    align-items: flex-start !important;
-    flex-direction: column-reverse !important;
-  }
-
-  [data-testid="slide-3-philosophy"] > div:first-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 100vw !important;
-    margin-left: -24px !important;
-    margin-bottom: 0 !important;
-    margin-top: 40px !important;
-  }
-
-  [data-testid="slide-3-philosophy"] > p {
-    max-width: 100% !important;
-    padding: 0 !important;
-    text-align: left !important;
-  }
-
-  [data-testid="slide-4-directors"] {
-    display: flex !important;
+  .filmstrip-slide {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh;
+    padding: 80px 24px;
     flex-direction: column !important;
-    justify-content: flex-start !important;
-    padding-top: 16px !important;
-    min-height: auto !important;
   }
 
-  [data-testid="slide-4-directors"] > div {
+  .filmstrip-slide .placeholder-image {
     position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
+    width: 100% !important;
+    height: 60vw !important;
+    margin-bottom: 32px;
+  }
+
+  .filmstrip-slide h2,
+  .filmstrip-slide p,
+  .filmstrip-slide span,
+  .filmstrip-slide a,
+  .filmstrip-slide div {
+    opacity: 1 !important;
     transform: none !important;
   }
 
-  [data-testid="slide-4-directors"] > div:first-child {
-    margin-bottom: 40px;
-    order: 1;
+  .filmstrip-slide .film-headline,
+  .filmstrip-slide .film-body,
+  .filmstrip-slide .film-image {
+    transform: none !important;
   }
 
-  [data-testid="slide-4-directors"] > div:first-child p {
-    max-width: 100% !important;
-    margin-top: 24px !important;
+  .filmstrip-slide .headline-letter {
+    transform: none !important;
+    opacity: 1 !important;
   }
 
-  [data-testid="slide-4-directors"] > div:last-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 75vw !important;
-    margin-left: -24px !important;
-    margin-bottom: 0px;
-    order: 2;
-  }
-
-  [data-testid="slide-5-craft"] {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    min-height: auto !important;
-    padding-top: 0px !important;
-  }
-
-  [data-testid="slide-5-craft"] > div:first-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 75vw !important;
-    margin-left: -24px !important;
-    margin-bottom: 40px !important;
-    order: -1;
-  }
-
-  [data-testid="slide-5-craft"] > p {
-    margin-left: 0 !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-  }
-
-  [data-testid="slide-6-beliefs"] {
+  [data-testid="slide-3-workspeaks"] {
     display: flex !important;
     flex-direction: column !important;
     justify-content: flex-end !important;
-    min-height: 100vh;
-    padding: 0 24px 40px !important;
+    padding-bottom: 60px !important;
   }
 
-  [data-testid="slide-6-beliefs"] > .absolute:first-child {
+  [data-testid="slide-3-workspeaks"] > div:first-child {
     position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    inset: 0;
   }
 
-  [data-testid="slide-6-beliefs"] > .absolute:not(:first-child) {
+  [data-testid="slide-3-workspeaks"] h2 {
     position: relative !important;
-    left: auto !important;
+    z-index: 2;
     bottom: auto !important;
-    max-width: 100% !important;
-    z-index: 10;
-  }
-
-  [data-testid="slide-6-beliefs"] > .absolute:nth-child(2) {
-    margin-bottom: 20px;
-  }
-
-  [data-testid="slide-6-beliefs"] > .absolute:nth-child(3) {
-    margin-bottom: 0;
-  }
-
-  [data-testid="slide-7-beyond"] {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    min-height: auto !important;
-    padding-top: 80px !important;
-  }
-
-  [data-testid="slide-7-beyond"] > div {
-    position: relative !important;
     left: auto !important;
+    font-size: 42px !important;
+  }
+
+  [data-testid="slide-3-workspeaks"] > p {
+    position: relative !important;
+    z-index: 2;
+    bottom: auto !important;
+    left: auto !important;
+    margin-top: 12px;
+  }
+
+  [data-testid="slide-4-manifesto"] {
+    padding-top: 60px !important;
+  }
+
+  [data-testid="slide-4-manifesto"] > div:first-child {
+    position: relative !important;
+    width: 100% !important;
+    height: 60vw !important;
     right: auto !important;
     top: auto !important;
-    transform: none !important;
+    margin-bottom: 40px;
   }
 
-  [data-testid="slide-7-beyond"] > div:last-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 65vw !important;
-    margin-left: -24px !important;
+  [data-testid="slide-4-manifesto"] > div:last-child {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  [data-testid="slide-5-ticker"] {
+    min-height: 50vh !important;
+  }
+
+  [data-testid="slide-6-mission"],
+  [data-testid="slide-7-reach"] {
+    padding: 60px 24px !important;
+  }
+
+  [data-testid="slide-6-mission"] > div,
+  [data-testid="slide-7-reach"] > div:last-child {
+    max-width: 100% !important;
+    font-size: 22px !important;
+  }
+
+  [data-testid="slide-7-reach"] > div:first-child {
+    position: relative !important;
+    width: 100% !important;
+    height: 50vw !important;
+    top: auto !important;
+    left: auto !important;
+    margin-bottom: 32px;
+  }
+
+  [data-testid="slide-8-roster"] > div:first-child {
+    position: relative !important;
+    width: 100% !important;
+    height: 60vw !important;
+    right: auto !important;
+    top: auto !important;
+    margin-bottom: 40px;
+  }
+
+  [data-testid="slide-8-roster"] > div:last-child {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  [data-testid="slide-8-roster"] > div:last-child > div:last-child {
+    max-width: 100% !important;
+  }
+
+  [data-testid="slide-9-impact"] {
+    padding-top: 40px !important;
+  }
+
+  [data-testid="slide-9-impact"] > div:first-child {
+    position: relative !important;
+    width: 100% !important;
+    height: 60vw !important;
+    top: auto !important;
+    left: auto !important;
+    margin-bottom: 32px;
+  }
+
+  [data-testid="slide-9-impact"] h2 {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    font-size: 36px !important;
+    margin-bottom: 12px;
+  }
+
+  [data-testid="slide-9-impact"] > p {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    margin-bottom: 32px;
+  }
+
+  [data-testid="slide-9-impact"] > div:nth-child(4) {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    max-width: 100% !important;
+  }
+
+  [data-testid="slide-9-impact"] > div:last-child {
+    position: relative !important;
+    width: 100% !important;
+    height: 60vw !important;
+    right: auto !important;
+    top: auto !important;
     margin-top: 32px;
   }
 
-  [data-testid="slide-8-capabilities"] {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    min-height: auto !important;
-    padding-top: 80px !important;
-    padding-bottom: 40px !important;
+  [data-testid="slide-10-partners"] {
+    padding-top: 60px !important;
   }
 
-  [data-testid="slide-8-capabilities"] .transparent-reveal {
-    position: relative !important;
-    left: auto !important;
+  [data-testid="slide-10-partners"] h2 {
+    margin-top: 0 !important;
+    font-size: 32px !important;
+  }
+
+  [data-testid="slide-10-partners"] > div:last-child {
     max-width: 100% !important;
-    font-size: 22px !important;
-    line-height: 1.5 !important;
+    margin-top: 40px !important;
+    gap: 20px 24px !important;
   }
 
-  [data-testid="slide-8-capabilities"] > div:last-child {
-    position: relative !important;
-    right: auto !important;
-    bottom: auto !important;
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    margin-left: -24px !important;
-    margin-top: 40px;
-  }
-
-  [data-testid="slide-9-reach"] {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    min-height: auto !important;
-    padding-top: 80px !important;
-    padding-bottom: 40px !important;
-  }
-
-  [data-testid="slide-9-reach"] .transparent-reveal {
-    position: relative !important;
-    left: auto !important;
-    max-width: 100% !important;
-    font-size: 22px !important;
-    line-height: 1.5 !important;
-  }
-
-  [data-testid="slide-10-roster"] {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    min-height: auto !important;
-    padding-top: 0 !important;
-  }
-
-  [data-testid="slide-10-roster"] > div {
-    position: relative !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    max-width: 100% !important;
-  }
-
-  [data-testid="slide-10-roster"] > div:last-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 100vw !important;
-    margin-left: -24px !important;
-    margin-bottom: 40px;
-    order: -1;
-  }
-
-  [data-testid="slide-11-thework"] {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .slide-11-bg {
-    position: absolute;
-  }
-
-  [data-testid="slide-12-proof"] {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    min-height: auto !important;
-    padding-top: 0 !important;
-  }
-
-  [data-testid="slide-12-proof"] > div {
-    position: relative !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    transform: none !important;
-    max-width: 100% !important;
-  }
-
-  [data-testid="slide-12-proof"] > div:last-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 80vw !important;
-    margin-left: -24px !important;
-    margin-bottom: 40px;
-    order: -1;
-  }
-
-  [data-testid="slide-12-proof"] > div:first-child {
-    margin-top: 40px;
-  }
-
-  [data-testid="slide-13-flagship"] {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    min-height: auto !important;
-    padding-top: 80px !important;
-  }
-
-  [data-testid="slide-13-flagship"] > div {
-    position: relative !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    transform: none !important;
-    max-width: 100% !important;
-    text-align: left !important;
-  }
-
-  [data-testid="slide-13-flagship"] > div:first-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 65vw !important;
-    margin-left: -24px !important;
-    margin-bottom: 40px;
-  }
-
-  [data-testid="slide-14-culture"] {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    min-height: auto !important;
-    padding-top: 80px !important;
-  }
-
-  [data-testid="slide-14-culture"] > div {
-    position: relative !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    max-width: 100% !important;
-  }
-
-  [data-testid="slide-14-culture"] > div:first-child {
-    width: calc(100% + 48px) !important;
-    max-width: none !important;
-    height: 65vw !important;
-    margin-left: -24px !important;
-    margin-bottom: 40px;
-  }
-
-  [data-testid="slide-14-culture"] > div:last-child {
-    margin-top: 40px;
-  }
-
-  .showcase__card {
-    height: 80vh;
+  [data-testid="slide-11-closing"] {
+    min-height: 80vh !important;
   }
 }

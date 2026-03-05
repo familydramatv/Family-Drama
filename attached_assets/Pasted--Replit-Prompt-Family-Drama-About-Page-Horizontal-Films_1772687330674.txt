@@ -1,0 +1,1199 @@
+# Replit Prompt: Family Drama — About Page Horizontal Filmstrip (Slides 3+)
+
+---
+
+## CRITICAL CONTEXT — READ THIS FIRST
+
+This prompt builds Slides 3–11 of a horizontal filmstrip About page. The user scrolls **vertically** with their mousewheel, but the content moves **horizontally** like a long cinematic reel. This is NOT a regular vertical scroll page. This is NOT a horizontal slider with snap points. It is a continuous horizontal canvas where vertical scroll input is translated into smooth horizontal translation.
+
+**The reference for this build is https://prettybird.co/about/** — study that page. Every animation pattern, transition behavior, parallax speed, image scaling mechanic, and typographic treatment described below is derived from that reference. The goal is to match that level of craft exactly.
+
+**Slides 1 and 2 already exist and must not be touched.**
+- Slide 1: Hero banner — "Family Drama is fluent in..." with rolodex cycling words
+- Slide 2: "We're All Family" — brief company overview
+
+Everything below begins after Slide 2 ends.
+
+---
+
+## PART 1: CORE ARCHITECTURE — HOW THE HORIZONTAL SCROLL WORKS
+
+### The Canvas
+The entire About page is a single container laid out horizontally. Think of it as one enormously wide canvas — approximately 20x the viewport width. Each "slide" is a zone on this canvas, each zone being at least 100vw wide (many are wider). The viewport acts as a fixed frame. As the user scrolls down, the canvas translates left, revealing content from right to left.
+
+### GSAP ScrollTrigger Setup
+```js
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+
+const container = document.querySelector(".slides-container");
+const slides = gsap.utils.toArray(".slide");
+
+// Calculate total width
+const totalWidth = container.scrollWidth - window.innerWidth;
+
+// Pin the container and translate it horizontally
+const mainTimeline = gsap.to(container, {
+  x: -totalWidth,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".slides-wrapper",
+    pin: true,
+    scrub: 1, // 1 second of smoothing — critical for that buttery feel
+    end: () => "+=" + totalWidth,
+    invalidateOnRefresh: true,
+  },
+});
+```
+
+### HTML Structure
+```html
+<div class="slides-wrapper"> <!-- This gets pinned -->
+  <div class="slides-container"> <!-- This translates horizontally -->
+    <section class="slide slide-1">...</section> <!-- Existing -->
+    <section class="slide slide-2">...</section> <!-- Existing -->
+    <section class="slide slide-3">...</section> <!-- NEW — start here -->
+    <!-- ... slides 4 through 11 ... -->
+  </div>
+</div>
+```
+
+### CSS Foundation
+```css
+.slides-wrapper {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+.slides-container {
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  will-change: transform;
+}
+
+.slide {
+  flex-shrink: 0;
+  width: 100vw; /* minimum — some slides are wider */
+  height: 100vh;
+  position: relative;
+  overflow: hidden; /* contain parallax elements that extend beyond */
+}
+```
+
+### Fixed Elements
+The Family Drama logo stays pinned center-top of the viewport throughout the entire scroll. It does NOT move with the horizontal translation. It sits in a fixed-position layer above everything:
+```css
+.fixed-logo {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  pointer-events: none; /* don't interfere with scroll */
+}
+```
+"ABOUT" label fixed top-left. "MENU" fixed top-right. Same z-index layer as the logo.
+
+---
+
+## PART 2: THE PARALLAX & TRANSITION SYSTEM — HOW ELEMENTS MOVE
+
+This is the most important section. Every element on the page belongs to one of three parallax layers, and each layer moves at a different horizontal speed relative to the main scroll. This creates depth — like looking out of a car window where nearby objects move fast and distant objects move slow.
+
+### Layer 1: Headlines (fastest)
+Headlines translate horizontally at **1.15x** the base scroll speed. They enter from the right edge first and exit the left edge first. This makes headlines feel "close" to the viewer.
+
+### Layer 2: Body Text / Statements (base speed)
+Body text and statement paragraphs move at **1.0x** — they match the base horizontal scroll speed. This is the default layer.
+
+### Layer 3: Images (slowest)
+Images translate horizontally at **0.7–0.85x** the base scroll speed. They lag behind text. When a headline and an image are entering from the right at the same time, the headline arrives first and the image catches up. When they're both exiting left, the headline leaves first and the image lingers. This parallax gap is what creates the cinematic depth.
+
+**Implementation approach:**
+Each element within a slide has its own GSAP ScrollTrigger that adds a secondary horizontal transform on top of the main canvas translation:
+```js
+// Example: image parallax (moves slower = positive offset against the leftward scroll)
+gsap.to(".slide-3 .parallax-image", {
+  x: "15%", // positive x offsets the leftward movement, making image "lag"
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".slide-3",
+    containerAnimation: mainTimeline, // tie to the horizontal scroll
+    scrub: true,
+    start: "left right", // when slide's left edge hits viewport right
+    end: "right left", // when slide's right edge hits viewport left
+  },
+});
+
+// Example: headline parallax (moves faster = negative offset)
+gsap.to(".slide-3 .parallax-headline", {
+  x: "-10%",
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".slide-3",
+    containerAnimation: mainTimeline,
+    scrub: true,
+    start: "left right",
+    end: "right left",
+  },
+});
+```
+
+### Transition Zones — NO HARD CUTS
+
+This is critical. **There is NEVER a hard cut between slides.** Between every two slides there is a **300–500px overlap zone** where elements from both slides are visible simultaneously. The outgoing slide's elements are shrinking and fading in the left portion of the viewport while the incoming slide's elements are growing and appearing in the right portion.
+
+**How to build overlap zones:**
+Each slide is slightly wider than 100vw (add 200–400px of padding on the right side). Elements within a slide are positioned so they're visible even when the slide is partially off-screen. Images from the outgoing slide have `overflow: visible` or are positioned with negative margins so they bleed into the transition zone.
+
+**What the viewer sees during EVERY transition (this repeats between each slide):**
+
+- Frame 1 (settled): Slide A content fully visible, composed, readable. The user is dwelling here.
+- Frame 2 (transition begins): Slide A content starts drifting left. The headline is the first thing to start leaving (fastest layer). The right edge of the viewport reveals pure black or a sliver of Slide B's first element peeking in from the right.
+- Frame 3 (mid-transition): Slide A's image is now small, tucked into the left 20–30% of the viewport and still shrinking. Slide A's headline is gone (already off the left edge). Slide B's headline or label text is partially visible on the right 30–40%. Center of viewport is black negative space — breathing room.
+- Frame 4 (late transition): Slide A's image is tiny in the far left corner or has faded to opacity 0. Slide B's headline is fully visible, centered or left-aligned. Slide B's image is entering from the right at ~40–60% of its final size. Still some black space between Slide B's text and image — they haven't composed yet.
+- Frame 5 (new settled): Slide A is completely gone. Slide B's content is now fully composed — headline, text, images all in their final resting positions. The user dwells here.
+
+**This 5-frame transition pattern is the fundamental rhythm of the entire page.** Every transition follows it. The timing varies (some transitions are faster, some slower) but the structure is always: settled → text exits first → image lingers → overlap zone with black breathing room → new content settles.
+
+---
+
+## PART 3: IMAGE BEHAVIOR SYSTEM
+
+Images in this design are NOT static. They have complex scroll-driven behaviors. There are 4 distinct behaviors used across the page:
+
+### Behavior A: Enter → Grow → Settle → Shrink → Exit
+This is the default image behavior. Most images follow this lifecycle:
+
+1. **Enter** from the right edge of the viewport at ~40–60% of their final size. The image is positioned off-screen right and begins moving leftward.
+2. **Grow** as the image travels leftward, scaling up via `transform: scale()`. The scaling is scrubbed to scroll position so it's perfectly smooth.
+3. **Settle** at full composed size when the slide is centered in the viewport. The image reaches scale(1.0) and its final position (e.g., right: 4%, top: 12%).
+4. **Shrink** as the slide continues moving left, scaling back down. The image also drifts leftward within its slide, compressing toward the left edge.
+5. **Exit** off the left edge at ~20–30% of their settled size. The image is now small in the far left corner before disappearing.
+
+The key visual effect: the image appears to "breathe" — expanding on approach, holding at full size, then contracting on departure. This gives every image its own dramatic arc.
+
+GSAP implementation:
+```js
+// ENTER + GROW (right edge → centered)
+gsap.fromTo(".slide-3 .hero-image", 
+  { scale: 0.5, xPercent: 30, opacity: 0.7 },
+  {
+    scale: 1.0, xPercent: 0, opacity: 1,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".slide-3",
+      containerAnimation: mainTimeline,
+      scrub: true,
+      start: "left right",     // slide enters viewport
+      end: "center center",    // slide is centered
+    },
+  }
+);
+
+// SHRINK + EXIT (centered → left edge)
+gsap.to(".slide-3 .hero-image", {
+  scale: 0.3, xPercent: -30, opacity: 0.5,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".slide-3",
+    containerAnimation: mainTimeline,
+    scrub: true,
+    start: "center center",
+    end: "right left",
+  },
+});
+```
+
+### Behavior B: Enter → Scale to Full-Bleed → Hold → Shrink to Contained
+Some images scale from a contained rectangle all the way to covering the ENTIRE viewport (100vw × 100vh). This is used for major "hero moments" and is the most dramatic image behavior.
+
+**How it looks frame by frame (from the reference, Screenshots 9–13 and 50–54):**
+
+- Frame 1: Image is a rectangle occupying ~40% of the viewport width, positioned right side. Black background visible on all other sides.
+- Frame 2: Image has grown to ~60% width. Top and bottom edges are closer to the viewport edges.
+- Frame 3: Image is ~80% width. Only thin strips of black visible at the edges.
+- Frame 4: Image is 100% width and 100% height. It IS the viewport. No black visible. Full-bleed.
+- Frame 5: Image holds at full-bleed while text is overlaid on top of it.
+
+**Then when exiting (Screenshots 58–61):**
+- Frame 1: Image still full-bleed.
+- Frame 2: Image begins shrinking. Width drops to ~70%. Black background reappears at the edges.
+- Frame 3: Image now ~40% width, shifted to the LEFT side of the viewport. Right side of viewport is black.
+- Frame 4: Image ~25% width, tucked into far left corner. New image entering from right side.
+- Frame 5: Old image gone or tiny. New image settling into right side.
+
+GSAP: Animate `width`, `height`, `top`, `left` (or use `scale` + `transformOrigin`) simultaneously, scrubbed to scroll. The image container must be `position: absolute` within the slide and the slide must be `overflow: hidden` (or `visible` during transitions if you want bleed).
+
+### Behavior C: Pinned (counter-animated to stay fixed while canvas moves)
+Used when text cycles through multiple states and the image needs to stay put. The image effectively becomes `position: fixed` relative to the viewport by counter-animating against the horizontal scroll.
+
+**How it looks (from the reference, Screenshots 36–45):**
+The golden foil portrait stays EXACTLY in the same screen position (right half) for the ENTIRE duration of the cycling text sequence (~10+ screenshots = a LOT of scroll distance). The text on the left changes, the user is scrolling, but the image doesn't budge. It only starts moving again when the cycling sequence ends and the slide begins its exit.
+
+Implementation: Calculate exactly how many pixels the container will translate during the cycling phase, then apply a GSAP animation that moves the image the EXACT same distance in the OPPOSITE direction:
+```js
+const cycleScrollDistance = 250 * window.innerWidth / 100; // 250vw converted to px
+gsap.to(".pinned-image", {
+  x: cycleScrollDistance, // counter-animate
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".slide-8",
+    containerAnimation: mainTimeline,
+    scrub: true,
+    start: "left+=100vw left", // start pinning after entrance
+    end: "right-=100vw right", // stop pinning before exit
+  },
+});
+```
+
+### Behavior D: Dual-Image Bridge
+Between major sections, two images sit side by side as a "visual bridge" — a purely cinematic pause with no text. One image belongs to the exiting section (left side, may be shrinking) and one belongs to the entering section (right side, may be growing).
+
+**From the reference (Screenshots 48–50):**
+- Left image: golden foil face (from "Limitless Vision" section), now large, taking up left 45% of viewport
+- Right image: police car flood scene (beginning of "The Impact" section), taking up right 50% of viewport
+- Small gap between them (~5% black)
+- NO TEXT visible. Pure visual moment.
+- Duration: brief — about 0.5x viewport width of scroll distance before the next phase begins
+
+### Image Positioning Rules (apply to ALL images)
+- Images are **NEVER** centered in the viewport. They are asymmetrically offset — anchored to one side or overlapping an edge.
+- Vertical position varies between images: some sit high (top: 8%), some centered (top: 15%), some low (bottom: 10%). Alternate between these to create visual rhythm.
+- Images overlap with text during transitions (text has higher z-index).
+- Aspect ratios: use cinematic ratios — 16:9 for landscapes, 3:4 for tall portraits, 2.39:1 for ultra-wide hero shots.
+
+### Placeholder Image System
+All images are colored placeholder divs with subtle grain texture and a descriptive label:
+```css
+.placeholder-image {
+  background-color: var(--placeholder-color);
+  position: absolute;
+  overflow: hidden;
+}
+.placeholder-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Noise grain texture via SVG data URI */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.placeholder-image::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  font-family: var(--font-body);
+}
+```
+**Placeholder color palette:**
+- Deep teal: `#0D3B3B`
+- Warm amber: `#3B2A0D`
+- Muted burgundy: `#3B0D1A`
+- Dark navy: `#0D1A3B`
+- Dark olive: `#1A2B0D`
+
+---
+
+## PART 4: TYPOGRAPHY SYSTEM
+
+### Fonts
+- **Display/Headlines:** A distinctive serif. Use Google Font `"DM Serif Display"` or `"Playfair Display"`. Weight: 400 for headlines, 700 for emphasized caps. These headlines should feel like film titles.
+- **Body/Statements:** A clean, slightly geometric sans-serif. Use `"Syne"` or `"Outfit"` or `"Instrument Sans"` from Google Fonts. NOT Inter, NOT Roboto, NOT Arial, NOT system fonts.
+- **Labels/Accent:** Same sans-serif as body, but: text-transform: uppercase, letter-spacing: 0.2em, color: #666666, font-size: clamp(11px, 1vw, 16px).
+
+### Sizing (all use clamp for fluid scaling)
+- **Massive display headlines** ("The Work Speaks", "Full Service", "The Impact", "Built Different"): `clamp(60px, 9vw, 160px)`. Line-height: 0.95. These are ENORMOUS. They dominate the viewport.
+- **Section labels** ("What We Do", "One Team"): `clamp(11px, 1.2vw, 16px)`. Uppercase. Letter-spaced.
+- **Statement paragraphs** (the keyword-emphasis blocks in Slides 6 and 7): `clamp(24px, 3.5vw, 52px)`. Line-height: 1.3. These are BIG — almost headline scale. They're meant to be read as singular visual statements, not body copy.
+- **Cycling body lines** ("We conceptualize.", "Producers who've managed..."): `clamp(20px, 2.8vw, 40px)`. Line-height: 1.4.
+- **Manifesto stacking lines** ("We conceptualize." etc.): `clamp(18px, 2.5vw, 36px)`. Line-height: 1.6.
+- **Closing CTA**: `clamp(22px, 3vw, 42px)`. Line-height: 1.4.
+- **Email / small text**: 14px, #666666, letter-spacing: 0.1em.
+
+### Typography Animation A: Sequential Line Reveal (Stacking)
+**Used in:** Slide 4 (Capabilities Manifesto)
+**Reference:** PRETTYBIRD "Core Beliefs" (Screenshots 11–17)
+
+**How it works in the reference, frame by frame:**
+- Screenshot 13: Full-bleed image in place. Headline "Core Beliefs" visible. First line: "Creativity isn't produced in a factory." All white.
+- Screenshot 14: Second line APPEARS BELOW the first: "We're active partners." First line STAYS visible and white. Both lines stacked.
+- Screenshot 15: Third line below: "Your problems are our problems." All three visible.
+- Screenshot 16: Fourth line: "Your successes are our successes." All four visible.
+- Screenshot 17: Fifth + sixth lines: "We don't hide from challenges." + "WE EMBRACE THEM." All six visible as a complete stack. Final line is CAPS, bolder weight — the crescendo.
+
+**Key details:**
+- Lines STACK. They do NOT replace each other. Each new line appears below the previous ones.
+- Earlier lines may dim SLIGHTLY (to ~#CCCCCC) once the final line appears, but they DON'T disappear.
+- The final line uses CAPS, bold weight, and may be slightly larger — it's the exclamation point.
+- The horizontal scroll PAUSES during this entire sequence. Scroll input triggers line reveals instead of horizontal canvas movement.
+- Each line takes approximately 80–120px of vertical scroll to trigger.
+
+**Animation per line:**
+```js
+gsap.fromTo(line, 
+  { opacity: 0, y: 25 },
+  { 
+    opacity: 1, y: 0,
+    duration: 0.4,
+    ease: "power2.out",
+  }
+);
+```
+
+### Typography Animation B: Bold Keyword Emphasis (Dim/Brighten)
+**Used in:** Slide 6 (The Mission), Slide 7 (The Reach)
+**Reference:** PRETTYBIRD company description (Screenshots 25–26) and location statement (Screenshots 30–33)
+
+**How it works in the reference, frame by frame:**
+- Screenshots 30–31: Location paragraph appears in UNIFORM white: "With offices in Los Angeles and London, and a team of directors around the world, WE HAVE GLOBAL REACH." Every word is the same color.
+- Screenshot 32: "WE HAVE GLOBAL REACH." is now slightly brighter/bolder. The emphasis is BEGINNING.
+- Screenshot 33: Full emphasis complete. "With offices in" → dimmed to gray (#666). "Los Angeles" → bright white, bold. "London" → bright white, bold. "and a team of directors around the world," → dimmed to gray. "WE HAVE GLOBAL REACH." → bright white, bold, caps.
+
+**Key details:**
+- The emphasis is NOT instant. It's a gradual transition scrubbed to scroll position. Over ~50–80vw of scroll distance, the text smoothly shifts from all-white to emphasized.
+- Context words dim to approximately #444444 (not invisible, just receded).
+- Keyword words stay #FFFFFF and gain font-weight: 700.
+- The text block itself does NOT move during the emphasis animation — it's centered and static.
+
+**Implementation:** Wrap every word in a `<span>`. Mark keywords with a data attribute or class. Use GSAP scrubbed ScrollTrigger:
+```js
+// Dim context words
+gsap.to(".slide-6 .context-word", {
+  color: "#444444",
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".slide-6",
+    containerAnimation: mainTimeline,
+    scrub: true,
+    start: "center-=10% center",  // start emphasis slightly before center
+    end: "center+=10% center",    // complete emphasis slightly after center
+  },
+});
+
+// Strengthen keywords
+gsap.to(".slide-6 .keyword", {
+  color: "#FFFFFF",
+  fontWeight: 700,
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".slide-6",
+    containerAnimation: mainTimeline,
+    scrub: true,
+    start: "center-=10% center",
+    end: "center+=10% center",
+  },
+});
+```
+
+### Typography Animation C: Pinned Headline + Cycling Body Text
+**Used in:** Slide 8 (The Roster)
+**Reference:** PRETTYBIRD "One Collection Of Artists / Limitless Vision" (Screenshots 36–47)
+
+**How it works in the reference, frame by frame:**
+- Screenshot 36: Label "One Collection Of Artists" left side. Golden foil image pinned right half. Clean two-column.
+- Screenshot 37: "Limitless Vision" headline animates in with KINETIC LETTER SCATTER. Each letter enters at a random size (0.6–1.5x) and random vertical offset (-50px to +50px). Letters are visibly disordered.
+- Screenshot 38: Letters have settled into their final positions. Clean headline. Label above, headline below, image right.
+- Screenshot 39: First body line appears below headline: "From directors who started out on micro-budget YouTube videos..." — bright white.
+- Screenshot 40: First line DIMS to dark gray (#444). Second line appears bright white: "To niche TV and comedy sensations..." Both lines visible, but previous one is faint.
+- Screenshot 41: Second line dimming. Third about to appear. Pattern continues.
+- Screenshots 42–45: One line at a time: current bright, previous dim, all earlier nearly invisible. The headline stays in place. The image stays pinned.
+- Screenshot 46–47: Section ending. "Limitless Vision" letters SCATTER AGAIN (reverse of entrance). Image begins expanding/moving.
+
+**Key differences from the Stacking Manifesto (Animation A):**
+- In the manifesto, lines STACK (all stay visible). Here, lines CYCLE (only current + 1 previous visible).
+- In the manifesto, the image is full-bleed. Here, the image is contained on one side.
+- The headline has kinetic letter scatter on entrance AND exit.
+
+**Cycling mechanic per line:**
+```js
+// When a new line becomes active:
+gsap.to(previousLine, { color: "#333", opacity: 0.3, y: -10, duration: 0.5 });
+gsap.fromTo(currentLine, 
+  { color: "#FFF", opacity: 0, y: 20 },
+  { opacity: 1, y: 0, duration: 0.5 }
+);
+```
+
+**Kinetic letter scatter:**
+```js
+// On entrance
+const letters = gsap.utils.toArray(".headline-letter");
+gsap.from(letters, {
+  y: () => gsap.utils.random(-50, 50),
+  scale: () => gsap.utils.random(0.6, 1.5),
+  rotation: () => gsap.utils.random(-15, 15),
+  opacity: 0,
+  stagger: { each: 0.03, from: "random" },
+  duration: 0.8,
+  ease: "power3.out",
+  scrollTrigger: { /* tied to scroll position within this slide */ }
+});
+```
+
+### Typography Animation D: Awards Cascade (Build + Background Transition)
+**Used in:** Slide 9 (The Impact)
+**Reference:** PRETTYBIRD awards section (Screenshots 55–64)
+
+**How it works in the reference, frame by frame:**
+- Screenshot 55: "The Impact" headline sliding off LEFT. Full-bleed image still in place. "From Cannes..." entering from RIGHT. Outgoing and incoming text OVERLAP on the full-bleed image for one frame.
+- Screenshot 56: "From Cannes Grand Prix," now centered on the full-bleed image. Just one line.
+- Screenshot 57: Second line below, indented right: "to MTV's Video of the Year,"
+- Screenshot 58: Same lines, but the background image starts SHRINKING. No longer full-bleed — black background visible around edges.
+- Screenshot 59: Image now small, left column only (~25% width). Third line: "to multiple Grammy and Emmys..." Text is now floating on black, not on the image. New dark image peeking in from far right.
+- Screenshots 60–62: Image A continues shrinking/exiting left. Image B growing/entering right. Text settled left. Final state: text left 50%, Image B right 40%.
+- Screenshots 63–64: Entire composition slides left. New text entering right.
+
+**The key mechanic that makes this unique:** The background TRANSITIONS from full-bleed image to black while the text is building. Lines 1–2 appear ON the image. Line 3 appears as the image is shrinking, so it's partially on image, partially on black. Line 4 appears on pure black. The text goes from living on a visual surface to floating in empty space — a mood shift from "cinematic" to "stark."
+
+---
+
+## PART 5: SLIDE-BY-SLIDE SPECIFICATIONS
+
+---
+
+### SLIDE 3: "The Work Speaks"
+**Width:** 250vw
+**Reference pattern:** Screenshots 1–5 (hero zone — image enters and grows, headline reveals, composition settles)
+
+#### Elements at SETTLED state (when slide is centered in viewport):
+- **IMAGE A:** Placeholder, 16:9 landscape format.
+  - Label: "HERO: Full crew on active commercial set — lights, camera, action"
+  - Color: deep teal (#0D3B3B)
+  - Position: width: 85vw, height: 88vh, top: 6vh, left: 7vw
+  - This is NEAR full-bleed — thin borders of black visible on all sides
+  - z-index: 1
+  
+- **HEADLINE:** "The Work Speaks"
+  - Font: display serif, massive size (clamp 60px–160px)
+  - Color: #FFFFFF
+  - Position: bottom: 15vh, left: 5vw
+  - z-index: 2 (sits ON TOP of the image)
+  - text-shadow: 0 2px 40px rgba(0,0,0,0.5) for legibility over image
+  
+- **SUBTITLE:** "A decade of content for the world's most recognized brands."
+  - Font: body sans-serif, size clamp(16px, 2vw, 28px)
+  - Color: #B0B0B0
+  - Position: directly below headline, left: 5vw, bottom: 8vh
+  - z-index: 2
+
+#### Entrance Choreography (scroll-driven over first 120vw of this slide):
+
+**0–30vw (Image enters):**
+- IMAGE A begins off-screen right at `scale(0.5), xPercent: 25, opacity: 0.6`
+- Moves left and grows: `scale(0.5→0.75), xPercent: 25→10`
+- No text visible yet
+
+**30–60vw (Image continues growing, headline begins):**
+- IMAGE A: `scale(0.75→0.9), xPercent: 10→3`
+- HEADLINE enters from right (parallax — faster than image, so it slides in OVER the image): `opacity: 0→1, y: 60→0, xPercent: 20→0`
+- Headline is now partially visible, positioned over the image
+
+**60–90vw (Composition settling):**
+- IMAGE A reaches final size: `scale(0.9→1.0), xPercent: 3→0`
+- HEADLINE fully in position: bottom-left over image
+- SUBTITLE fades in: `opacity: 0→1, y: 20→0` (starts at 75vw, completes by 90vw)
+
+**90–180vw (HOLD — reading moment):**
+- Everything settled. The user sits with this composition — enormous image, bold headline, subtitle.
+- Nothing moves during this hold. This IS the hero moment.
+
+**180–250vw (Exit):**
+- HEADLINE begins sliding left first (fastest parallax layer): `xPercent: 0→-40`
+- SUBTITLE follows: `xPercent: 0→-30, opacity: 1→0`
+- IMAGE A begins shrinking: `scale(1.0→0.35), xPercent: 0→-25`
+- By 250vw, IMAGE A is a small rectangle in the left 20% of the viewport, partially transparent
+
+---
+
+### SLIDE 3→4 TRANSITION ZONE
+
+**What the viewer sees (this happens over ~80vw of scroll as Slide 3 exits and Slide 4 enters):**
+
+- **Left 20% of viewport:** IMAGE A from Slide 3, now ~200px wide, still shrinking. Opacity fading 0.5→0.
+- **Center 40% of viewport:** Pure black. Empty. Breathing room. This negative space is ESSENTIAL — it gives the eye a rest between dense compositions.
+- **Right 30% of viewport:** Slide 4's LABEL "What We Do" just beginning to peek in from the right edge. Slide 4's IMAGE B is a faint sliver on the far right.
+- Over ~50 more vw of scroll, IMAGE A fully disappears and Slide 4's content settles.
+
+---
+
+### SLIDE 4: "Capabilities Manifesto"
+**Width:** 400vw
+**Reference pattern:** Screenshots 9–18 (Core Beliefs — image enters and scales while label/headline reveal, image goes FULL-BLEED, then text reveals line by line with scroll paused, then everything exits)
+
+This is a complex multi-phase slide. Breaking it into phases:
+
+#### Phase 1: Entrance (100vw)
+
+**Elements entering:**
+- **IMAGE B:** Placeholder, tall vertical 3:4 format.
+  - Label: "ACTION: Camera operator tracking shot through set"
+  - Color: warm amber (#3B2A0D)
+  - ENTERS from right at `scale(0.4), xPercent: 40`
+  - DESTINATION: right side of viewport, width: 42vw, height: 75vh, right: 4vw, top: 12vh
+  - Image Behavior A: Enter → Grow → Settle
+  
+- **LABEL:** "What We Do"
+  - Small caps, tracked, gray (#666)
+  - Enters from right (parallax layer 1 — faster than image, so it arrives first)
+  - DESTINATION: top: 18vh, left: 5vw
+  
+- **HEADLINE:** "Full Service"
+  - Massive display serif
+  - Enters from right, slightly behind LABEL (0.3s delay but scroll-driven)
+  - DESTINATION: below label, left: 5vw, top: 26vh
+
+**Scroll choreography:**
+- 0–30vw: LABEL appears from right, starts settling left
+- 15–50vw: HEADLINE appears from right, starts settling left (overlaps with label entrance)
+- 0–80vw: IMAGE B enters from right at scale(0.4), grows to scale(1.0), settles right side
+- 80–100vw: Everything in final position. Two-column composition: text left (55%), image right (45%). Brief reading moment.
+
+#### Phase 2: Manifesto Line Reveals (200vw — scroll paused on horizontal, triggers vertical reveals)
+
+The horizontal canvas translation PAUSES here. The user scrolls down, but instead of the canvas moving left, each increment of scroll reveals a new text line below the headline.
+
+**IMAGE B stays pinned** in its right-side position throughout this entire phase using the counter-animation technique (Behavior C). It does not move.
+
+**Lines appear one at a time, stacking beneath the headline:**
+
+Each line uses body sans-serif at manifesto size (clamp 18px–36px).
+
+**Scroll position 0vw → 33vw: Line 1 reveals**
+- "We conceptualize."
+- Animation: `opacity: 0→1, y: 25→0`, duration: 0.4s, ease: power2.out
+- Color: #FFFFFF
+- Position: left: 5vw, below the headline with 30px gap
+
+**33vw → 66vw: Line 2 reveals**
+- "We create."
+- Same animation as Line 1
+- Stacks below Line 1 with 15px gap
+- Line 1 STAYS bright white — no dimming yet
+
+**66vw → 99vw: Line 3 reveals**
+- "We produce."
+- Same animation
+- Lines 1–2 stay white
+
+**99vw → 132vw: Line 4 reveals**
+- "We distribute."
+- Lines 1–3 stay white
+
+**132vw → 165vw: Line 5 reveals**
+- "From first frame to final delivery."
+- Lines 1–4 begin to SLIGHTLY dim: #FFFFFF → #CCCCCC (slow, subtle, over this entire line's reveal period)
+
+**165vw → 200vw: Line 6 reveals (THE CRESCENDO)**
+- "EVERY. SINGLE. STEP."
+- Font: same family but BOLD weight, CAPS, slightly larger (+4px), letter-spacing: 0.05em
+- Color: #FFFFFF — stays bright
+- Lines 1–5 dim further: #CCCCCC → #888888
+- This line gets special entrance treatment: each word ("EVERY." / "SINGLE." / "STEP.") staggers in separately, 0.15s apart
+- The final state: all 6 lines visible as a stack, lines 1–5 in gray, line 6 in bold bright white
+
+#### Phase 3: Exit (100vw — horizontal scroll resumes)
+
+After the manifesto is complete, the horizontal scroll resumes:
+- HEADLINE "Full Service" slides left (fastest layer)
+- Manifesto text block slides left
+- IMAGE B begins shrinking: `scale(1.0→0.4), xPercent: 0→-20`
+- By the end, IMAGE B is small in the left 25% of viewport
+- Black space opens on the right for Slide 5's marquee
+
+---
+
+### SLIDE 5: "Capabilities Ticker"
+**Width:** 120vw
+**Reference pattern:** Screenshots 23–24 (horizontal caps marquee between sections)
+
+This is a TRANSITIONAL BEAT. Quick, light, breathing room. The user passes through this in a few seconds of scrolling.
+
+#### Layout:
+Pure black viewport. One horizontal marquee line, vertically centered in the viewport.
+
+#### Marquee Text:
+```
+CREATIVE · LIVE ACTION · VFX · POST-PRODUCTION · VIRTUAL PRODUCTION · STILL PHOTOGRAPHY · BRANDED CONTENT · SOCIAL · BROADCAST ·
+```
+Repeating infinitely (duplicate the text node so the marquee loops seamlessly).
+
+#### Marquee Specs:
+- Font: body sans-serif, text-transform: uppercase
+- Size: clamp(28px, 4.5vw, 64px)
+- Letter-spacing: 0.15em
+- Color: #333333 (very subtle — dark gray on black)
+- No keyword highlighting (keep it simple)
+- Position: vertically centered (`top: 50%; transform: translateY(-50%)`)
+
+#### CSS Animation (independent of scroll):
+```css
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+```
+The marquee runs CONTINUOUSLY regardless of scroll state. It's always moving. This creates subtle life even during the brief moment the user dwells here.
+
+#### Entrance/Exit:
+- The marquee fades from `opacity: 0→0.8` as it enters the viewport.
+- Fades from `opacity: 0.8→0` as it exits.
+- No complex choreography — this is a simple pass-through.
+
+---
+
+### SLIDE 5→6 TRANSITION ZONE
+
+Brief black negative space (~50vw). The marquee has faded. The viewport is nearly pure black. Then Slide 6's text begins appearing from the right. This empty black moment between the kinetic marquee and the static statement paragraph creates a powerful contrast — motion → stillness.
+
+---
+
+### SLIDE 6: "The Mission"
+**Width:** 250vw
+**Reference pattern:** Screenshots 25–27 (company description with bold keyword emphasis) and Screenshots 30–32 (centered text on black, no images)
+
+#### Elements at SETTLED state:
+- **No images.** Pure black background. This is a text-only slide.
+- One large text block, centered horizontally and vertically in the viewport.
+- Text block max-width: 80vw (generous black on sides).
+
+#### Text Content:
+```
+Family Drama is a full-service production company that creates content
+which transcends PLATFORMS and LIVES at the intersection of
+branded entertainment, culture, sports, technology and storytelling.
+```
+
+#### Word-Level Markup:
+Every word wrapped in `<span>`. Two classes:
+- `.context-word` → words that will dim (these are the grammatical connectors)
+- `.keyword` → words that stay bright
+
+**Context words (→ dim to #444444):**
+"is", "a", "full-service", "production", "company", "that", "creates", "content", "which", "transcends", "and", "at", "the", "intersection", "of", "and"
+
+**Keyword words (→ stay #FFFFFF, gain bold):**
+"Family Drama", "PLATFORMS", "LIVES", "branded entertainment,", "culture,", "sports,", "technology", "storytelling."
+
+#### Entrance Choreography (80vw):
+- Text block enters from right side of viewport
+- ALL words start at #FFFFFF (uniform white, no emphasis yet)
+- Text slides left and settles centered
+- At this point, it reads as a single white paragraph on black — clean, readable
+
+#### Hold + Read (30vw):
+- Text is centered. Uniform white. User reads it. Nothing happens.
+
+#### Emphasis Animation (scroll-driven, 60vw):
+Over this scroll distance, the emphasis GRADUALLY shifts:
+- 0–20vw: Context words begin dimming: #FFFFFF → #999999
+- 20–40vw: Context words continue: #999999 → #555555. Keywords begin gaining font-weight: 400→600
+- 40–60vw: Context words reach #444444. Keywords reach font-weight: 700 and remain #FFFFFF
+- The transition is SMOOTH and scrubbed to scroll. NOT a sudden switch. If the user scrolls backward, the emphasis reverses.
+
+#### Final Hold (30vw):
+- Emphasized state. Keywords pop. Context words receded. The eye is drawn to: PLATFORMS, LIVES, branded entertainment, culture, sports, technology, storytelling.
+- This hold is important — let the user absorb the emphasized version.
+
+#### Exit (50vw):
+- Entire text block slides left. Keywords and context words all move together.
+- For ~20vw of overlap, Slide 6's exiting text and Slide 7's entering text are BOTH visible on opposite sides of the viewport (matching Screenshots 28–29 where two text blocks overlap during transition)
+
+---
+
+### SLIDE 6→7 TRANSITION ZONE
+
+**What the viewer sees:**
+- Left 35%: Slide 6's mission text, small and sliding off, emphasis colors still visible
+- Center 30%: Black negative space
+- Right 35%: Slide 7's text just beginning to enter ("Based in Houston...")
+
+This mirrors the reference where the company description and the location paragraph coexist briefly during a horizontal wipe.
+
+---
+
+### SLIDE 7: "The Reach"
+**Width:** 250vw
+**Reference pattern:** Screenshots 28–34 (location statement with progressive city-name emphasis, image as texture, crescendo final statement)
+
+#### Elements at SETTLED state:
+- **IMAGE C:** Placeholder, 16:9 landscape.
+  - Label: "AERIAL: Houston skyline at golden hour"
+  - Color: dark olive (#1A2B0D)
+  - Position: SMALL, upper-left — width: 28vw, height: 35vh, top: 8vh, left: 3vw
+  - This is NOT the hero — it's background texture. It should feel like it belongs to the previous transition, lingering.
+  - z-index: 1
+  
+- **TEXT BLOCK:** Centered in viewport, overlapping the bottom edge of IMAGE C slightly.
+  - Max-width: 75vw
+  - z-index: 2
+
+#### Text Content:
+```
+Based in Houston, with productions spanning Los Angeles, New York, Miami
+and locations worldwide, WE GO WHERE THE STORY TAKES US.
+```
+
+#### Entrance Choreography (60vw):
+- IMAGE C enters from right at `scale(0.5)`, grows and settles upper-left (Behavior A, small destination)
+- Text enters from right (faster parallax), settles centered
+
+#### Multi-Phase Emphasis Sequence (100vw, scroll-driven):
+This is modeled EXACTLY on Screenshots 30–33 where the emphasis happens in stages:
+
+**Phase 1 (0–25vw): Uniform text, reading moment**
+- All text #FFFFFF. IMAGE C slowly drifting left and beginning to shrink (it's exiting during the text hold — same as Screenshot 30 where the golden image is small upper-left).
+
+**Phase 2 (25–40vw): "Houston" emphasis**
+- "Houston" gains font-weight: 700 (bold). Stays white.
+- Other words still white — emphasis is subtle at first.
+
+**Phase 3 (40–60vw): City names light up with stagger**
+- "Los Angeles" → bold, white (triggers at 40vw)
+- "New York" → bold, white (triggers at 47vw)
+- "Miami" → bold, white (triggers at 54vw)
+- These STAGGER in sequence — each city brightens a moment after the previous one. Tied to scroll position.
+
+**Phase 4 (60–75vw): Context dims**
+- "Based in", "with productions spanning", "and locations worldwide," → all animate from #FFFFFF to #444444
+- City names stay bright. IMAGE C fully exited or faded to opacity 0 by now.
+
+**Phase 5 (75–100vw): Final statement crescendo**
+- "WE GO WHERE THE STORY TAKES US." → font-weight: 700, #FFFFFF, letter-spacing tightens slightly
+- This is the equivalent of "WE HAVE GLOBAL REACH." in Screenshot 33
+
+**Final state:** Pure black viewport. City names bright white bold. Context words dim. Final statement BOLD. Hold for 20vw.
+
+#### Exit (50vw):
+- Text slides left
+- Slide 8's first image (IMAGE D) begins peeking in from the far right edge (matches Screenshot 34 where the golden foil image appears during the "Global Reach" exit)
+
+---
+
+### SLIDE 8: "The Roster"
+**Width:** 450vw
+**Reference pattern:** Screenshots 35–50 ("One Collection Of Artists / Limitless Vision" — kinetic headline, cycling body text with dim/brighten, pinned image, image swaps, dual-image exit bridge)
+
+This is the second-most complex slide. Three phases:
+
+#### Phase 1: Entrance with Kinetic Headline (100vw)
+
+**Elements entering:**
+- **LABEL:** "One Team" — small caps, tracked, gray
+  - Enters from right, settles: top: 20vh, left: 5vw
+  
+- **IMAGE D:** Placeholder, tall vertical 3:4.
+  - Label: "PORTRAIT: Producer reviewing shot list on location"
+  - Color: deep teal (#0D3B3B)
+  - Enters from right at scale(0.4), grows to fill: right: 4vw, width: 42vw, height: 78vh, top: 11vh
+  
+- **HEADLINE:** "Built Different" — massive display serif
+  - KINETIC LETTER SCATTER entrance:
+    - Each letter is wrapped in a `<span class="headline-letter">`
+    - Letters enter at RANDOM positions: `y: random(-50, 50)`, `scale: random(0.6, 1.5)`, `rotation: random(-15, 15)`, `opacity: 0`
+    - Over 30vw of scroll, all letters animate to: `y: 0, scale: 1, rotation: 0, opacity: 1`
+    - GSAP stagger: `{ each: 0.03, from: "random" }`
+    - Duration: tied to scroll, not time
+  - Final position: left: 5vw, top: 28vh
+
+**Settled state at 100vw:** Label above headline, headline below, image right. Clean two-column. Same composition as Screenshot 38.
+
+#### Phase 2: Cycling Text Sequence (250vw — scroll pauses horizontal)
+
+The horizontal scroll PAUSES. IMAGE D is PINNED via counter-animation (Behavior C).
+
+**Cycling zone:** Below the headline, left: 5vw, top: 55vh
+
+**How each cycle works (50vw of scroll per cycle):**
+
+**Cycle 1 (0–50vw):**
+- Line appears: "Producers who've managed $10M+ campaigns..."
+- Entrance: `opacity: 0→1, y: 20→0, color: #FFFFFF`
+- IMAGE D: stays as-is (initial placeholder)
+- Hold for 30vw (reading moment)
+- At 40vw: Line begins dimming: `color: #FFFFFF→#333333, opacity: 1→0.3`
+
+**Cycle 2 (50–100vw):**
+- New line: "Directors of photography who paint with light..."
+- Entrance: same animation
+- Previous line: now at `color: #333, opacity: 0.3` — visible but faint
+- IMAGE D: crossfades to new placeholder.
+  - New label: "ACTION: DP pulling focus on dolly rig"
+  - New color: warm amber (#3B2A0D)
+  - Crossfade: old image `opacity: 1→0` over 0.4s, new image `opacity: 0→1` over 0.4s, staggered 0.1s after text
+  
+**Cycle 3 (100–150vw):**
+- "Editors who find the story in the footage..."
+- IMAGE: "WORKSPACE: Editor at dual-monitor Avid timeline", muted burgundy (#3B0D1A)
+- Previous lines continue fading
+
+**Cycle 4 (150–200vw):**
+- "VFX artists who make the impossible real..."
+- IMAGE: "WORKSPACE: VFX artist compositing green screen layers", dark navy (#0D1A3B)
+
+**Cycle 5 (200–250vw):**
+- "A production team that treats every project like it's personal."
+- This line STAYS BRIGHT. Does not dim. It's the final statement.
+- IMAGE: "GROUP: Full production crew photo at golden hour on location", deep teal (#0D3B3B)
+- All previous lines now at `opacity: 0.15, color: #222` — barely ghosts
+
+#### Phase 3: Exit with Dual-Image Bridge (100vw)
+
+When horizontal scroll resumes:
+
+**0–30vw:**
+- "Built Different" headline does REVERSE kinetic scatter: letters randomize to random y/scale/rotation, then fade to opacity 0. Same as Screenshot 46–47.
+- Label and cycling text slide left
+- IMAGE D (currently "GROUP: crew photo") begins growing: `scale(1.0→1.2), xPercent: 0→-15` (expanding and moving left)
+
+**30–60vw:**
+- IMAGE D now occupies left-center of viewport, ~50% width
+- NEW IMAGE E enters from far right: Placeholder tall vertical.
+  - Label: "CINEMATIC: Dramatic low-key portrait against black"
+  - Color: muted burgundy (#3B0D1A)
+  - Enters at `scale(0.3), xPercent: 30`
+  - Grows toward right ~45% of viewport
+
+**60–100vw: DUAL-IMAGE BRIDGE**
+- Two images side by side, filling most of the viewport:
+  - IMAGE D: left-center, ~45% width
+  - IMAGE E: right, ~45% width
+  - ~10% black gap between them
+- NO TEXT. Pure visual pause. Cinematic bridge.
+- Hold for 30vw, then both begin to move:
+  - IMAGE D slides left and shrinks (exiting)
+  - IMAGE E scales up (transitioning to Slide 9's full-bleed)
+
+This mirrors Screenshots 48–50 EXACTLY.
+
+---
+
+### SLIDE 9: "The Impact"
+**Width:** 500vw (the biggest section — give it maximum room)
+**Reference pattern:** Screenshots 50–64 (dual-image bridge → full-bleed → headline overlay → awards cascade → image shrink + swap → two-column settle → horizontal exit)
+
+This is the climax of the page. Five distinct internal phases:
+
+#### PHASE A: IMAGE E Goes Full-Bleed (80vw)
+
+Starting from the dual-image bridge at the end of Slide 8:
+- IMAGE D (left) slides off the left edge: `scale(0.4→0.2), xPercent: -20→-60, opacity: 1→0`
+- IMAGE E (right) SIMULTANEOUSLY scales to full-bleed:
+  - `width: 45%→100%, height: 70%→100%, top: 15%→0%, right: 5%→0%`
+  - Or equivalently: `scale: 0.7→1.0` with `transformOrigin: center center` and `width: 100vw, height: 100vh`
+- By 80vw: IMAGE E covers the ENTIRE viewport. No black visible. Full-bleed.
+- IMAGE E placeholder: Label: "CAMPAIGN: Final delivered commercial frame — dramatic, cinematic, the hero shot". Color: warm amber (#3B2A0D). Full grain overlay.
+
+This mirrors Screenshots 50–51.
+
+#### PHASE B: Headline Overlay on Full-Bleed (80vw)
+
+**Elements appearing ON the full-bleed image:**
+- HEADLINE: "The Impact"
+  - Font: display serif, massive (clamp 60px–160px)
+  - Color: #FFFFFF
+  - text-shadow: 0 4px 60px rgba(0,0,0,0.6), 0 2px 20px rgba(0,0,0,0.4) — for legibility over image
+  - Position: left: 5vw, top: 35vh
+  - Entrance: `opacity: 0→1, y: 40→0` over first 20vw
+  
+- SUBTITLE: "Work that resonates beyond the screen."
+  - Font: body sans-serif, clamp(16px, 2vw, 28px)
+  - Color: #CCCCCC with text-shadow
+  - Position: below headline, left: 5vw
+  - Entrance: `opacity: 0→1, y: 20→0` starting 10vw after headline
+
+**Hold for 40vw.** This is the magazine cover moment. Big type on big image. Let it breathe.
+
+This mirrors Screenshots 52–54.
+
+#### PHASE C: Headline Exits, Awards Build on Full-Bleed (100vw)
+
+**0–30vw:**
+- "The Impact" headline slides LEFT off viewport: `xPercent: 0→-50, opacity: 1→0`
+- SUBTITLE slides left: `xPercent: 0→-40, opacity: 1→0`
+- Full-bleed image STAYS in place (images are the slow parallax layer — they linger)
+- New text enters from RIGHT:
+  - Line 1: "From national broadcast campaigns..."
+  - `opacity: 0→1, xPercent: 15→0`
+
+**30–50vw:**
+- Line 1 settled, overlaid on full-bleed image
+- Line 2 appears below, indented +20px from Line 1's left edge:
+  - "to globally distributed brand content..."
+  - `opacity: 0→1, y: 20→0`
+  - Line 1 dims slightly: `color: #FFFFFF→#DDDDDD`
+
+**50–80vw:**
+- Line 3 appears below, indented +40px:
+  - "to award-winning storytelling..."
+  - Line 2 dims: `#FFFFFF→#DDDDDD`
+  - Line 1 dims further: `#DDDDDD→#AAAAAA`
+
+**80–100vw:**
+- Lines are now all visible on the full-bleed image. The image may have begun a VERY slight scale-down (full-bleed → 95%) hinting at what's coming next.
+
+This mirrors Screenshots 55–57.
+
+#### PHASE D: Image Shrinks + New Image Enters (140vw)
+
+This is the most complex animation. Three things happen SIMULTANEOUSLY:
+
+**IMAGE E (full-bleed → contained):**
+- `width: 100%→28%, height: 100%→55%, top: 0%→20%, left: 0%→2%`
+- Image shrinks from filling the viewport to a contained rectangle in the LEFT side
+- Duration: scrubbed over 100vw of scroll
+- As it shrinks, black background is REVEALED around it
+
+**AWARDS TEXT (shift and build):**
+- Lines 1–3 shift leftward and slightly upward as the image shrinks
+- They separate from the image — text stays center-left while image moves left
+- Line 4 appears during this transition:
+  - "TO WORK THAT MOVES PEOPLE." — CAPS, bold, bright #FFFFFF
+  - This is the crescendo line. Previous lines dim to #888888.
+
+**IMAGE F (enters from right):**
+- New placeholder, tall vertical 3:4
+- Label: "DRAMATIC: Low-key figure in motion against pure black"
+- Color: dark navy (#0D1A3B)
+- Enters: `scale(0.3), xPercent: 40, opacity: 0` → grows to `scale(1.0), xPercent: 0, opacity: 1`
+- Destination: right side, width: 38vw, height: 70vh, right: 4vw, top: 15vh
+
+**Timing of the three simultaneous animations:**
+- 0–40vw: IMAGE E shrinking begins. Lines 1–3 starting to shift. No new image yet.
+- 40–80vw: IMAGE E at ~50% shrunk. Line 4 "TO WORK THAT MOVES PEOPLE." appearing. IMAGE F just peeking in from right edge.
+- 80–120vw: IMAGE E fully shrunk (small left). IMAGE F growing. Text settled left. Approaching two-column layout.
+- 120–140vw: SETTLED — Awards text (4 lines) left 50%. IMAGE F right 40%. IMAGE E small in far left or faded out. Black background.
+
+This mirrors Screenshots 58–62 EXACTLY — the police car shrinking left, performer growing right, awards text floating between.
+
+#### PHASE E: Exit (100vw)
+
+The settled two-column composition exits:
+- Text slides left (fastest)
+- IMAGE F slides left (slower — lingers)
+- By 60vw into exit, viewport is mostly black with IMAGE F in left 30%
+- Transitions into Slide 10
+
+This mirrors Screenshots 63–64.
+
+---
+
+### SLIDE 10: "Select Partners"
+**Width:** 200vw
+**Reference pattern:** No direct PRETTYBIRD equivalent — a clean typographic grid moment for pacing.
+
+#### Elements at SETTLED state:
+- **HEADLINE:** "Select Partners"
+  - Font: display serif, size clamp(36px, 5vw, 80px)
+  - Color: #FFFFFF
+  - Position: centered horizontally, top: 22vh
+  
+- **CLIENT GRID:** Below headline. 3×3 grid of client names.
+  - Grid: CSS Grid, 3 columns, gap: clamp(30px, 4vw, 60px) horizontal, clamp(24px, 3vw, 40px) vertical
+  - Max-width: 75vw, centered horizontally, top: 38vh
+  - Each name: display serif font, size clamp(16px, 2vw, 30px), #FFFFFF, text-align: center
+
+```
+Air New Zealand       Discovery        Ford
+HBO Max               Marriott         Philips
+Essentia              Freeport LNG     Dr. Teal's
+```
+
+#### Entrance Choreography (60vw):
+
+**0–20vw:**
+- "Select Partners" headline: `opacity: 0→1, y: 30→0`
+
+**20–55vw:**
+- Client names stagger in with a wave pattern:
+  - Row 1: left-to-right, 0.08s stagger between names, each `opacity: 0→1, y: 15→0`
+  - Row 2: same, starts 0.12s after Row 1 begins
+  - Row 3: same, starts 0.12s after Row 2 begins
+  - Total cascade completes over ~35vw of scroll
+
+#### Hold (80vw):
+All names visible. Clean grid on black. Spacious.
+
+#### Exit (60vw):
+Everything fades out together: `opacity: 1→0`, slight leftward drift.
+
+---
+
+### SLIDE 11: "The Closing"
+**Width:** 200vw
+**Reference pattern:** No PRETTYBIRD equivalent — an intimate, quiet ending that contrasts with the cinematic energy of everything before it.
+
+#### Elements at SETTLED state:
+- Pure black. Nothing else visible. No images. No labels.
+- One text block, centered both horizontally and vertically in the viewport.
+
+**Line 1:** "We'd love the opportunity to build something meaningful."
+- Font: display serif, size clamp(22px, 3vw, 42px), weight: 400 (normal, not bold)
+- Color: #FFFFFF
+- Text-align: center
+
+**Line 2:** "Together."
+- Font: same display serif, size clamp(28px, 3.8vw, 52px), weight: 700 (bold)
+- Color: #FFFFFF
+- On its own line, slightly larger than Line 1
+- 10px gap below Line 1
+
+**Line 3:** `hello@familydrama.tv`
+- Font: body sans-serif, size 14px
+- Color: #666666
+- Letter-spacing: 0.1em
+- 60px gap below "Together."
+
+#### Entrance (this is DIFFERENT from all other slides):
+This slide's content does NOT enter from the right. It MATERIALIZES. There is no directional slide. The text fades in from the center:
+
+**0–30vw:**
+- Viewport is pure black (transition from Slide 10's exit)
+
+**30–60vw:**
+- Line 1 fades in: `opacity: 0→1` with very slow ease (1.5s equivalent, scrubbed). No y movement. No x movement. It just appears.
+
+**60–80vw:**
+- "Together." fades in same way, 0.6s behind Line 1
+
+**80–100vw:**
+- `hello@familydrama.tv` fades in. Very subtle. Very quiet.
+
+**100–200vw:**
+- Everything holds. This is the END. No exit animation. The scroll stops here.
+- If the user has reached the end of the horizontal scroll, further scrolling does nothing (ScrollTrigger naturally handles this — the pin releases).
+
+---
+
+## PART 6: RESPONSIVE BEHAVIOR
+
+### Desktop (>1024px)
+Full horizontal filmstrip experience as described above. All parallax, all kinetic typography, all scroll-driven animations active.
+
+### Tablet (768–1024px)
+Same horizontal experience. Type sizes scale via clamp(). Parallax speeds reduced by ~30% to feel less dramatic. Images may be slightly wider relative to viewport (50% → 55%).
+
+### Mobile (<768px)
+**Convert to VERTICAL scroll.** The horizontal filmstrip becomes a standard vertically-scrolling page:
+- Each slide becomes a `min-height: 100vh` vertical section
+- Content order stays identical
+- Images go full-width (width: 100%, no offset positioning)
+- Text stays left-aligned with padding: 0 5vw
+- All GSAP horizontal transforms DISABLED
+- ScrollTrigger animations convert to simple scroll-into-view triggers (fade in when element enters viewport)
+- The manifesto and cycling text sequences play on scroll-into-view (simpler vertical ScrollTrigger with scrub)
+- No scroll hijacking — native vertical scroll
+- No parallax
+
+### Reduced Motion
+If `prefers-reduced-motion: reduce`:
+- Disable ALL parallax
+- Disable ALL scroll-driven animations  
+- Disable scroll hijacking (convert to vertical)
+- Show ALL content statically — full opacity, final positions
+- No kinetic typography (letters in final positions immediately)
+- No emphasis shifts (keywords pre-emphasized)
+- No image scaling (images at settled sizes)
+
+---
+
+## PART 7: TECHNICAL REQUIREMENTS
+
+### Libraries
+- **GSAP 3.12+** (core + ScrollTrigger) — REQUIRED. CDN or npm.
+- **SplitText** (GSAP Club plugin) — PREFERRED for kinetic typography on "Built Different". If unavailable, manually wrap each letter in `<span>` in the HTML.
+- **No other JS libraries.** Vanilla JS + GSAP only.
+- CSS: Vanilla CSS with custom properties. Tailwind is acceptable IF the existing codebase uses it.
+
+### Performance Targets
+- 60fps throughout on desktop. The horizontal scroll MUST feel buttery smooth. If any section drops frames, reduce parallax complexity there first.
+- `will-change: transform` on all animated elements
+- `transform: translate3d(0,0,0)` to force GPU compositing on animated layers
+- Use GSAP's `invalidateOnRefresh: true` on all ScrollTriggers
+- Debounce resize handlers
+- Lazy-load placeholder images (for when real images replace them later)
+
+### CSS Custom Properties
+```css
+:root {
+  --color-bg: #000000;
+  --color-text: #FFFFFF;
+  --color-text-dim: #444444;
+  --color-text-muted: #666666;
+  --color-text-faint: #333333;
+  --color-text-ghost: #222222;
+  --color-accent: #B0B0B0;
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Syne', sans-serif;
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --placeholder-teal: #0D3B3B;
+  --placeholder-amber: #3B2A0D;
+  --placeholder-burgundy: #3B0D1A;
+  --placeholder-navy: #0D1A3B;
+  --placeholder-olive: #1A2B0D;
+}
+```
+
+### Semantic HTML
+- Each slide: `<section class="slide slide-N" aria-label="Section Name">`
+- Proper heading hierarchy: one `<h2>` per slide, labels as `<p>` or `<span>`
+- Placeholder images: `<div role="img" aria-label="..." data-label="...">`
+- Skip-link to main content for screen readers
+
+---
+
+## PART 8: WHAT NOT TO BUILD
+
+- Do NOT touch Slides 1 or 2
+- No navigation bar (exists separately)
+- No footer (exists separately)  
+- No real images — use the placeholder system described in Part 3
+- No video players or embeds
+- No contact forms
+- No hover effects on text
+- No loading screens or preloaders
+- No parallax on mobile
+- No snap scrolling — the scroll is continuous and smooth, NEVER snapping to positions
+- No scroll progress bars
+- No "scroll down" arrows or hints
+- No scroll indicators of any kind
+
+---
+
+## SUMMARY
+
+| Slide | Name | Width | Key Animation | PRETTYBIRD Reference |
+|-------|------|-------|---------------|---------------------|
+| 3 | The Work Speaks | 250vw | Image Behavior A (grow → settle → shrink) + headline overlay | Screenshots 1–5 |
+| 3→4 | Transition | ~80vw | Image A shrinking left, black breathing room, Slide 4 peeking right | Screenshots 5–9 |
+| 4 | Capabilities Manifesto | 400vw | Image Behavior A entrance + Typography A (stacking line reveals, scroll pauses) | Screenshots 9–18 |
+| 5 | Capabilities Ticker | 120vw | CSS marquee, independent of scroll, dark gray on black | Screenshots 23–24 |
+| 5→6 | Transition | ~50vw | Pure black pause — motion → stillness | — |
+| 6 | The Mission | 250vw | Typography B (keyword emphasis — context dims, keywords stay bright) | Screenshots 25–27, 30–32 |
+| 6→7 | Transition | ~40vw | Two text blocks overlapping during horizontal wipe | Screenshots 28–29 |
+| 7 | The Reach | 250vw | Typography B with multi-phase staggered city emphasis + crescendo | Screenshots 29–34 |
+| 8 | The Roster | 450vw | Typography C (kinetic headline scatter + cycling text/images) + Image Behavior C (pinned) + Behavior D (dual-image bridge exit) | Screenshots 35–50 |
+| 9 | The Impact | 500vw | Image Behavior B (full-bleed) + Typography D (awards cascade on image → image shrinks → new image enters → two-column) | Screenshots 50–64 |
+| 10 | Select Partners | 200vw | Staggered grid reveal | — |
+| 11 | The Closing | 200vw | Materialization (no directional entrance, fades from center) | — |
+
+**Total canvas width for Slides 3–11:** ~2,820vw (including transition zones)
+**Reference:** https://prettybird.co/about/ — match this level of craft, animation quality, and pacing.
+**Company:** Family Drama — full-service video production, Houston-based

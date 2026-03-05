@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const EASE = 0.05;
 const SCROLL_DAMPEN = 0.5;
-const SLIDE_COUNT = 15;
-const SHOWCASE_SLIDE = 14;
 const HERO_LOCK_MULTIPLIER = 1;
 const SLIDE2_LOCK_MULTIPLIER = 2;
 
@@ -39,60 +41,54 @@ const cyclingWords = [
   "Content Worth Watching",
 ];
 
-const coreBeliefs = [
-  "The best work comes from trust, not timelines.",
-  "Directors aren't interchangeable.",
-  "Brands deserve a partner, not a vendor.",
-  "We don't hide behind the treatment.",
-  "We don't play it safe.",
+const manifestoLines = [
+  "We conceptualize.",
+  "We create.",
+  "We produce.",
+  "We distribute.",
+  "From first frame to final delivery.",
+];
+const manifestoCrescendo = "EVERY. SINGLE. STEP.";
+
+const missionText = {
+  before: "Family Drama is a full-service production company that creates content which transcends ",
+  keyword1: "PLATFORMS",
+  mid: " and ",
+  keyword2: "LIVES",
+  after: " at the intersection of ",
+  keywords: ["branded entertainment,", "culture,", "sports,", "technology", "and storytelling."],
+};
+
+const reachText = {
+  intro: "Based in ",
+  cities: ["Houston,", "Los Angeles,", "New York,", "Miami"],
+  mid: " with productions spanning ",
+  after: " and locations worldwide, ",
+  crescendo: "WE GO WHERE THE STORY TAKES US.",
+};
+
+const rosterLines = [
+  "Producers who've managed $10M+ campaigns...",
+  "Directors of photography who paint with light...",
+  "Editors who find the story in the footage...",
+  "VFX artists who make the impossible real...",
+  "A production team that treats every project like it's personal.",
 ];
 
-const rosterItems = [
-  "From Super Bowl spots to startup launch films…",
-  "To athlete driven docuseries…",
-  "To brand campaigns that live beyond the media buy…",
-  "To passion projects that win festivals…",
-  "To content that earns press, not just placement…",
-  "To work that makes the reel and the culture.",
+const impactLines = [
+  "From national broadcast campaigns...",
+  "to globally distributed brand content...",
+  "to award-winning storytelling...",
+];
+const impactCrescendo = "TO WORK THAT MOVES PEOPLE.";
+
+const clientGrid = [
+  "Air New Zealand", "Discovery", "Ford",
+  "HBO Max", "Marriott", "Philips",
+  "Essentia", "Freeport LNG", "Dr. Teal's",
 ];
 
-const showcaseCards = [
-  {
-    statNumber: "3 Part Docuseries",
-    statLabel: "Original Production",
-    creditTitle: "Grit & Glory: Journey to the Draft",
-    creditDetail: "Directed by Family Drama / Produced by Family Drama",
-    image: "/images/project-1.png",
-  },
-  {
-    statNumber: "National Broadcast",
-    statLabel: "Network Campaign",
-    creditTitle: "Dr. Teal's x Aaron Donald",
-    creditDetail: "Directed by Family Drama",
-    image: "/images/project-2.png",
-  },
-  {
-    statNumber: "12 Million",
-    statLabel: "Views",
-    creditTitle: "Branded Content Partnership",
-    creditDetail: "Family Drama × Brand",
-    image: "/images/project-3.png",
-  },
-  {
-    statNumber: "SXSW",
-    statLabel: "Official Selection",
-    creditTitle: "Documentary Feature",
-    creditDetail: "A Family Drama Production",
-    image: "/images/project-4.png",
-  },
-  {
-    statNumber: "Director Spotlight",
-    statLabel: "Family Drama Roster",
-    creditTitle: "Director Reel",
-    creditDetail: "Featured Work",
-    image: "/images/project-5.png",
-  },
-];
+const marqueeText = "CREATIVE · LIVE ACTION · VFX · POST-PRODUCTION · VIRTUAL PRODUCTION · STILL PHOTOGRAPHY · BRANDED CONTENT · SOCIAL · BROADCAST · ";
 
 function useHorizontalScroll() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -101,7 +97,6 @@ function useHorizontalScroll() {
   const maxVirtual = useRef(0);
   const heroLockDist = useRef(0);
   const slide2LockDist = useRef(0);
-  const showcaseContainer = useRef<HTMLDivElement | null>(null);
   const rafId = useRef<number>(0);
   const isMobile = useRef(false);
 
@@ -151,32 +146,6 @@ function useHorizontalScroll() {
       if (isMobile.current) return;
       e.preventDefault();
 
-      const realX = virtualToReal(currentVirtual.current);
-      const showcaseSlidePos = SHOWCASE_SLIDE * window.innerWidth;
-      const atShowcase = realX >= showcaseSlidePos - 10;
-
-      if (atShowcase && showcaseContainer.current) {
-        const sc = showcaseContainer.current;
-        const scrollMax = sc.scrollHeight - sc.clientHeight;
-        const delta = e.deltaY || e.deltaX;
-
-        if (delta > 0 && sc.scrollTop < scrollMax - 2) {
-          sc.scrollTop = Math.min(scrollMax, sc.scrollTop + delta);
-          return;
-        }
-        if (delta < 0 && sc.scrollTop > 2) {
-          sc.scrollTop = Math.max(0, sc.scrollTop + delta);
-          return;
-        }
-        if (delta < 0 && sc.scrollTop <= 2) {
-          targetVirtual.current = Math.max(0, targetVirtual.current + delta);
-          return;
-        }
-        if (delta > 0 && sc.scrollTop >= scrollMax - 2) {
-          return;
-        }
-      }
-
       const delta = (e.deltaY || e.deltaX) * SCROLL_DAMPEN;
       targetVirtual.current = Math.max(0, Math.min(maxVirtual.current, targetVirtual.current + delta));
     };
@@ -220,7 +189,7 @@ function useHorizontalScroll() {
     };
   }, [calculateMax]);
 
-  return { wrapperRef, showcaseContainer };
+  return { wrapperRef };
 }
 
 function useReveal() {
@@ -793,329 +762,1290 @@ function Slide2Difference() {
   );
 }
 
-function Slide3Philosophy() {
+function PlaceholderImage({ label, color, className, style }: {
+  label: string;
+  color: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
-    <div className="slide flex flex-col items-center justify-center" data-testid="slide-3-philosophy">
-      <div className="w-[60vw] max-w-[800px] overflow-hidden mb-12" style={{ aspectRatio: "2.4 / 1" }}>
-        <img
-          src="/images/about-production-2.png?v=2"
-          alt=""
-          className="w-full h-full object-cover parallax-element"
-          data-parallax="0.1"
-          style={{ transform: "scale(1.05)" }}
-        />
-      </div>
-      <p className="reveal -t-20 max-w-[560px] text-center mx-auto px-8">
-        We started as Bolt TV Studios with a camera, a roster, and a point of view.
-        We rebranded as Family Drama because that's what we've always been. A tight
-        crew that fights for the work, shows up for each other, and treats every
-        production like it matters. Because it does.
-      </p>
-    </div>
+    <div
+      role="img"
+      aria-label={label}
+      data-label={label}
+      className={`placeholder-image ${className || ""}`}
+      style={{ backgroundColor: color, ...style }}
+    />
   );
 }
 
-function Slide4Directors() {
-  return (
-    <div className="slide" data-testid="slide-4-directors">
-      <div className="absolute right-0 top-0 h-full w-[50vw] overflow-hidden">
-        <img
-          src="/images/about-production-3.png"
-          alt=""
-          className="w-full h-full object-cover parallax-element"
-          data-parallax="0.1"
-          style={{ transform: "scale(1.2)", transformOrigin: "top center" }}
-        />
-      </div>
-      <div className="absolute top-[30%] left-[8vw] z-20" style={{ transform: "translateY(-50%)" }}>
-        <h2 className="-t-100 font-normal text-white reveal">
-          It Starts with Directors
-        </h2>
-        <p className="reveal -t-20 max-w-[440px] mt-10 text-white" style={{ transitionDelay: "100ms" }}>
-          We don't assign directors to projects. We build relationships with filmmakers
-          who have a voice, a vision, and something to prove. Then we put the full weight
-          of the company behind them.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Slide5Craft() {
-  return (
-    <div className="slide flex flex-col items-center justify-center" data-testid="slide-5-craft">
-      <div className="w-[45vh] h-[45vh] overflow-hidden mb-12 mx-auto">
-        <img
-          src="/images/about-content.png"
-          alt=""
-          className="w-full h-full object-cover parallax-element"
-          data-parallax="0.08"
-          style={{ transform: "scale(1.15)" }}
-        />
-      </div>
-      <p className="reveal -t-20 max-w-[500px] px-8" style={{ marginLeft: "28%" }}>
-        From concept to color, we're in the room. We don't hand off. We stay involved
-        because the gap between a good spot and a great one is the hundred decisions
-        nobody sees.
-      </p>
-    </div>
-  );
-}
-
-function Slide6CoreBeliefs() {
-  return (
-    <div className="slide" data-testid="slide-6-beliefs">
-      <div className="absolute inset-0">
-        <img src="/images/about-experience.png?v=2" alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%)" }} />
-      </div>
-      <div className="absolute left-[8vw] bottom-[50%] z-10">
-        <h2 className="-t-100 font-normal text-white reveal">Core Beliefs</h2>
-      </div>
-      <div className="absolute left-[8vw] bottom-[8vh] max-w-[500px] z-10">
-        <p className="reveal -t-20">
-          {coreBeliefs.join(" ")}{" "}
-          <span className="font-bold">WE MAKE IT PERSONAL.</span>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Slide7Beyond() {
-  return (
-    <div className="slide" data-testid="slide-7-beyond">
-      <div className="absolute left-[8vw]" style={{ top: "calc(50% - 22vh)" }}>
-        <h2 className="-t-125 font-normal text-white reveal">Beyond<br />the Brief</h2>
-      </div>
-      <div
-        className="absolute overflow-hidden slide-in-right"
-        style={{ right: "8vw", top: "50%", transform: "translateY(-30%)", width: "40vw", height: "50vh" }}
-      >
-        <img src="/images/about-abstract.png" alt="" className="w-full h-full object-cover" />
-      </div>
-    </div>
-  );
-}
-
-function Slide8Capabilities() {
-  return (
-    <div className="slide flex items-center" data-testid="slide-8-capabilities">
-      <div className="transparent-reveal" style={{ position: "relative", left: "8vw" }}>
-        <span className="tr-context">Family Drama is a full service production company creating work across </span>
-        <span className="tr-keyword">Commercials</span>
-        <span className="tr-context">, </span>
-        <span className="tr-keyword">Branded Content</span>
-        <span className="tr-context">, </span>
-        <span className="tr-keyword">Documentaries</span>
-        <span className="tr-context">, and </span>
-        <span className="tr-keyword">Special Projects</span>
-        <span className="tr-context"> for agencies, brands, and platforms that expect more than just execution.</span>
-      </div>
-      <div
-        className="absolute slide-in-right overflow-hidden"
-        style={{ right: "6vw", bottom: "15vh", width: "25vw" }}
-      >
-        <img src="/images/project-6.png" alt="" className="w-full h-auto object-cover" />
-      </div>
-    </div>
-  );
-}
-
-function Slide9Reach() {
-  return (
-    <div className="slide flex items-center" data-testid="slide-9-reach">
-      <div className="transparent-reveal" style={{ position: "relative", left: "8vw" }}>
-        <span className="tr-context">Based in </span>
-        <span className="tr-keyword">Texas</span>
-        <span className="tr-context">, shooting </span>
-        <span className="tr-keyword">everywhere</span>
-        <span className="tr-context">, with a director roster that spans coasts, styles, and sensibilities. </span>
-        <span className="tr-keyword tr-kicker">The work goes wherever the story is.</span>
-      </div>
-    </div>
-  );
-}
-
-function Slide10Roster() {
-  return (
-    <div className="slide" data-testid="slide-10-roster">
-      <div className="absolute left-[8vw] top-[15%] max-w-[45vw] z-10">
-        <p className="-t-60 font-normal text-white reveal">One Roster</p>
-        <h2 className="-t-100 font-normal text-white reveal mt-4" style={{ transitionDelay: "100ms" }}>Every Register</h2>
-        <div className="cascade mt-10">
-          {rosterItems.map((item, i) => (
-            <p key={i} className="reveal -t-20 mb-4 text-[#999]">{item}</p>
-          ))}
-        </div>
-      </div>
-      <div className="absolute right-0 top-0 w-[50vw] h-full overflow-hidden">
-        <img src="/images/about-3d.png" alt="" className="w-full h-full object-cover clip-reveal" />
-      </div>
-    </div>
-  );
-}
-
-function Slide11TheWork() {
-  const [active, setActive] = useState(false);
+function FilmstripSlides() {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
     const onHScroll = (e: Event) => {
       const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
       const vw = window.innerWidth;
-      const slideStart = 10 * vw;
-      const slideEnd = 12 * vw;
-      setActive(detail.scrollX >= slideStart - vw * 0.5 && detail.scrollX <= slideEnd);
+
+      if (!containerRef.current) return;
+      const slides = containerRef.current.querySelectorAll<HTMLElement>(".filmstrip-slide");
+
+      slides.forEach((slide) => {
+        const slideLeft = slide.offsetLeft;
+        const slideWidth = slide.offsetWidth;
+        const slideCenter = slideLeft + slideWidth / 2;
+        const viewCenter = scrollX + vw / 2;
+        const distFromCenter = (viewCenter - slideCenter) / vw;
+        const entryProgress = Math.max(0, Math.min(1, (scrollX + vw - slideLeft) / slideWidth));
+        const exitProgress = Math.max(0, Math.min(1, (scrollX - slideLeft) / slideWidth));
+        const centerProgress = Math.max(0, Math.min(1, 1 - Math.abs(distFromCenter) / (slideWidth / vw)));
+
+        slide.style.setProperty("--entry", String(entryProgress));
+        slide.style.setProperty("--exit", String(exitProgress));
+        slide.style.setProperty("--center", String(centerProgress));
+        slide.style.setProperty("--dist", String(distFromCenter));
+
+        const headlines = slide.querySelectorAll<HTMLElement>(".film-headline");
+        headlines.forEach((h) => {
+          const speed = 1.15;
+          const offset = distFromCenter * vw * (speed - 1) * -0.5;
+          h.style.transform = `translateX(${offset}px)`;
+        });
+
+        const bodyTexts = slide.querySelectorAll<HTMLElement>(".film-body");
+        bodyTexts.forEach((b) => {
+          b.style.transform = `translateX(0px)`;
+        });
+
+        const images = slide.querySelectorAll<HTMLElement>(".film-image");
+        images.forEach((img) => {
+          const speed = 0.78;
+          const offset = distFromCenter * vw * (1 - speed) * 0.5;
+          img.style.transform = `translateX(${offset}px) ${img.dataset.extraTransform || ""}`;
+        });
+      });
     };
+
     window.addEventListener("horizontalscroll", onHScroll);
     return () => window.removeEventListener("horizontalscroll", onHScroll);
   }, []);
 
   return (
-    <>
-      <div className={`slide-11-bg ${active ? "is-active" : ""}`}>
-        <img src="/images/about-abstract-1.png" alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
-      <div className="slide flex flex-col items-center justify-center" data-testid="slide-11-thework">
-        <h2 className="-t-200 font-normal text-white reveal text-center">The Work</h2>
-        <p className="reveal -t-24 text-center text-[#999] mt-8 max-w-[500px]" style={{ transitionDelay: "200ms" }}>
-          We don't just deliver. We make things people talk about.
-        </p>
-      </div>
-    </>
-  );
-}
-
-function Slide12Proof() {
-  return (
-    <div className="slide flex items-center" data-testid="slide-12-proof">
-      <div className="absolute left-[8vw] top-[50%] max-w-[500px] cascade" style={{ transform: "translateY(-50%)" }}>
-        <p className="reveal -t-24 mb-6">From national broadcast campaigns,</p>
-        <p className="reveal -t-24 mb-6">to series that changed how brands tell stories,</p>
-        <p className="reveal -t-24">to projects that put new directors on the map…</p>
-      </div>
-      <div
-        className="absolute overflow-hidden slide-in-right"
-        style={{ right: "12vw", top: "50%", transform: "translateY(-50%)", width: "30vw", height: "45vh" }}
-      >
-        <img src="/images/project-7.png" alt="" className="w-full h-full object-cover" />
-      </div>
+    <div ref={containerRef} style={{ display: "contents" }}>
+      <Slide3WorkSpeaks />
+      <Slide4Manifesto />
+      <Slide5Ticker />
+      <Slide6Mission />
+      <Slide7Reach />
+      <Slide8Roster />
+      <Slide9Impact />
+      <Slide10Partners />
+      <Slide11Closing />
     </div>
   );
 }
 
-function Slide13Flagship() {
-  return (
-    <div className="slide" data-testid="slide-13-flagship">
-      <div className="absolute left-[8vw] top-[15vh] w-[35vw] h-[70vh] overflow-hidden">
-        <img
-          src="/images/project-1.png"
-          alt=""
-          className="w-full h-full object-cover reveal"
-          style={{ transform: "scale(1.1)", transition: "opacity 0.8s var(--ease), transform 1.2s var(--ease)" }}
-        />
-      </div>
-      <div className="absolute right-[8vw] top-[50%] max-w-[480px] text-right cascade" style={{ transform: "translateY(-50%)" }}>
-        <p className="reveal -t-24 mb-6">From "Grit &amp; Glory," a docuseries that followed Bo Nix from draft prep to the NFL,</p>
-        <p className="reveal -t-24 mb-6">to branded content partnerships with top-tier brands,</p>
-        <p className="reveal -t-24">to commercial work seen by millions.</p>
-      </div>
-    </div>
-  );
-}
-
-function Slide14Culture() {
-  return (
-    <div className="slide" data-testid="slide-14-culture">
-      <div className="absolute left-[6vw] top-[15vh] w-[30vw] h-[65vh] overflow-hidden">
-        <img src="/images/about-production-1.png" alt="" className="w-full h-full object-cover clip-reveal" />
-      </div>
-      <div className="absolute right-[8vw] top-[30%] max-w-[440px]" style={{ transform: "translateY(-50%)" }}>
-        <p className="reveal -t-20 text-[#999]">
-          We measure success the same way we pick projects. By gut. Does it move people?
-          Does it hold up? Does it make our directors proud?
-        </p>
-      </div>
-      <div className="absolute right-[8vw] bottom-[15vh]">
-        <p className="reveal -t-24 text-white" style={{ transitionDelay: "200ms" }}>
-          That's the only metric that
-        </p>
-        <p className="-t-100 text-uppercase-bold text-white climax-word mt-2">
-          MATTERS.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function Slide15Showcase({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+function Slide3WorkSpeaks() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const sc = containerRef.current;
+    if (window.innerWidth <= 1024) return;
 
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = (entry.target as HTMLElement).querySelector(".media-video") as HTMLVideoElement | null;
-          const container = entry.target.querySelector(".media-container");
-          if (!video || !container) return;
-          if (entry.isIntersecting) {
-            video.play().then(() => container.classList.add("video-active")).catch(() => {});
-          } else {
-            video.pause();
-            container.classList.remove("video-active");
-          }
-        });
-      },
-      { threshold: 0.3, root: sc }
-    );
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
 
-    sc.querySelectorAll(".showcase__card").forEach((card) => obs.observe(card));
-    return () => obs.disconnect();
-  }, [containerRef]);
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      if (imgRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / 0.4));
+        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        const scale = 0.5 + enterP * 0.5 - exitP * 0.35;
+        const xP = (1 - enterP) * 25 - exitP * 25;
+        const opacity = Math.min(1, enterP * 1.5) * (1 - exitP * 0.5);
+        imgRef.current.style.transform = `scale(${scale}) translateX(${xP}%)`;
+        imgRef.current.style.opacity = String(opacity);
+      }
+
+      if (headlineRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.15) / 0.3));
+        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        const opacity = enterP * (1 - exitP);
+        const y = (1 - enterP) * 60;
+        const xExit = exitP * -40;
+        headlineRef.current.style.transform = `translateY(${y}px) translateX(${xExit}%)`;
+        headlineRef.current.style.opacity = String(opacity);
+      }
+
+      if (subtitleRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.3) / 0.2));
+        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        const opacity = enterP * (1 - exitP);
+        const y = (1 - enterP) * 20;
+        subtitleRef.current.style.transform = `translateY(${y}px) translateX(${exitP * -30}%)`;
+        subtitleRef.current.style.opacity = String(opacity);
+      }
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
 
   return (
-    <div className="slide" data-testid="slide-15-showcase" style={{ overflow: "hidden" }}>
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{ width: "250vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      aria-label="The Work Speaks"
+      data-testid="slide-3-workspeaks"
+    >
       <div
-        ref={containerRef as React.RefObject<HTMLDivElement>}
-        className="w-full h-full overflow-y-auto"
-        style={{ scrollbarWidth: "none" }}
+        ref={imgRef}
+        style={{
+          position: "absolute",
+          width: "85vw",
+          height: "88vh",
+          top: "6vh",
+          left: "7vw",
+          zIndex: 1,
+          willChange: "transform, opacity",
+          transform: "scale(0.5) translateX(25%)",
+          opacity: 0,
+        }}
       >
-        {showcaseCards.map((card, i) => (
-          <div key={i} className="showcase__card">
-            <div className="media-container absolute inset-0">
-              <img className="media-image" src={card.image} alt="" loading="lazy" />
-              <video
-                ref={(el) => { videoRefs.current[i] = el; }}
-                className="media-video"
-                muted
-                loop
-                playsInline
-                preload="none"
-                poster={card.image}
-              />
-            </div>
-            <div className="showcase__overlay" />
-            <div className="absolute top-[12vh] left-[8vw] z-[2]">
-              <p className="-t-150 font-normal">{card.statNumber}</p>
-              <p className="-t-24 text-[#999] mt-2">{card.statLabel}</p>
-            </div>
-            <div className="absolute bottom-[8vh] left-[8vw] z-[2]" style={{ mixBlendMode: "difference" }}>
-              <p className="text-lg font-medium">{card.creditTitle}</p>
-              <p className="text-sm text-[#999] mt-1">{card.creditDetail}</p>
-            </div>
+        <PlaceholderImage
+          label="HERO: Full crew on active commercial set — lights, camera, action"
+          color="#0D3B3B"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+      <h2
+        ref={headlineRef}
+        className="film-headline"
+        style={{
+          position: "absolute",
+          bottom: "15vh",
+          left: "5vw",
+          zIndex: 2,
+          fontSize: "clamp(60px, 9vw, 160px)",
+          lineHeight: 0.95,
+          color: "#FFFFFF",
+          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontWeight: 600,
+          textShadow: "0 2px 40px rgba(0,0,0,0.5)",
+          opacity: 0,
+          willChange: "transform, opacity",
+        }}
+      >
+        The Work Speaks
+      </h2>
+      <p
+        ref={subtitleRef}
+        style={{
+          position: "absolute",
+          bottom: "8vh",
+          left: "5vw",
+          zIndex: 2,
+          fontSize: "clamp(16px, 2vw, 28px)",
+          color: "#B0B0B0",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 500,
+          opacity: 0,
+          willChange: "transform, opacity",
+        }}
+      >
+        A decade of content for the world's most recognized brands.
+      </p>
+    </section>
+  );
+}
+
+function Slide4Manifesto() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLParagraphElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const crescendoRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      if (imgRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / 0.25));
+        const exitP = Math.max(0, Math.min(1, (p - 0.75) / 0.25));
+        const scale = 0.4 + enterP * 0.6 - exitP * 0.4;
+        const xP = (1 - enterP) * 40 - exitP * 20;
+        imgRef.current.style.transform = `scale(${scale}) translateX(${xP}%)`;
+        imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
+      }
+
+      if (labelRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.02) / 0.12));
+        const exitP = Math.max(0, Math.min(1, (p - 0.75) / 0.25));
+        labelRef.current.style.opacity = String(enterP * (1 - exitP));
+        labelRef.current.style.transform = `translateX(${(1 - enterP) * 40 - exitP * 40}px)`;
+      }
+
+      if (headlineRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.05) / 0.15));
+        const exitP = Math.max(0, Math.min(1, (p - 0.75) / 0.25));
+        headlineRef.current.style.opacity = String(enterP * (1 - exitP));
+        headlineRef.current.style.transform = `translateX(${(1 - enterP) * 60 - exitP * 60}px)`;
+      }
+
+      const manifestoStart = 0.25;
+      const manifestoEnd = 0.75;
+      const manifestoP = Math.max(0, Math.min(1, (p - manifestoStart) / (manifestoEnd - manifestoStart)));
+
+      manifestoLines.forEach((_, i) => {
+        const el = lineRefs.current[i];
+        if (!el) return;
+        const lineStart = i / (manifestoLines.length + 1);
+        const lineEnd = lineStart + 1 / (manifestoLines.length + 1);
+        const lineP = Math.max(0, Math.min(1, (manifestoP - lineStart) / (lineEnd - lineStart)));
+        const dimP = Math.max(0, Math.min(1, (manifestoP - 0.85) / 0.15));
+        el.style.opacity = String(lineP);
+        el.style.transform = `translateY(${(1 - lineP) * 25}px)`;
+        const color = dimP > 0 ? Math.round(255 - dimP * 119) : 255;
+        el.style.color = `rgb(${color}, ${color}, ${color})`;
+      });
+
+      if (crescendoRef.current) {
+        const cStart = (manifestoLines.length) / (manifestoLines.length + 1);
+        const cP = Math.max(0, Math.min(1, (manifestoP - cStart) / (1 - cStart)));
+        crescendoRef.current.style.opacity = String(cP);
+        crescendoRef.current.style.transform = `translateY(${(1 - cP) * 25}px)`;
+      }
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{ width: "400vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      aria-label="Capabilities Manifesto"
+      data-testid="slide-4-manifesto"
+    >
+      <div
+        ref={imgRef}
+        style={{
+          position: "absolute",
+          width: "42vw",
+          height: "75vh",
+          right: "4vw",
+          top: "12vh",
+          zIndex: 1,
+          willChange: "transform, opacity",
+          transform: "scale(0.4) translateX(40%)",
+          opacity: 0,
+        }}
+      >
+        <PlaceholderImage
+          label="ACTION: Camera operator tracking shot through set"
+          color="#3B2A0D"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      <div style={{ position: "absolute", top: "18vh", left: "5vw", zIndex: 2 }}>
+        <p
+          ref={labelRef}
+          style={{
+            fontSize: "clamp(11px, 1.2vw, 16px)",
+            textTransform: "uppercase",
+            letterSpacing: "0.2em",
+            color: "#666666",
+            opacity: 0,
+            willChange: "transform, opacity",
+            fontFamily: "'Ritmica', sans-serif",
+            fontWeight: 500,
+          }}
+        >
+          What We Do
+        </p>
+        <h2
+          ref={headlineRef}
+          style={{
+            fontSize: "clamp(60px, 9vw, 160px)",
+            lineHeight: 0.95,
+            color: "#FFFFFF",
+            fontFamily: "'Ritmica', 'DM Serif Display', serif",
+            fontWeight: 600,
+            marginTop: "12px",
+            opacity: 0,
+            willChange: "transform, opacity",
+          }}
+        >
+          Full Service
+        </h2>
+
+        <div style={{ marginTop: "40px" }}>
+          {manifestoLines.map((line, i) => (
+            <p
+              key={i}
+              ref={(el) => { lineRefs.current[i] = el; }}
+              style={{
+                fontSize: "clamp(18px, 2.5vw, 36px)",
+                lineHeight: 1.6,
+                color: "#FFFFFF",
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 500,
+                opacity: 0,
+                willChange: "transform, opacity",
+                marginBottom: "8px",
+              }}
+            >
+              {line}
+            </p>
+          ))}
+          <p
+            ref={crescendoRef}
+            style={{
+              fontSize: "clamp(22px, 3vw, 40px)",
+              lineHeight: 1.6,
+              color: "#FFFFFF",
+              fontFamily: "'Ritmica', sans-serif",
+              fontWeight: 700,
+              letterSpacing: "0.05em",
+              opacity: 0,
+              willChange: "transform, opacity",
+              marginTop: "8px",
+            }}
+          >
+            {manifestoCrescendo}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Slide5Ticker() {
+  return (
+    <section
+      className="filmstrip-slide"
+      style={{
+        width: "120vw",
+        height: "100vh",
+        flexShrink: 0,
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+      }}
+      aria-label="Capabilities Ticker"
+      data-testid="slide-5-ticker"
+    >
+      <div
+        style={{
+          display: "flex",
+          whiteSpace: "nowrap",
+          animation: "marquee-scroll 30s linear infinite",
+          willChange: "transform",
+        }}
+      >
+        {[0, 1].map((k) => (
+          <span
+            key={k}
+            style={{
+              fontSize: "clamp(28px, 4.5vw, 64px)",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "#333333",
+              fontFamily: "'Ritmica', sans-serif",
+              fontWeight: 500,
+              paddingRight: "0.5em",
+            }}
+          >
+            {marqueeText}
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Slide6Mission() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current || !textRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      const enterP = Math.max(0, Math.min(1, p / 0.3));
+      const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+      textRef.current.style.opacity = String(enterP * (1 - exitP));
+      textRef.current.style.transform = `translateX(${(1 - enterP) * 15 - exitP * 20}%)`;
+
+      const emphasisStart = 0.4;
+      const emphasisEnd = 0.7;
+      const emphP = Math.max(0, Math.min(1, (p - emphasisStart) / (emphasisEnd - emphasisStart)));
+
+      textRef.current.querySelectorAll<HTMLElement>(".context-word").forEach((el) => {
+        const dimColor = Math.round(255 - emphP * (255 - 68));
+        el.style.color = `rgb(${dimColor}, ${dimColor}, ${dimColor})`;
+      });
+
+      textRef.current.querySelectorAll<HTMLElement>(".keyword").forEach((el) => {
+        el.style.fontWeight = String(400 + emphP * 300);
+      });
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{
+        width: "250vw",
+        height: "100vh",
+        flexShrink: 0,
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      aria-label="The Mission"
+      data-testid="slide-6-mission"
+    >
+      <div
+        ref={textRef}
+        style={{
+          maxWidth: "80vw",
+          fontSize: "clamp(24px, 3.5vw, 52px)",
+          lineHeight: 1.3,
+          textAlign: "center",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 500,
+          opacity: 0,
+          willChange: "transform, opacity",
+        }}
+      >
+        <span className="context-word">Family Drama is a full-service production company that creates content which transcends </span>
+        <span className="keyword" style={{ color: "#FFFFFF" }}>PLATFORMS</span>
+        <span className="context-word"> and </span>
+        <span className="keyword" style={{ color: "#FFFFFF" }}>LIVES</span>
+        <span className="context-word"> at the intersection of </span>
+        <span className="keyword" style={{ color: "#FFFFFF" }}>branded entertainment,</span>
+        <span className="context-word"> </span>
+        <span className="keyword" style={{ color: "#FFFFFF" }}>culture,</span>
+        <span className="context-word"> </span>
+        <span className="keyword" style={{ color: "#FFFFFF" }}>sports,</span>
+        <span className="context-word"> </span>
+        <span className="keyword" style={{ color: "#FFFFFF" }}>technology</span>
+        <span className="context-word"> and </span>
+        <span className="keyword" style={{ color: "#FFFFFF" }}>storytelling.</span>
+      </div>
+    </section>
+  );
+}
+
+function Slide7Reach() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current || !textRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      if (imgRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / 0.25));
+        const exitP = Math.max(0, Math.min(1, (p - 0.6) / 0.3));
+        const scale = 0.5 + enterP * 0.5;
+        imgRef.current.style.transform = `scale(${scale})`;
+        imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
+      }
+
+      const enterP = Math.max(0, Math.min(1, (p - 0.1) / 0.2));
+      const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+      textRef.current.style.opacity = String(enterP * (1 - exitP));
+
+      const emphStart = 0.3;
+      const cities = textRef.current.querySelectorAll<HTMLElement>(".city-name");
+      cities.forEach((el, i) => {
+        const cityStart = emphStart + i * 0.07;
+        const cityP = Math.max(0, Math.min(1, (p - cityStart) / 0.1));
+        el.style.fontWeight = String(400 + cityP * 300);
+      });
+
+      const contextDimStart = 0.55;
+      const contextP = Math.max(0, Math.min(1, (p - contextDimStart) / 0.15));
+      textRef.current.querySelectorAll<HTMLElement>(".reach-context").forEach((el) => {
+        const dimColor = Math.round(255 - contextP * (255 - 68));
+        el.style.color = `rgb(${dimColor}, ${dimColor}, ${dimColor})`;
+      });
+
+      const crescendo = textRef.current.querySelector<HTMLElement>(".reach-crescendo");
+      if (crescendo) {
+        const cP = Math.max(0, Math.min(1, (p - 0.65) / 0.15));
+        crescendo.style.fontWeight = String(400 + cP * 300);
+        crescendo.style.letterSpacing = `${0.02 - cP * 0.01}em`;
+      }
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{
+        width: "250vw",
+        height: "100vh",
+        flexShrink: 0,
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      aria-label="The Reach"
+      data-testid="slide-7-reach"
+    >
+      <div
+        ref={imgRef}
+        style={{
+          position: "absolute",
+          width: "28vw",
+          height: "35vh",
+          top: "8vh",
+          left: "3vw",
+          zIndex: 1,
+          willChange: "transform, opacity",
+          opacity: 0,
+        }}
+      >
+        <PlaceholderImage
+          label="AERIAL: Houston skyline at golden hour"
+          color="#1A2B0D"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      <div
+        ref={textRef}
+        style={{
+          maxWidth: "75vw",
+          fontSize: "clamp(24px, 3.5vw, 52px)",
+          lineHeight: 1.3,
+          textAlign: "center",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 500,
+          zIndex: 2,
+          opacity: 0,
+          willChange: "opacity",
+        }}
+      >
+        <span className="reach-context">Based in </span>
+        <span className="city-name" style={{ color: "#FFFFFF" }}>Houston, </span>
+        <span className="reach-context">with productions spanning </span>
+        <span className="city-name" style={{ color: "#FFFFFF" }}>Los Angeles, </span>
+        <span className="city-name" style={{ color: "#FFFFFF" }}>New York, </span>
+        <span className="city-name" style={{ color: "#FFFFFF" }}>Miami </span>
+        <span className="reach-context">and locations worldwide, </span>
+        <span className="reach-crescendo" style={{ color: "#FFFFFF", display: "block", marginTop: "20px" }}>
+          WE GO WHERE THE STORY TAKES US.
+        </span>
+      </div>
+    </section>
+  );
+}
+
+function Slide8Roster() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLParagraphElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      if (imgRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / 0.22));
+        const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+        const scale = 0.4 + enterP * 0.6;
+        imgRef.current.style.transform = `scale(${scale})`;
+        imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
+      }
+
+      if (labelRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / 0.15));
+        const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+        labelRef.current.style.opacity = String(enterP * (1 - exitP));
+      }
+
+      if (headlineRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.03) / 0.15));
+        const exitP = Math.max(0, Math.min(1, (p - 0.8) / 0.2));
+        headlineRef.current.style.opacity = String(enterP * (1 - exitP));
+
+        const letters = headlineRef.current.querySelectorAll<HTMLElement>(".headline-letter");
+        letters.forEach((letter, i) => {
+          const seed = i * 73 + 17;
+          const randomY = (seededRandom(seed) - 0.5) * 100;
+          const randomScale = 0.6 + seededRandom(seed + 1) * 0.9;
+          const randomRot = (seededRandom(seed + 2) - 0.5) * 30;
+
+          const y = randomY * (1 - enterP);
+          const s = randomScale + (1 - randomScale) * enterP;
+          const r = randomRot * (1 - enterP);
+
+          const exitScatterP = exitP;
+          const ey = randomY * exitScatterP;
+          const es = 1 + (randomScale - 1) * exitScatterP;
+          const er = randomRot * exitScatterP;
+
+          letter.style.transform = `translateY(${y + ey}px) scale(${s * es}) rotate(${r + er}deg)`;
+          letter.style.opacity = String(enterP * (1 - exitP));
+        });
+      }
+
+      const cycleStart = 0.22;
+      const cycleEnd = 0.78;
+      const cycleP = Math.max(0, Math.min(1, (p - cycleStart) / (cycleEnd - cycleStart)));
+
+      rosterLines.forEach((_, i) => {
+        const el = lineRefs.current[i];
+        if (!el) return;
+        const total = rosterLines.length;
+        const lineStart = i / total;
+        const lineEnd = (i + 1) / total;
+        const lineP = Math.max(0, Math.min(1, (cycleP - lineStart) / (lineEnd - lineStart)));
+        const isLast = i === total - 1;
+
+        const enterLineP = Math.min(1, lineP * 3);
+        el.style.opacity = String(enterLineP);
+        el.style.transform = `translateY(${(1 - enterLineP) * 20}px)`;
+
+        if (!isLast && lineP > 0.6) {
+          const dimP = (lineP - 0.6) / 0.4;
+          const color = Math.round(255 - dimP * 204);
+          el.style.color = `rgb(${color}, ${color}, ${color})`;
+        } else {
+          el.style.color = "#FFFFFF";
+        }
+      });
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  const headlineText = "Built Different";
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{ width: "450vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      aria-label="The Roster"
+      data-testid="slide-8-roster"
+    >
+      <div
+        ref={imgRef}
+        style={{
+          position: "absolute",
+          right: "4vw",
+          width: "42vw",
+          height: "78vh",
+          top: "11vh",
+          zIndex: 1,
+          willChange: "transform, opacity",
+          opacity: 0,
+        }}
+      >
+        <PlaceholderImage
+          label="PORTRAIT: Producer reviewing shot list on location"
+          color="#0D3B3B"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      <div style={{ position: "absolute", top: "20vh", left: "5vw", zIndex: 2 }}>
+        <p
+          ref={labelRef}
+          style={{
+            fontSize: "clamp(11px, 1.2vw, 16px)",
+            textTransform: "uppercase",
+            letterSpacing: "0.2em",
+            color: "#666666",
+            fontFamily: "'Ritmica', sans-serif",
+            fontWeight: 500,
+            opacity: 0,
+          }}
+        >
+          One Team
+        </p>
+        <h2
+          ref={headlineRef}
+          style={{
+            fontSize: "clamp(60px, 9vw, 160px)",
+            lineHeight: 0.95,
+            color: "#FFFFFF",
+            fontFamily: "'Ritmica', 'DM Serif Display', serif",
+            fontWeight: 600,
+            marginTop: "12px",
+            opacity: 0,
+          }}
+        >
+          {headlineText.split("").map((ch, i) => (
+            <span
+              key={i}
+              className="headline-letter"
+              style={{
+                display: "inline-block",
+                willChange: "transform, opacity",
+                minWidth: ch === " " ? "0.3em" : undefined,
+              }}
+            >
+              {ch === " " ? "\u00A0" : ch}
+            </span>
+          ))}
+        </h2>
+
+        <div style={{ marginTop: "60px", maxWidth: "45vw" }}>
+          {rosterLines.map((line, i) => (
+            <p
+              key={i}
+              ref={(el) => { lineRefs.current[i] = el; }}
+              style={{
+                fontSize: "clamp(20px, 2.8vw, 40px)",
+                lineHeight: 1.4,
+                color: "#FFFFFF",
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 500,
+                opacity: 0,
+                willChange: "transform, opacity",
+                marginBottom: "12px",
+              }}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Slide9Impact() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const fullBleedRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const crescendoRef = useRef<HTMLParagraphElement>(null);
+  const newImgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      if (fullBleedRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / 0.16));
+        const shrinkStart = 0.5;
+        const shrinkEnd = 0.78;
+        const shrinkP = Math.max(0, Math.min(1, (p - shrinkStart) / (shrinkEnd - shrinkStart)));
+
+        const w = 100 - shrinkP * 72;
+        const h = 100 - shrinkP * 45;
+        const t = shrinkP * 20;
+        const l = shrinkP * 2;
+
+        fullBleedRef.current.style.width = `${w}%`;
+        fullBleedRef.current.style.height = `${h}%`;
+        fullBleedRef.current.style.top = `${t}%`;
+        fullBleedRef.current.style.left = `${l}%`;
+        fullBleedRef.current.style.opacity = String(Math.min(1, enterP * 2));
+      }
+
+      if (headlineRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.16) / 0.08));
+        const exitP = Math.max(0, Math.min(1, (p - 0.32) / 0.08));
+        headlineRef.current.style.opacity = String(enterP * (1 - exitP));
+        headlineRef.current.style.transform = `translateY(${(1 - enterP) * 40}px) translateX(${exitP * -50}%)`;
+      }
+
+      if (subtitleRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.2) / 0.08));
+        const exitP = Math.max(0, Math.min(1, (p - 0.34) / 0.08));
+        subtitleRef.current.style.opacity = String(enterP * (1 - exitP));
+        subtitleRef.current.style.transform = `translateY(${(1 - enterP) * 20}px) translateX(${exitP * -40}%)`;
+      }
+
+      const awardsStart = 0.36;
+      const awardsEnd = 0.7;
+      impactLines.forEach((_, i) => {
+        const el = lineRefs.current[i];
+        if (!el) return;
+        const lineStart = awardsStart + (i / (impactLines.length + 1)) * (awardsEnd - awardsStart);
+        const lineP = Math.max(0, Math.min(1, (p - lineStart) / 0.06));
+        el.style.opacity = String(lineP);
+        el.style.transform = `translateY(${(1 - lineP) * 20}px)`;
+
+        if (i > 0) {
+          const prevEl = lineRefs.current[i - 1];
+          if (prevEl) {
+            const dimP = Math.max(0, Math.min(1, (p - (lineStart + 0.03)) / 0.05));
+            const color = Math.round(255 - dimP * 34);
+            prevEl.style.color = `rgb(${color}, ${color}, ${color})`;
+          }
+        }
+      });
+
+      if (crescendoRef.current) {
+        const cStart = awardsStart + (impactLines.length / (impactLines.length + 1)) * (awardsEnd - awardsStart);
+        const cP = Math.max(0, Math.min(1, (p - cStart) / 0.06));
+        crescendoRef.current.style.opacity = String(cP);
+        crescendoRef.current.style.transform = `translateY(${(1 - cP) * 25}px)`;
+
+        impactLines.forEach((_, i) => {
+          const el = lineRefs.current[i];
+          if (el && cP > 0) {
+            const color = Math.round(255 - cP * 119);
+            el.style.color = `rgb(${color}, ${color}, ${color})`;
+          }
+        });
+      }
+
+      if (newImgRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.6) / 0.2));
+        const scale = 0.3 + enterP * 0.7;
+        newImgRef.current.style.transform = `scale(${scale}) translateX(${(1 - enterP) * 40}%)`;
+        newImgRef.current.style.opacity = String(enterP);
+      }
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{ width: "500vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      aria-label="The Impact"
+      data-testid="slide-9-impact"
+    >
+      <div
+        ref={fullBleedRef}
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          top: 0,
+          left: 0,
+          zIndex: 1,
+          willChange: "width, height, top, left, opacity",
+          opacity: 0,
+        }}
+      >
+        <PlaceholderImage
+          label="CAMPAIGN: Final delivered commercial frame — dramatic, cinematic, the hero shot"
+          color="#3B2A0D"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      <h2
+        ref={headlineRef}
+        style={{
+          position: "absolute",
+          left: "5vw",
+          top: "35vh",
+          zIndex: 2,
+          fontSize: "clamp(60px, 9vw, 160px)",
+          lineHeight: 0.95,
+          color: "#FFFFFF",
+          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontWeight: 600,
+          textShadow: "0 4px 60px rgba(0,0,0,0.6), 0 2px 20px rgba(0,0,0,0.4)",
+          opacity: 0,
+          willChange: "transform, opacity",
+        }}
+      >
+        The Impact
+      </h2>
+
+      <p
+        ref={subtitleRef}
+        style={{
+          position: "absolute",
+          left: "5vw",
+          top: "calc(35vh + clamp(60px, 9vw, 160px) + 20px)",
+          zIndex: 2,
+          fontSize: "clamp(16px, 2vw, 28px)",
+          color: "#CCCCCC",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 500,
+          textShadow: "0 2px 20px rgba(0,0,0,0.4)",
+          opacity: 0,
+          willChange: "transform, opacity",
+        }}
+      >
+        Work that resonates beyond the screen.
+      </p>
+
+      <div style={{ position: "absolute", left: "5vw", top: "30vh", zIndex: 3, maxWidth: "45vw" }}>
+        {impactLines.map((line, i) => (
+          <p
+            key={i}
+            ref={(el) => { lineRefs.current[i] = el; }}
+            style={{
+              fontSize: "clamp(20px, 2.8vw, 40px)",
+              lineHeight: 1.4,
+              color: "#FFFFFF",
+              fontFamily: "'Ritmica', sans-serif",
+              fontWeight: 500,
+              opacity: 0,
+              willChange: "transform, opacity",
+              marginBottom: "8px",
+              textShadow: "0 2px 20px rgba(0,0,0,0.4)",
+              paddingLeft: `${i * 20}px`,
+            }}
+          >
+            {line}
+          </p>
+        ))}
+        <p
+          ref={crescendoRef}
+          style={{
+            fontSize: "clamp(22px, 3vw, 42px)",
+            lineHeight: 1.4,
+            color: "#FFFFFF",
+            fontFamily: "'Ritmica', sans-serif",
+            fontWeight: 700,
+            opacity: 0,
+            willChange: "transform, opacity",
+            marginTop: "16px",
+            textShadow: "0 2px 20px rgba(0,0,0,0.4)",
+          }}
+        >
+          {impactCrescendo}
+        </p>
+      </div>
+
+      <div
+        ref={newImgRef}
+        style={{
+          position: "absolute",
+          right: "4vw",
+          top: "15vh",
+          width: "38vw",
+          height: "70vh",
+          zIndex: 2,
+          willChange: "transform, opacity",
+          opacity: 0,
+        }}
+      >
+        <PlaceholderImage
+          label="DRAMATIC: Low-key figure in motion against pure black"
+          color="#0D1A3B"
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+    </section>
+  );
+}
+
+function Slide10Partners() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      if (headlineRef.current) {
+        const enterP = Math.max(0, Math.min(1, p / 0.2));
+        const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+        headlineRef.current.style.opacity = String(enterP * (1 - exitP));
+        headlineRef.current.style.transform = `translateY(${(1 - enterP) * 30}px)`;
+      }
+
+      if (gridRef.current) {
+        const items = gridRef.current.children;
+        for (let i = 0; i < items.length; i++) {
+          const el = items[i] as HTMLElement;
+          const row = Math.floor(i / 3);
+          const col = i % 3;
+          const delay = row * 0.04 + col * 0.025;
+          const enterP = Math.max(0, Math.min(1, (p - 0.1 - delay) / 0.15));
+          const exitP = Math.max(0, Math.min(1, (p - 0.7) / 0.3));
+          el.style.opacity = String(enterP * (1 - exitP));
+          el.style.transform = `translateY(${(1 - enterP) * 15}px)`;
+        }
+      }
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{
+        width: "200vw",
+        height: "100vh",
+        flexShrink: 0,
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+      aria-label="Select Partners"
+      data-testid="slide-10-partners"
+    >
+      <h2
+        ref={headlineRef}
+        style={{
+          fontSize: "clamp(36px, 5vw, 80px)",
+          color: "#FFFFFF",
+          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontWeight: 600,
+          textAlign: "center",
+          marginTop: "22vh",
+          opacity: 0,
+          willChange: "transform, opacity",
+        }}
+      >
+        Select Partners
+      </h2>
+
+      <div
+        ref={gridRef}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "clamp(24px, 3vw, 40px) clamp(30px, 4vw, 60px)",
+          maxWidth: "75vw",
+          marginTop: "8vh",
+        }}
+      >
+        {clientGrid.map((name, i) => (
+          <div
+            key={i}
+            style={{
+              fontSize: "clamp(16px, 2vw, 30px)",
+              color: "#FFFFFF",
+              fontFamily: "'Ritmica', 'DM Serif Display', serif",
+              fontWeight: 600,
+              textAlign: "center",
+              opacity: 0,
+              willChange: "transform, opacity",
+            }}
+          >
+            {name}
           </div>
         ))}
       </div>
-    </div>
+    </section>
+  );
+}
+
+function Slide11Closing() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const line1Ref = useRef<HTMLParagraphElement>(null);
+  const line2Ref = useRef<HTMLParagraphElement>(null);
+  const emailRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+
+      if (line1Ref.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.15) / 0.2));
+        line1Ref.current.style.opacity = String(enterP);
+      }
+
+      if (line2Ref.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.3) / 0.15));
+        line2Ref.current.style.opacity = String(enterP);
+      }
+
+      if (emailRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - 0.4) / 0.15));
+        emailRef.current.style.opacity = String(enterP);
+      }
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{
+        width: "200vw",
+        height: "100vh",
+        flexShrink: 0,
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      aria-label="The Closing"
+      data-testid="slide-11-closing"
+    >
+      <p
+        ref={line1Ref}
+        style={{
+          fontSize: "clamp(22px, 3vw, 42px)",
+          color: "#FFFFFF",
+          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontWeight: 400,
+          textAlign: "center",
+          opacity: 0,
+          willChange: "opacity",
+          maxWidth: "80vw",
+        }}
+      >
+        We'd love the opportunity to build something meaningful.
+      </p>
+      <p
+        ref={line2Ref}
+        style={{
+          fontSize: "clamp(28px, 3.8vw, 52px)",
+          color: "#FFFFFF",
+          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontWeight: 700,
+          textAlign: "center",
+          marginTop: "10px",
+          opacity: 0,
+          willChange: "opacity",
+        }}
+      >
+        Together.
+      </p>
+      <a
+        ref={emailRef}
+        href="mailto:hello@familydrama.tv"
+        style={{
+          fontSize: "14px",
+          color: "#666666",
+          letterSpacing: "0.1em",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 500,
+          marginTop: "60px",
+          opacity: 0,
+          willChange: "opacity",
+          textDecoration: "none",
+        }}
+      >
+        hello@familydrama.tv
+      </a>
+    </section>
   );
 }
 
 export default function About() {
-  const { wrapperRef, showcaseContainer } = useHorizontalScroll();
+  const { wrapperRef } = useHorizontalScroll();
   useReveal();
   useParallax();
 
@@ -1124,19 +2054,7 @@ export default function About() {
       <div ref={wrapperRef} className="page-about__wrapper">
         <Slide1Hero />
         <Slide2Difference />
-        <Slide3Philosophy />
-        <Slide4Directors />
-        <Slide5Craft />
-        <Slide6CoreBeliefs />
-        <Slide7Beyond />
-        <Slide8Capabilities />
-        <Slide9Reach />
-        <Slide10Roster />
-        <Slide11TheWork />
-        <Slide12Proof />
-        <Slide13Flagship />
-        <Slide14Culture />
-        <Slide15Showcase containerRef={showcaseContainer} />
+        <FilmstripSlides />
       </div>
     </div>
   );
