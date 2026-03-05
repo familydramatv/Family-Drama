@@ -1417,10 +1417,7 @@ function Slide7Reach() {
 
       if (imgRef.current) {
         const enterP = Math.max(0, Math.min(1, p / (vr * 0.3)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
-        const scale = 0.5 + enterP * 0.5;
-        imgRef.current.style.transform = `scale(${scale})`;
-        imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
+        imgRef.current.style.opacity = String(Math.min(1, enterP * 2));
       }
 
       const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
@@ -1473,20 +1470,28 @@ function Slide7Reach() {
         ref={imgRef}
         style={{
           position: "absolute",
-          width: "28vw",
-          height: "35vh",
-          top: "8vh",
-          left: "3vw",
-          zIndex: 1,
+          width: "100%",
+          height: "100%",
+          top: 0,
+          left: 0,
+          zIndex: 0,
           willChange: "transform, opacity",
           opacity: 0,
         }}
       >
-        <PlaceholderImage
-          label="AERIAL: Houston skyline at golden hour"
-          color="#1A2B0D"
-          style={{ width: "100%", height: "100%" }}
+        <img
+          src="/images/reach-bg.jpg"
+          alt="Production scene"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
+        <div style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.55)",
+        }} />
       </div>
 
       <div
@@ -1500,6 +1505,7 @@ function Slide7Reach() {
           fontWeight: 400,
           zIndex: 2,
           willChange: "opacity",
+          position: "relative",
         }}
       >
         <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>Based in </span>
