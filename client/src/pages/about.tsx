@@ -1235,7 +1235,7 @@ function Slide5CoreBeliefs() {
         }}
       >
         <img
-          src="https://image.mux.com/YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA/thumbnail.jpg?time=8&width=1920"
+          src="/images/core-beliefs-bg.jpg"
           alt=""
           style={{
             position: "absolute",
