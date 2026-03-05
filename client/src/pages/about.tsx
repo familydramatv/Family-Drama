@@ -561,6 +561,35 @@ function Slide2Difference() {
       track.style.transform = `translateY(${yOffset}px)`;
     };
 
+    const positionRolodex = () => {
+      if (!bannerRef.current || !rolodexContainerRef.current || isMobileView) return;
+      const bannerEl = bannerRef.current;
+      const slideEl = bannerEl.closest(".slide") as HTMLElement;
+      if (!slideEl) return;
+      const bannerRect = bannerEl.getBoundingClientRect();
+      const slideRect = slideEl.getBoundingClientRect();
+      const bannerRight = bannerRect.right - slideRect.left;
+      const slideWidth = slideRect.width;
+      const spaceRight = slideWidth - bannerRight;
+      const padding = spaceRight * 0.08;
+      const rolodexLeft = bannerRight + padding;
+      const rolodexWidth = spaceRight - padding * 2;
+      rolodexContainerRef.current.style.left = `${rolodexLeft}px`;
+      rolodexContainerRef.current.style.width = `${Math.max(rolodexWidth, 100)}px`;
+      rolodexContainerRef.current.style.right = "auto";
+      const line2El = bannerEl.querySelector("div[style]") as HTMLElement;
+      if (line2El) {
+        const line2Rect = line2El.getBoundingClientRect();
+        const line2CenterY = line2Rect.top + line2Rect.height / 2 - slideRect.top;
+        const rolodexHeight = 220;
+        rolodexContainerRef.current.style.top = `${line2CenterY - rolodexHeight / 2}px`;
+        rolodexContainerRef.current.style.bottom = "auto";
+      }
+    };
+
+    positionRolodex();
+    window.addEventListener("resize", positionRolodex);
+
     const applyAnimations = (s2p: number, scrollX: number, vw: number, isDesktop: boolean) => {
       
       if (isDesktop && imgRef.current) {
@@ -589,6 +618,7 @@ function Slide2Difference() {
       animateLine(line2Refs.current, slide2Line2.length, s2p, 0.15, line2Offset, bannerExitP);
 
       animateRolodex(s2p);
+      positionRolodex();
     };
 
     const onHScroll = (e: Event) => {
@@ -622,6 +652,7 @@ function Slide2Difference() {
     onVerticalScroll();
     return () => {
       window.removeEventListener("horizontalscroll", onHScroll);
+      window.removeEventListener("resize", positionRolodex);
       if (scrollContainer) {
         scrollContainer.removeEventListener("scroll", onVerticalScroll);
       }
@@ -712,8 +743,8 @@ function Slide2Difference() {
           className="absolute slide-2-rolodex-container"
           style={{
             bottom: "calc(8vh + 195px)",
-            left: "calc(15vw - 120px + min(18.2vw, 31.2vh) * 2.8)",
-            right: "1vw",
+            left: 0,
+            right: 0,
             height: "220px",
             overflow: "hidden",
             opacity: 0,
