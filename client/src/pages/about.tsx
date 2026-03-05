@@ -1323,7 +1323,8 @@ function Slide6Mission() {
       const p = Math.max(0, localScroll / slideWidth);
       const vr = vw / slideWidth;
 
-      const textCenter = (slideLeft + slideWidth / 2 - scrollX) / vw;
+      const textRect = textRef.current.getBoundingClientRect();
+      const textCenter = (textRect.left + textRect.width / 2) / vw;
 
       let contextOpacity;
       if (textCenter > 0.85) {
