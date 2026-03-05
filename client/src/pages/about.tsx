@@ -1360,7 +1360,7 @@ function Slide6Mission() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "calc(150vw - 200px)",
+        width: "120vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
