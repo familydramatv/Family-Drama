@@ -1153,7 +1153,6 @@ function Slide5CoreBeliefs() {
   const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if (window.innerWidth <= 1024) return;
@@ -1175,19 +1174,13 @@ function Slide5CoreBeliefs() {
       if (scrollX >= lockStart && scrollX <= lockEnd) {
         counterX = scrollX - lockStart;
       } else if (scrollX > lockEnd) {
-        counterX = lockRange;
+        const overscroll = scrollX - lockEnd;
+        counterX = lockRange + overscroll * 0.35;
       }
       contentRef.current.style.transform = `translateX(${counterX}px)`;
 
       const stickyP = Math.max(0, Math.min(1, (scrollX - lockStart) / lockRange));
       const entryP = Math.max(0, Math.min(1, (scrollX - (slideLeft - vw)) / vw));
-
-      if (imgRef.current) {
-        const outroStart = 0.75;
-        const outroP = Math.max(0, Math.min(1, (stickyP - outroStart) / (1 - outroStart)));
-        const parallaxX = outroP * -150;
-        imgRef.current.style.transform = `translateX(${parallaxX}px)`;
-      }
 
       if (headlineRef.current) {
         const hP = Math.max(0, Math.min(1, entryP / 0.3));
@@ -1243,19 +1236,17 @@ function Slide5CoreBeliefs() {
         }}
       >
         <img
-          ref={imgRef}
           src="/images/core-beliefs-bg.jpg"
           alt=""
           style={{
             position: "absolute",
             top: 0,
             left: 0,
-            width: "calc(100% + 150px)",
+            width: "100%",
             height: "100%",
             objectFit: "cover",
             zIndex: 0,
             pointerEvents: "none",
-            willChange: "transform",
           }}
         />
 
