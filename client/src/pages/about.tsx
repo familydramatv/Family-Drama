@@ -1183,7 +1183,9 @@ function Slide5CoreBeliefs() {
       const entryP = Math.max(0, Math.min(1, (scrollX - (slideLeft - vw)) / vw));
 
       if (imgRef.current) {
-        const parallaxX = stickyP * -150;
+        const outroStart = 0.75;
+        const outroP = Math.max(0, Math.min(1, (stickyP - outroStart) / (1 - outroStart)));
+        const parallaxX = outroP * -150;
         imgRef.current.style.transform = `translateX(${parallaxX}px)`;
       }
 
