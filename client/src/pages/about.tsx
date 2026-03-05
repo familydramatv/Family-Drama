@@ -1152,13 +1152,6 @@ function Slide5CoreBeliefs() {
   const slideRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  }, []);
 
   useEffect(() => {
     if (window.innerWidth <= 1024) return;
@@ -1211,12 +1204,9 @@ function Slide5CoreBeliefs() {
       aria-label="Core Beliefs"
       data-testid="slide-5-core-beliefs"
     >
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
+      <img
+        src="https://image.mux.com/YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA/thumbnail.jpg?time=8&width=1920"
+        alt=""
         style={{
           position: "absolute",
           top: 0,
@@ -1228,9 +1218,7 @@ function Slide5CoreBeliefs() {
           zIndex: 0,
           pointerEvents: "none",
         }}
-      >
-        <source src="https://stream.mux.com/YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA/high.mp4" type="video/mp4" />
-      </video>
+      />
 
       <div
         style={{
