@@ -1470,13 +1470,13 @@ function Slide7Reach() {
         ref={imgRef}
         style={{
           position: "absolute",
-          width: "75vw",
+          width: "60vw",
           height: "auto",
           aspectRatio: "16/9",
           top: "50%",
           left: "50%",
-          marginTop: "-21.09vw",
-          marginLeft: "-37.5vw",
+          marginTop: "-16.875vw",
+          marginLeft: "-30vw",
           zIndex: 0,
           willChange: "transform, opacity",
           opacity: 0,
@@ -1492,8 +1492,8 @@ function Slide7Reach() {
       <div
         ref={textRef}
         style={{
-          maxWidth: "75vw",
-          fontSize: "clamp(24px, 3.5vw, 52px)",
+          maxWidth: "65vw",
+          fontSize: "clamp(19px, 2.8vw, 42px)",
           lineHeight: 1.3,
           textAlign: "center",
           fontFamily: "'Ritmica', sans-serif",
