@@ -915,10 +915,12 @@ function Slide3WorkSpeaks() {
         ref={imgRef}
         style={{
           position: "absolute",
-          width: "85vw",
-          height: "88vh",
-          top: "6vh",
-          left: "7vw",
+          width: "90vw",
+          height: "auto",
+          aspectRatio: "16/9",
+          top: "50%",
+          left: "5vw",
+          marginTop: "-25.3125vw",
           zIndex: 1,
           willChange: "transform, opacity",
           transform: "scale(0.5) translateX(25%)",
@@ -928,7 +930,7 @@ function Slide3WorkSpeaks() {
         <img
           src="/images/work-speaks.jpg"
           alt="Production shot"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
         />
       </div>
       <h2
