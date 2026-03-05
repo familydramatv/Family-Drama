@@ -870,7 +870,7 @@ function Slide3WorkSpeaks() {
       const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.25)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.6)));
         const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         const scale = 0.5 + enterP * 0.5 - exitP * 0.35;
         const xP = (1 - enterP) * 25 - exitP * 25;
