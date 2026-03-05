@@ -1214,7 +1214,6 @@ function Slide5CoreBeliefs() {
           width: "100%",
           height: "100%",
           objectFit: "cover",
-          opacity: 0.3,
           zIndex: 0,
           pointerEvents: "none",
         }}
@@ -1227,7 +1226,7 @@ function Slide5CoreBeliefs() {
           left: 0,
           width: "100%",
           height: "100%",
-          background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.3) 100%)",
           zIndex: 1,
         }}
       />
