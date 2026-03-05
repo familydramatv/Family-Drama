@@ -922,6 +922,17 @@
     opacity: 1 !important;
   }
 
+  .filmstrip-slide--sticky {
+    width: 100% !important;
+  }
+
+  .filmstrip-slide--sticky > div:first-child {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
   .filmstrip-slide .context-word,
   .filmstrip-slide .reach-context,
   .filmstrip-slide .reach-crescendo,
