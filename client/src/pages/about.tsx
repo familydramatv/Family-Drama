@@ -1323,13 +1323,15 @@ function Slide6Mission() {
       const p = Math.max(0, localScroll / slideWidth);
       const vr = vw / slideWidth;
 
+      const textCenter = (slideLeft + slideWidth / 2 - scrollX) / vw;
+
       let contextOpacity;
-      if (p < 0.15) {
+      if (textCenter > 0.85) {
         contextOpacity = 0;
-      } else if (p < 0.5) {
-        contextOpacity = (p - 0.15) / 0.35;
-      } else if (p < 0.85) {
-        contextOpacity = 1 - (p - 0.5) / 0.35;
+      } else if (textCenter > 0.5) {
+        contextOpacity = (0.85 - textCenter) / 0.35;
+      } else if (textCenter > 0.15) {
+        contextOpacity = (textCenter - 0.15) / 0.35;
       } else {
         contextOpacity = 0;
       }
