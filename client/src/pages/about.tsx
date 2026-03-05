@@ -870,8 +870,8 @@ function Slide3WorkSpeaks() {
       const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.25)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         const scale = 0.5 + enterP * 0.5 - exitP * 0.35;
         const xP = (1 - enterP) * 25 - exitP * 25;
         const opacity = Math.min(1, enterP * 1.5) * (1 - exitP * 0.5);
@@ -880,8 +880,8 @@ function Slide3WorkSpeaks() {
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.15) / (vr * 0.35)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         const opacity = enterP * (1 - exitP);
         const y = (1 - enterP) * 60;
         const xExit = exitP * -40;
@@ -890,8 +890,8 @@ function Slide3WorkSpeaks() {
       }
 
       if (subtitleRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.3) / (vr * 0.3)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.05) / (vr * 0.2)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         const opacity = enterP * (1 - exitP);
         const y = (1 - enterP) * 20;
         subtitleRef.current.style.transform = `translateY(${y}px) translateX(${exitP * -30}%)`;
@@ -942,7 +942,7 @@ function Slide3WorkSpeaks() {
           fontSize: "clamp(60px, 9vw, 160px)",
           lineHeight: 0.95,
           color: "#FFFFFF",
-          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontFamily: "'Ritmica', sans-serif",
           fontWeight: 600,
           textShadow: "0 2px 40px rgba(0,0,0,0.5)",
           opacity: 0,
@@ -996,8 +996,8 @@ function Slide4Manifesto() {
       const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.6)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.3)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         const scale = 0.4 + enterP * 0.6 - exitP * 0.4;
         const xP = (1 - enterP) * 30 - exitP * 20;
         imgRef.current.style.transform = `scale(${scale}) translateX(${xP}%)`;
@@ -1005,28 +1005,28 @@ function Slide4Manifesto() {
       }
 
       if (labelRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.15)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         labelRef.current.style.opacity = String(enterP * (1 - exitP));
         labelRef.current.style.transform = `translateX(${(1 - enterP) * 40 - exitP * 40}px)`;
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.05) / (vr * 0.35)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
         headlineRef.current.style.transform = `translateX(${(1 - enterP) * 60 - exitP * 60}px)`;
       }
 
-      const manifestoStart = vr * 0.5;
-      const manifestoEnd = 1 - vr * 0.15;
+      const manifestoStart = vr * 0.15;
+      const manifestoEnd = 1 - vr * 0.1;
       const manifestoP = Math.max(0, Math.min(1, (p - manifestoStart) / (manifestoEnd - manifestoStart)));
 
       manifestoLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
         const lineStart = i / (manifestoLines.length + 1);
-        const lineEnd = lineStart + 1 / (manifestoLines.length + 1);
+        const lineEnd = lineStart + 1.5 / (manifestoLines.length + 1);
         const lineP = Math.max(0, Math.min(1, (manifestoP - lineStart) / (lineEnd - lineStart)));
         const dimP = Math.max(0, Math.min(1, (manifestoP - 0.85) / 0.15));
         el.style.opacity = String(lineP);
@@ -1051,7 +1051,7 @@ function Slide4Manifesto() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "250vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "150vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="Capabilities Manifesto"
       data-testid="slide-4-manifesto"
     >
@@ -1098,7 +1098,7 @@ function Slide4Manifesto() {
             fontSize: "clamp(60px, 9vw, 160px)",
             lineHeight: 0.95,
             color: "#FFFFFF",
-            fontFamily: "'Ritmica', 'DM Serif Display', serif",
+            fontFamily: "'Ritmica', sans-serif",
             fontWeight: 600,
             marginTop: "12px",
             opacity: 0,
@@ -1150,6 +1150,14 @@ function Slide4Manifesto() {
 }
 
 function Slide5Ticker() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
+
   return (
     <section
       className="filmstrip-slide"
@@ -1165,12 +1173,35 @@ function Slide5Ticker() {
       aria-label="Capabilities Ticker"
       data-testid="slide-5-ticker"
     >
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          opacity: 0.15,
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <source src="https://stream.mux.com/YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA/high.mp4" type="video/mp4" />
+      </video>
       <div
         style={{
           display: "flex",
           whiteSpace: "nowrap",
           animation: "marquee-scroll 30s linear infinite",
           willChange: "transform",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         {[0, 1].map((k) => (
@@ -1213,23 +1244,24 @@ function Slide6Mission() {
       const p = Math.max(0, localScroll / slideWidth);
       const vr = vw / slideWidth;
 
-      const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
-      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
-      textRef.current.style.opacity = String(enterP * (1 - exitP));
-      textRef.current.style.transform = `translateX(${(1 - enterP) * 10 - exitP * 15}%)`;
+      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
 
-      const emphasisStart = vr * 0.6;
-      const emphasisEnd = 1 - vr * 0.3;
-      const emphP = Math.max(0, Math.min(1, (p - emphasisStart) / (emphasisEnd - emphasisStart)));
+      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.3) / (vr * 0.6)));
 
       textRef.current.querySelectorAll<HTMLElement>(".context-word").forEach((el) => {
-        const dimColor = Math.round(255 - emphP * (255 - 68));
-        el.style.color = `rgb(${dimColor}, ${dimColor}, ${dimColor})`;
+        const revealColor = Math.round(contextRevealP * 255);
+        el.style.color = `rgb(${revealColor}, ${revealColor}, ${revealColor})`;
+        el.style.opacity = "1";
       });
 
       textRef.current.querySelectorAll<HTMLElement>(".keyword").forEach((el) => {
-        el.style.fontWeight = String(400 + emphP * 300);
+        el.style.color = "#FFFFFF";
+        el.style.fontWeight = "700";
+        el.style.opacity = String(1 - exitP);
       });
+
+      textRef.current.style.opacity = "1";
+      textRef.current.style.transform = `translateX(${-exitP * 15}%)`;
     };
 
     window.addEventListener("horizontalscroll", onHScroll);
@@ -1262,24 +1294,23 @@ function Slide6Mission() {
           textAlign: "center",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 500,
-          opacity: 0,
           willChange: "transform, opacity",
         }}
       >
-        <span className="context-word">Family Drama is a full-service production company that creates content which transcends </span>
-        <span className="keyword" style={{ color: "#FFFFFF" }}>PLATFORMS</span>
-        <span className="context-word"> and </span>
-        <span className="keyword" style={{ color: "#FFFFFF" }}>LIVES</span>
-        <span className="context-word"> at the intersection of </span>
-        <span className="keyword" style={{ color: "#FFFFFF" }}>branded entertainment,</span>
-        <span className="context-word"> </span>
-        <span className="keyword" style={{ color: "#FFFFFF" }}>culture,</span>
-        <span className="context-word"> </span>
-        <span className="keyword" style={{ color: "#FFFFFF" }}>sports,</span>
-        <span className="context-word"> </span>
-        <span className="keyword" style={{ color: "#FFFFFF" }}>technology</span>
-        <span className="context-word"> and </span>
-        <span className="keyword" style={{ color: "#FFFFFF" }}>storytelling.</span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}>Family Drama is a full-service production company that creates content which transcends </span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>PLATFORMS</span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> and </span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>LIVES</span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> at the intersection of </span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>branded entertainment,</span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> </span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>culture,</span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> </span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>sports,</span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> </span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>technology</span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> and </span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>storytelling.</span>
       </div>
     </section>
   );
@@ -1306,37 +1337,35 @@ function Slide7Reach() {
       const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.3)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
         const scale = 0.5 + enterP * 0.5;
         imgRef.current.style.transform = `scale(${scale})`;
         imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
       }
 
-      const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
-      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
-      textRef.current.style.opacity = String(enterP * (1 - exitP));
+      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
 
-      const emphStart = vr * 0.4;
-      const cities = textRef.current.querySelectorAll<HTMLElement>(".city-name");
-      cities.forEach((el, i) => {
-        const cityStart = emphStart + i * (vr * 0.15);
-        const cityP = Math.max(0, Math.min(1, (p - cityStart) / (vr * 0.2)));
-        el.style.fontWeight = String(400 + cityP * 300);
+      textRef.current.style.opacity = "1";
+
+      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.3) / (vr * 0.5)));
+      textRef.current.querySelectorAll<HTMLElement>(".reach-context").forEach((el) => {
+        const revealColor = Math.round(contextRevealP * 255);
+        el.style.color = `rgb(${revealColor}, ${revealColor}, ${revealColor})`;
       });
 
-      const contextDimStart = vr * 0.9;
-      const contextP = Math.max(0, Math.min(1, (p - contextDimStart) / (vr * 0.3)));
-      textRef.current.querySelectorAll<HTMLElement>(".reach-context").forEach((el) => {
-        const dimColor = Math.round(255 - contextP * (255 - 68));
-        el.style.color = `rgb(${dimColor}, ${dimColor}, ${dimColor})`;
+      const cities = textRef.current.querySelectorAll<HTMLElement>(".city-name");
+      cities.forEach((el) => {
+        el.style.fontWeight = "700";
+        el.style.color = "#FFFFFF";
+        el.style.opacity = String(1 - exitP);
       });
 
       const crescendo = textRef.current.querySelector<HTMLElement>(".reach-crescendo");
       if (crescendo) {
-        const cP = Math.max(0, Math.min(1, (p - (1 - vr * 0.5)) / (vr * 0.3)));
-        crescendo.style.fontWeight = String(400 + cP * 300);
-        crescendo.style.letterSpacing = `${0.02 - cP * 0.01}em`;
+        const cP = Math.max(0, Math.min(1, (p - vr * 0.5) / (vr * 0.4)));
+        crescendo.style.color = `rgb(${Math.round(cP * 255)}, ${Math.round(cP * 255)}, ${Math.round(cP * 255)})`;
+        crescendo.style.fontWeight = "700";
       }
     };
 
@@ -1391,18 +1420,17 @@ function Slide7Reach() {
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 500,
           zIndex: 2,
-          opacity: 0,
           willChange: "opacity",
         }}
       >
-        <span className="reach-context">Based in </span>
-        <span className="city-name" style={{ color: "#FFFFFF" }}>Houston, </span>
-        <span className="reach-context">with productions spanning </span>
-        <span className="city-name" style={{ color: "#FFFFFF" }}>Los Angeles, </span>
-        <span className="city-name" style={{ color: "#FFFFFF" }}>New York, </span>
-        <span className="city-name" style={{ color: "#FFFFFF" }}>Miami </span>
-        <span className="reach-context">and locations worldwide, </span>
-        <span className="reach-crescendo" style={{ color: "#FFFFFF", display: "block", marginTop: "20px" }}>
+        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>Based in </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Houston, </span>
+        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>with productions spanning </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Los Angeles, </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>New York, </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Miami </span>
+        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>and locations worldwide, </span>
+        <span className="reach-crescendo" style={{ color: "rgb(0,0,0)", display: "block", marginTop: "20px", fontWeight: 700 }}>
           WE GO WHERE THE STORY TAKES US.
         </span>
       </div>
@@ -1433,22 +1461,22 @@ function Slide8Roster() {
       const vr = vw / slideWidth;
 
       if (imgRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.3)) / (vr * 0.5)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         const scale = 0.4 + enterP * 0.6;
         imgRef.current.style.transform = `scale(${scale})`;
         imgRef.current.style.opacity = String(Math.min(1, enterP * 2) * (1 - exitP));
       }
 
       if (labelRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.15)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         labelRef.current.style.opacity = String(enterP * (1 - exitP));
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.15)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
 
         const letters = headlineRef.current.querySelectorAll<HTMLElement>(".headline-letter");
@@ -1472,8 +1500,8 @@ function Slide8Roster() {
         });
       }
 
-      const cycleStart = vr * 0.5;
-      const cycleEnd = 1 - vr * 0.15;
+      const cycleStart = vr * 0.15;
+      const cycleEnd = 1 - vr * 0.1;
       const cycleP = Math.max(0, Math.min(1, (p - cycleStart) / (cycleEnd - cycleStart)));
 
       rosterLines.forEach((_, i) => {
@@ -1509,7 +1537,7 @@ function Slide8Roster() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "250vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "180vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="The Roster"
       data-testid="slide-8-roster"
     >
@@ -1554,7 +1582,7 @@ function Slide8Roster() {
             fontSize: "clamp(60px, 9vw, 160px)",
             lineHeight: 0.95,
             color: "#FFFFFF",
-            fontFamily: "'Ritmica', 'DM Serif Display', serif",
+            fontFamily: "'Ritmica', sans-serif",
             fontWeight: 600,
             marginTop: "12px",
             opacity: 0,
@@ -1625,9 +1653,9 @@ function Slide9Impact() {
       const vr = vw / slideWidth;
 
       if (fullBleedRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.4)));
-        const shrinkStart = vr * 0.8;
-        const shrinkEnd = 1 - vr * 0.3;
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
+        const shrinkStart = vr * 0.5;
+        const shrinkEnd = 1 - vr * 0.2;
         const shrinkP = Math.max(0, Math.min(1, (p - shrinkStart) / (shrinkEnd - shrinkStart)));
 
         const w = 100 - shrinkP * 72;
@@ -1643,21 +1671,21 @@ function Slide9Impact() {
       }
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.1) / (vr * 0.25)));
-        const exitP = Math.max(0, Math.min(1, (p - vr * 0.6) / (vr * 0.2)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
+        const exitP = Math.max(0, Math.min(1, (p - vr * 0.4) / (vr * 0.15)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
         headlineRef.current.style.transform = `translateY(${(1 - enterP) * 40}px) translateX(${exitP * -50}%)`;
       }
 
       if (subtitleRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.2) / (vr * 0.25)));
-        const exitP = Math.max(0, Math.min(1, (p - vr * 0.7) / (vr * 0.2)));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.05) / (vr * 0.2)));
+        const exitP = Math.max(0, Math.min(1, (p - vr * 0.45) / (vr * 0.15)));
         subtitleRef.current.style.opacity = String(enterP * (1 - exitP));
         subtitleRef.current.style.transform = `translateY(${(1 - enterP) * 20}px) translateX(${exitP * -40}%)`;
       }
 
-      const awardsStart = vr * 0.8;
-      const awardsEnd = 1 - vr * 0.2;
+      const awardsStart = vr * 0.5;
+      const awardsEnd = 1 - vr * 0.15;
       impactLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
@@ -1692,7 +1720,7 @@ function Slide9Impact() {
       }
 
       if (newImgRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - (1 - vr * 0.8)) / (vr * 0.5)));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.4) / (vr * 0.3)));
         const scale = 0.3 + enterP * 0.7;
         newImgRef.current.style.transform = `scale(${scale}) translateX(${(1 - enterP) * 40}%)`;
         newImgRef.current.style.opacity = String(enterP);
@@ -1741,7 +1769,7 @@ function Slide9Impact() {
           fontSize: "clamp(60px, 9vw, 160px)",
           lineHeight: 0.95,
           color: "#FFFFFF",
-          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontFamily: "'Ritmica', sans-serif",
           fontWeight: 600,
           textShadow: "0 4px 60px rgba(0,0,0,0.6), 0 2px 20px rgba(0,0,0,0.4)",
           opacity: 0,
@@ -1853,8 +1881,8 @@ function Slide10Partners() {
       const vr = vw / slideWidth;
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.5)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
+        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
         headlineRef.current.style.opacity = String(enterP * (1 - exitP));
         headlineRef.current.style.transform = `translateY(${(1 - enterP) * 30}px)`;
       }
@@ -1865,9 +1893,9 @@ function Slide10Partners() {
           const el = items[i] as HTMLElement;
           const row = Math.floor(i / 3);
           const col = i % 3;
-          const delay = row * (vr * 0.08) + col * (vr * 0.05);
-          const enterP = Math.max(0, Math.min(1, (p - vr * 0.15 - delay) / (vr * 0.35)));
-          const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
+          const delay = row * (vr * 0.04) + col * (vr * 0.03);
+          const enterP = Math.max(0, Math.min(1, (p - vr * 0.05 - delay) / (vr * 0.2)));
+          const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
           el.style.opacity = String(enterP * (1 - exitP));
           el.style.transform = `translateY(${(1 - enterP) * 15}px)`;
         }
@@ -1900,7 +1928,7 @@ function Slide10Partners() {
         style={{
           fontSize: "clamp(36px, 5vw, 80px)",
           color: "#FFFFFF",
-          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontFamily: "'Ritmica', sans-serif",
           fontWeight: 600,
           textAlign: "center",
           marginTop: "22vh",
@@ -1927,7 +1955,7 @@ function Slide10Partners() {
             style={{
               fontSize: "clamp(16px, 2vw, 30px)",
               color: "#FFFFFF",
-              fontFamily: "'Ritmica', 'DM Serif Display', serif",
+              fontFamily: "'Ritmica', sans-serif",
               fontWeight: 600,
               textAlign: "center",
               opacity: 0,
@@ -1964,17 +1992,17 @@ function Slide11Closing() {
       const vr = vw / slideWidth;
 
       if (line1Ref.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.1) / (vr * 0.4)));
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
         line1Ref.current.style.opacity = String(enterP);
       }
 
       if (line2Ref.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.3) / (vr * 0.35)));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.05) / (vr * 0.2)));
         line2Ref.current.style.opacity = String(enterP);
       }
 
       if (emailRef.current) {
-        const enterP = Math.max(0, Math.min(1, (p - vr * 0.5) / (vr * 0.3)));
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.1) / (vr * 0.2)));
         emailRef.current.style.opacity = String(enterP);
       }
     };
@@ -2006,7 +2034,7 @@ function Slide11Closing() {
         style={{
           fontSize: "clamp(22px, 3vw, 42px)",
           color: "#FFFFFF",
-          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontFamily: "'Ritmica', sans-serif",
           fontWeight: 400,
           textAlign: "center",
           opacity: 0,
@@ -2021,7 +2049,7 @@ function Slide11Closing() {
         style={{
           fontSize: "clamp(28px, 3.8vw, 52px)",
           color: "#FFFFFF",
-          fontFamily: "'Ritmica', 'DM Serif Display', serif",
+          fontFamily: "'Ritmica', sans-serif",
           fontWeight: 700,
           textAlign: "center",
           marginTop: "10px",

@@ -922,6 +922,14 @@
     opacity: 1 !important;
   }
 
+  .filmstrip-slide .context-word,
+  .filmstrip-slide .reach-context,
+  .filmstrip-slide .reach-crescendo,
+  .filmstrip-slide .keyword,
+  .filmstrip-slide .city-name {
+    color: #FFFFFF !important;
+  }
+
   [data-testid="slide-3-workspeaks"] {
     display: flex !important;
     flex-direction: column !important;
