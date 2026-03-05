@@ -961,7 +961,7 @@ function Slide3WorkSpeaks() {
           left: "5vw",
           zIndex: 2,
           fontSize: "clamp(16px, 2vw, 28px)",
-          color: "#B0B0B0",
+          color: "#FFFFFF",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 400,
           opacity: 0,
