@@ -1323,30 +1323,24 @@ function Slide6Mission() {
       const p = Math.max(0, localScroll / slideWidth);
       const vr = vw / slideWidth;
 
-      const fadeInStart = vr * 0.75;
-      const fadeInEnd = 0.5;
-      const fadeInP = Math.max(0, Math.min(1, (p - fadeInStart) / (fadeInEnd - fadeInStart)));
+      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.4)));
 
-      const fadeOutStart = 0.5;
-      const fadeOutEnd = 1 - vr * 0.25;
-      const fadeOutP = Math.max(0, Math.min(1, (p - fadeOutStart) / (fadeOutEnd - fadeOutStart)));
-
-      const contextRevealP = fadeInP;
+      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 1.26) / (vr * 0.5)));
 
       textRef.current.querySelectorAll<HTMLElement>(".context-word").forEach((el) => {
         const revealColor = Math.round(contextRevealP * 255);
         el.style.color = `rgb(${revealColor}, ${revealColor}, ${revealColor})`;
-        el.style.opacity = String(1 - fadeOutP);
+        el.style.opacity = "1";
       });
 
       textRef.current.querySelectorAll<HTMLElement>(".keyword").forEach((el) => {
         el.style.color = "#FFFFFF";
         el.style.fontWeight = "700";
-        el.style.opacity = String(1 - fadeOutP);
+        el.style.opacity = String(1 - exitP);
       });
 
       textRef.current.style.opacity = "1";
-      textRef.current.style.transform = `translateX(${-fadeOutP * 15}%)`;
+      textRef.current.style.transform = `translateX(${-exitP * 15}%)`;
     };
 
     window.addEventListener("horizontalscroll", onHScroll);
