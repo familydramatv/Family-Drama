@@ -88,7 +88,7 @@ const clientGrid = [
   "Essentia", "Freeport LNG", "Dr. Teal's",
 ];
 
-const marqueeText = "CREATIVE · LIVE ACTION · VFX · POST-PRODUCTION · VIRTUAL PRODUCTION · STILL PHOTOGRAPHY · BRANDED CONTENT · SOCIAL · BROADCAST · ";
+
 
 function useHorizontalScroll() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -1135,43 +1135,6 @@ function Slide4Manifesto() {
           >
             {manifestoCrescendo}
           </p>
-        </div>
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          left: 0,
-          width: "100%",
-          zIndex: 3,
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            whiteSpace: "nowrap",
-            animation: "marquee-scroll 30s linear infinite",
-            willChange: "transform",
-          }}
-        >
-          {[0, 1].map((k) => (
-            <span
-              key={k}
-              style={{
-                fontSize: "clamp(14px, 1.8vw, 24px)",
-                letterSpacing: "0.15em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.35)",
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 500,
-                paddingRight: "0.5em",
-              }}
-            >
-              {marqueeText}
-            </span>
-          ))}
         </div>
       </div>
     </section>
