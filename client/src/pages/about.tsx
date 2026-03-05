@@ -1191,11 +1191,17 @@ function Slide5CoreBeliefs() {
       coreBeliefLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
-        const lineStart = (i / totalItems) * 0.5;
-        const lineEnd = lineStart + (1 / totalItems) * 0.8;
-        const lineP = Math.max(0, Math.min(1, (stickyP - lineStart) / (lineEnd - lineStart)));
-        el.style.opacity = String(lineP);
-        el.style.transform = `translateY(${(1 - lineP) * 20}px)`;
+        if (i === 0) {
+          const firstP = Math.max(0, Math.min(1, entryP / 0.3));
+          el.style.opacity = String(firstP);
+          el.style.transform = `translateY(${(1 - firstP) * 20}px)`;
+        } else {
+          const lineStart = ((i - 1) / (totalItems - 1)) * 0.5;
+          const lineEnd = lineStart + (1 / (totalItems - 1)) * 0.8;
+          const lineP = Math.max(0, Math.min(1, (stickyP - lineStart) / (lineEnd - lineStart)));
+          el.style.opacity = String(lineP);
+          el.style.transform = `translateY(${(1 - lineP) * 20}px)`;
+        }
       });
     };
 
