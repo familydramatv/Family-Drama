@@ -1260,7 +1260,7 @@ function Slide5CoreBeliefs() {
               fontWeight: 500,
               opacity: 0,
               willChange: "transform, opacity",
-              marginBottom: "6px",
+              marginBottom: "0px",
             }}
           >
             {line}
