@@ -457,7 +457,7 @@ function Slide1Hero() {
         }}
       >
         <h1 className="-t-80 text-white" style={{ fontFamily: "'Ritmica', Inter, sans-serif", fontWeight: 400 }}>
-          <span style={{ fontWeight: 600 }}>FAMILY DRAMA</span> is fluent in…
+          <span style={{ fontWeight: 700 }}>FAMILY DRAMA</span> is fluent in…
         </h1>
         <div className="hero-cycling -t-80" style={{ marginTop: "0.1em", fontFamily: "'Ritmica', Inter, sans-serif", fontWeight: 400 }}>
           <div
