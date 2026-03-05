@@ -1150,6 +1150,7 @@ const coreBeliefLines = [
 
 function Slide5CoreBeliefs() {
   const slideRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const lineRefs = useRef<(HTMLParagraphElement | null)[]>([]);
 
@@ -1160,29 +1161,41 @@ function Slide5CoreBeliefs() {
       const detail = (e as CustomEvent).detail;
       const scrollX = detail.scrollX as number;
       const vw = window.innerWidth;
-      if (!slideRef.current) return;
+      if (!slideRef.current || !contentRef.current) return;
 
       const slideLeft = slideRef.current.offsetLeft;
       const slideWidth = slideRef.current.offsetWidth;
-      const localScroll = scrollX - slideLeft + vw;
-      const p = Math.max(0, localScroll / slideWidth);
-      const vr = vw / slideWidth;
+      const lockRange = Math.max(1, slideWidth - vw);
+
+      const lockStart = slideLeft;
+      const lockEnd = slideLeft + lockRange;
+
+      let counterX = 0;
+      if (scrollX >= lockStart && scrollX <= lockEnd) {
+        counterX = scrollX - lockStart;
+      } else if (scrollX > lockEnd) {
+        counterX = lockRange;
+      }
+      contentRef.current.style.transform = `translateX(${counterX}px)`;
+
+      const stickyP = Math.max(0, Math.min(1, (scrollX - lockStart) / lockRange));
+      const entryP = Math.max(0, Math.min(1, (scrollX - (slideLeft - vw)) / vw));
 
       if (headlineRef.current) {
-        const enterP = Math.max(0, Math.min(1, p / (vr * 0.3)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
-        headlineRef.current.style.opacity = String(enterP * (1 - exitP));
-        headlineRef.current.style.transform = `translateY(${(1 - enterP) * 40}px)`;
+        const hP = Math.max(0, Math.min(1, entryP / 0.5));
+        headlineRef.current.style.opacity = String(hP);
+        headlineRef.current.style.transform = `translateY(${(1 - hP) * 40}px)`;
       }
 
+      const totalItems = coreBeliefLines.length;
       coreBeliefLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
-        const delay = vr * 0.15 + i * vr * 0.12;
-        const enterP = Math.max(0, Math.min(1, (p - delay) / (vr * 0.25)));
-        const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
-        el.style.opacity = String(enterP * (1 - exitP));
-        el.style.transform = `translateY(${(1 - enterP) * 20}px)`;
+        const lineStart = (i / totalItems) * 0.8;
+        const lineEnd = lineStart + (1 / totalItems) * 1.2;
+        const lineP = Math.max(0, Math.min(1, (stickyP - lineStart) / (lineEnd - lineStart)));
+        el.style.opacity = String(lineP);
+        el.style.transform = `translateY(${(1 - lineP) * 20}px)`;
       });
     };
 
@@ -1193,9 +1206,9 @@ function Slide5CoreBeliefs() {
   return (
     <section
       ref={slideRef}
-      className="filmstrip-slide"
+      className="filmstrip-slide filmstrip-slide--sticky"
       style={{
-        width: "150vw",
+        width: "300vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
@@ -1204,68 +1217,80 @@ function Slide5CoreBeliefs() {
       aria-label="Core Beliefs"
       data-testid="slide-5-core-beliefs"
     >
-      <img
-        src="https://image.mux.com/YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA/thumbnail.jpg?time=8&width=1920"
-        alt=""
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      />
-
       <div
+        ref={contentRef}
         style={{
           position: "absolute",
           top: 0,
           left: 0,
-          width: "100%",
-          height: "100%",
-          background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.3) 100%)",
-          zIndex: 1,
+          width: "100vw",
+          height: "100vh",
+          willChange: "transform",
         }}
-      />
-
-      <div style={{ position: "absolute", bottom: "30vh", left: "5vw", zIndex: 2, maxWidth: "70vw" }}>
-        <h2
-          ref={headlineRef}
+      >
+        <img
+          src="https://image.mux.com/YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA/thumbnail.jpg?time=8&width=1920"
+          alt=""
           style={{
-            fontSize: "clamp(60px, 9vw, 160px)",
-            lineHeight: 0.95,
-            color: "#FFFFFF",
-            fontFamily: "'Ritmica', sans-serif",
-            fontWeight: 600,
-            opacity: 0,
-            willChange: "transform, opacity",
-            marginBottom: "30px",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 0,
+            pointerEvents: "none",
           }}
-        >
-          Core Beliefs
-        </h2>
+        />
 
-        {coreBeliefLines.map((line, i) => (
-          <p
-            key={i}
-            ref={(el) => { lineRefs.current[i] = el; }}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.3) 100%)",
+            zIndex: 1,
+          }}
+        />
+
+        <div style={{ position: "absolute", bottom: "30vh", left: "5vw", zIndex: 2, maxWidth: "70vw" }}>
+          <h2
+            ref={headlineRef}
             style={{
-              fontSize: "clamp(18px, 2.5vw, 36px)",
-              lineHeight: 1.5,
+              fontSize: "clamp(60px, 9vw, 160px)",
+              lineHeight: 0.95,
               color: "#FFFFFF",
               fontFamily: "'Ritmica', sans-serif",
-              fontWeight: 400,
+              fontWeight: 600,
               opacity: 0,
               willChange: "transform, opacity",
-              marginBottom: "0px",
+              marginBottom: "30px",
             }}
           >
-            {line}
-          </p>
-        ))}
+            Core Beliefs
+          </h2>
+
+          {coreBeliefLines.map((line, i) => (
+            <p
+              key={i}
+              ref={(el) => { lineRefs.current[i] = el; }}
+              style={{
+                fontSize: "clamp(18px, 2.5vw, 36px)",
+                lineHeight: 1.5,
+                color: "#FFFFFF",
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 400,
+                opacity: 0,
+                willChange: "transform, opacity",
+                marginBottom: "0px",
+              }}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
       </div>
     </section>
   );
