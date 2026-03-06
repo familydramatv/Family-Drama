@@ -422,7 +422,9 @@ function Slide1Hero() {
         style={{
           transform: isMobileView && exitProgress > 0
             ? `translateY(-50%) translateX(-${exitProgress * 120}%)`
-            : "translateY(-50%)",
+            : heroReady ? "translateY(-50%)" : "translateY(calc(-50% + 40px))",
+          opacity: heroReady ? 1 : 0,
+          transition: heroReady ? "transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s, opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.4s" : "none",
         }}
       >
         <h1 className="-t-80 text-white" style={{ fontFamily: "'Ritmica', Inter, sans-serif", fontWeight: 400 }}>
