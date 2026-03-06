@@ -169,7 +169,8 @@ function ProjectCard({
       <div className="absolute inset-0 p-3 sm:p-5 md:p-7 flex flex-col justify-between z-[4]">
         <div className="flex justify-between items-start">
           <span
-            className="text-white text-base sm:text-lg md:text-xl font-medium tracking-wide"
+            className="text-white text-base sm:text-lg md:text-xl tracking-wide"
+            style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 500 }}
             data-testid={`text-client-${project.id}`}
           >
             {displayClient}
@@ -177,8 +178,11 @@ function ProjectCard({
         </div>
         <div className="relative">
           <span
-            className="text-white/80 text-xs sm:text-sm md:text-base italic block will-change-transform"
+            className="text-white text-xs sm:text-sm md:text-base block will-change-transform"
             style={{
+              fontFamily: "'Ritmica', sans-serif",
+              fontWeight: 300,
+              fontStyle: "italic",
               transform: showDetails ? "translate3d(0, -10px, 0)" : "translate3d(0, 10px, 0)",
               transition: isMobile ? "none" : "transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1)",
             }}
