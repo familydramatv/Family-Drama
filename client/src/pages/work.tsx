@@ -260,6 +260,7 @@ export default function Work() {
               className={`md:text-base transition-colors duration-200 cursor-pointer text-[14px] sm:text-[17px] ${
                 activeCategory === cat.value ? "text-white" : "text-white/40 hover:text-white"
               }`}
+              style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 400 }}
             >
               {cat.label}
             </span>
