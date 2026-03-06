@@ -562,7 +562,8 @@ function Slide2Difference() {
     const applyAnimations = (s2p: number, scrollX: number, vw: number, isDesktop: boolean) => {
       
       if (isDesktop && imgRef.current) {
-        const slideT = Math.max(0, Math.min(1, s2p / 0.4));
+        const imgP = s2p + 0.08;
+        const slideT = Math.max(0, Math.min(1, imgP / 0.4));
         const eased = slideT < 0.5 ? 2 * slideT * slideT : 1 - Math.pow(-2 * slideT + 2, 2) / 2;
         const offsetX = (1 - eased) * vw * 0.6;
         imgRef.current.style.transform = `translateX(${offsetX}px)`;
