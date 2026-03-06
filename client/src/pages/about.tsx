@@ -1193,7 +1193,6 @@ function Slide5CoreBeliefs() {
         headlineRef.current.style.transform = `translateY(${(1 - hP) * 40}px)`;
       }
 
-      const totalItems = coreBeliefLines.length;
       coreBeliefLines.forEach((_, i) => {
         const el = lineRefs.current[i];
         if (!el) return;
@@ -1202,8 +1201,8 @@ function Slide5CoreBeliefs() {
           el.style.opacity = String(firstP);
           el.style.transform = `translateY(${(1 - firstP) * 20}px)`;
         } else {
-          const lineStart = (i - 1) * 0.25;
-          const lineP = Math.max(0, Math.min(1, (stickyP - lineStart) / 0.12));
+          const lineStart = (i - 1) * 0.35;
+          const lineP = Math.max(0, Math.min(1, (stickyP - lineStart) / 0.25));
           el.style.opacity = String(lineP);
           el.style.transform = `translateY(${(1 - lineP) * 20}px)`;
         }
@@ -1219,7 +1218,7 @@ function Slide5CoreBeliefs() {
       ref={slideRef}
       className="filmstrip-slide filmstrip-slide--sticky"
       style={{
-        width: "300vw",
+        width: "200vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
