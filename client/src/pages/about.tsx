@@ -1380,8 +1380,8 @@ function Slide6Mission() {
       <div
         ref={textRef}
         style={{
-          maxWidth: "90vw",
-          fontSize: "clamp(24px, 3.5vw, 52px)",
+          maxWidth: "93vw",
+          fontSize: "clamp(22px, 3.3vw, 50px)",
           lineHeight: 1.3,
           textAlign: "center",
           fontFamily: "'Ritmica', sans-serif",
