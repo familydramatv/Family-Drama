@@ -52,12 +52,12 @@ const manifestoLines = [
 const manifestoCrescendo = "";
 
 const missionText = {
-  before: "Family Drama is a full-service production company that creates content which transcends ",
+  before: "Family Drama, founded by Nick & Nate Simmons is an industry-leading production company that creates content which transcends ",
   keyword1: "PLATFORMS",
   mid: " and ",
-  keyword2: "LIVES",
+  keyword2: "FORMAT",
   after: " at the intersection of ",
-  keywords: ["branded entertainment,", "culture,", "sports,", "technology", "and storytelling."],
+  keywords: ["culture,", "media,", "and entertainment."],
 };
 
 const reachText = {
@@ -1389,20 +1389,16 @@ function Slide6Mission() {
           willChange: "transform, opacity",
         }}
       >
-        <span className="context-word" style={{ color: "rgb(0,0,0)" }}>Family Drama is a full-service production company that creates content which transcends </span>
+        <span className="context-word" style={{ color: "rgb(0,0,0)" }}>Family Drama, founded by Nick & Nate Simmons is an industry-leading production company that creates content which transcends </span>
         <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>PLATFORMS</span>
         <span className="context-word" style={{ color: "rgb(0,0,0)" }}> and </span>
-        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>LIVES</span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>FORMAT</span>
         <span className="context-word" style={{ color: "rgb(0,0,0)" }}> at the intersection of </span>
-        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>branded entertainment,</span>
-        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> </span>
         <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>culture,</span>
         <span className="context-word" style={{ color: "rgb(0,0,0)" }}> </span>
-        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>sports,</span>
-        <span className="context-word" style={{ color: "rgb(0,0,0)" }}> </span>
-        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>technology</span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>media,</span>
         <span className="context-word" style={{ color: "rgb(0,0,0)" }}> and </span>
-        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>storytelling.</span>
+        <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>entertainment.</span>
       </div>
     </section>
   );
