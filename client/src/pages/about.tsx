@@ -42,13 +42,14 @@ const cyclingWords = [
 ];
 
 const manifestoLines = [
-  "We conceptualize.",
-  "We create.",
-  "We produce.",
-  "We distribute.",
-  "From first frame to final delivery.",
+  "Media",
+  "Strategy",
+  "Creative + Development",
+  "Content Production",
+  "Still Photography",
+  "Post-Production",
 ];
-const manifestoCrescendo = "EVERY. SINGLE. STEP.";
+const manifestoCrescendo = "";
 
 const missionText = {
   before: "Family Drama is a full-service production company that creates content which transcends ",
@@ -1103,7 +1104,7 @@ function Slide4Manifesto() {
             willChange: "transform, opacity",
           }}
         >
-          Full Service
+          Services
         </h2>
 
         <div style={{ marginTop: "40px" }}>
