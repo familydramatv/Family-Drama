@@ -169,7 +169,7 @@ function ProjectCard({
       <div className="absolute inset-0 p-3 sm:p-5 md:p-7 flex flex-col justify-between z-[4]">
         <div className="flex justify-between items-start">
           <span
-            className="text-white text-base sm:text-lg md:text-xl tracking-wide"
+            className="text-white text-[19px] sm:text-[21px] md:text-[23px] tracking-wide"
             style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 500 }}
             data-testid={`text-client-${project.id}`}
           >
