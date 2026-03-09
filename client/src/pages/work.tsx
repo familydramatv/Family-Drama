@@ -67,16 +67,19 @@ function ProjectCard({
   project,
   muxMeta,
   onMobilePlay,
+  index = 0,
 }: {
   project: Project;
   muxMeta?: MuxMeta;
   onMobilePlay?: (playbackId: string) => void;
+  index?: number;
 }) {
   const videoRef = useRef<HTMLElement | null>(null);
   const [hovered, setHovered] = useState(false);
   const [mediaReady, setMediaReady] = useState(false);
   const isMobile = useIsMobile();
   const showDetails = hovered || isMobile;
+  const isRightColumn = index % 2 === 1;
 
   const displayClient = (muxMeta?.client || project.client);
   const displayTitle = (muxMeta?.title || project.title);
@@ -167,7 +170,7 @@ function ProjectCard({
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-[2]" />
       <div className="absolute inset-0 p-3 sm:p-5 md:p-7 flex flex-col justify-between z-[4]">
-        <div className="flex justify-between items-start">
+        <div className={`flex items-start ${!isMobile && isRightColumn ? "justify-end" : "justify-start"}`}>
           <span
             className="text-white text-[23px] sm:text-[25px] md:text-[27px] tracking-wide"
             style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 500 }}
@@ -178,7 +181,7 @@ function ProjectCard({
         </div>
         <div className="relative">
           <span
-            className="text-white text-xs sm:text-sm md:text-base block will-change-transform"
+            className="text-white text-xs sm:text-sm md:text-base block will-change-transform text-left"
             style={{
               fontFamily: "'Ritmica', sans-serif",
               fontWeight: 300,
@@ -293,6 +296,7 @@ export default function Work() {
                   project={project}
                   muxMeta={project.muxProjectPlaybackId ? muxMetadata[project.muxProjectPlaybackId] : undefined}
                   onMobilePlay={setFullscreenPlaybackId}
+                  index={i}
                 />
               </motion.div>
             ))
