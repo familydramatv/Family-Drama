@@ -173,7 +173,7 @@ function ProjectCard({
         <div className={`flex items-start ${!isMobile && isRightColumn ? "justify-end" : "justify-start"}`}>
           <span
             className="text-white text-[27px] sm:text-[29px] md:text-[31px] tracking-wide"
-            style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 500 }}
+            style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 400 }}
             data-testid={`text-client-${project.id}`}
           >
             {displayClient}
