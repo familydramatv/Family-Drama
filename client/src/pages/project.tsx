@@ -244,7 +244,7 @@ export default function Project() {
     <div className="min-h-screen bg-black">
       <motion.button
         onClick={() => navigate("/work")}
-        className="fixed top-5 right-4 sm:right-[72px] md:right-[88px] z-50 w-10 h-10 flex items-center justify-center text-white/50 hover:text-white transition-colors duration-300"
+        className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-10 h-10 flex items-center justify-center text-white hover:text-white transition-colors duration-300"
         initial={{ opacity: 0, rotate: -90 }}
         animate={{ opacity: 1, rotate: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
