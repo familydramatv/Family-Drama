@@ -1042,22 +1042,27 @@ function SlideScatterCollage() {
             top: img.top,
             width: img.width,
             willChange: "transform",
-            transition: "transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
-            cursor: "pointer",
           }}
-          onMouseEnter={(e) => { if (window.innerWidth > 1024) e.currentTarget.style.transform = "scale(1.15)"; }}
-          onMouseLeave={(e) => { if (window.innerWidth > 1024) e.currentTarget.style.transform = "scale(1)"; }}
         >
-          <img
-            src={img.src}
-            alt=""
-            loading="lazy"
+          <div
             style={{
-              width: "100%",
-              height: "auto",
-              display: "block",
+              transition: "transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
+              cursor: "pointer",
             }}
-          />
+            onMouseEnter={(e) => { if (window.innerWidth > 1024) e.currentTarget.style.transform = "scale(1.15)"; }}
+            onMouseLeave={(e) => { if (window.innerWidth > 1024) e.currentTarget.style.transform = "scale(1)"; }}
+          >
+            <img
+              src={img.src}
+              alt=""
+              loading="lazy"
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+              }}
+            />
+          </div>
         </div>
       ))}
     </section>
