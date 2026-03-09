@@ -181,7 +181,7 @@ function ProjectCard({
         </div>
         <div className="relative">
           <span
-            className="text-white text-[20px] sm:text-[22px] md:text-[24px] block will-change-transform text-left"
+            className={`text-white text-[20px] sm:text-[22px] md:text-[24px] block will-change-transform ${!isMobile && isRightColumn ? "text-right" : "text-left"}`}
             style={{
               fontFamily: "'Ritmica', sans-serif",
               fontWeight: 300,
