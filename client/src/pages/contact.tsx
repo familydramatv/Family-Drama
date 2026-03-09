@@ -64,15 +64,15 @@ function HoverPhoto({ src, parentRef }: { src: string; parentRef: React.RefObjec
   );
 }
 
-function TeamMember({ member, index, showHoverPhoto }: { member: { name: string; role: string; email: string }; index: number; showHoverPhoto: boolean }) {
+function TeamMember({ member, index, hoverPhotoSrc }: { member: { name: string; role: string; email: string }; index: number; hoverPhotoSrc: string | null }) {
   const ref = useRef<HTMLDivElement>(null);
   return (
     <div
       ref={ref}
       data-testid={`team-member-${member.name.toLowerCase().replace(/\s+/g, '-')}`}
-      style={{ position: "relative", padding: showHoverPhoto ? "10px 0" : undefined, cursor: showHoverPhoto ? "pointer" : undefined }}
+      style={{ position: "relative", padding: hoverPhotoSrc ? "10px 0" : undefined, cursor: hoverPhotoSrc ? "pointer" : undefined }}
     >
-      {showHoverPhoto && <HoverPhoto src="/images/sarah-garza.jpg" parentRef={ref} />}
+      {hoverPhotoSrc && <HoverPhoto src={hoverPhotoSrc} parentRef={ref} />}
       <div style={{ position: "relative", zIndex: 2 }}>
         <a href={`mailto:${member.email}`} className="text-white text-lg font-medium opacity-80 hover:opacity-100 transition-opacity">
           <RevealText text={member.name} delay={index * 60} />
@@ -165,9 +165,11 @@ export default function Contact() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {teamMembers.map((member, i) => {
-              const isSarah = member.name === "Sarah Garza";
+              const hoverPhoto = member.name === "Sarah Garza" ? "/images/sarah-garza.jpg"
+                : member.name === "Nate Simmons" ? "/images/nate-simmons.jpg"
+                : null;
               return (
-                <TeamMember key={member.name} member={member} index={i} showHoverPhoto={isSarah} />
+                <TeamMember key={member.name} member={member} index={i} hoverPhotoSrc={hoverPhoto} />
               );
             })}
           </div>
