@@ -42,6 +42,14 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: 'Ritmica';
+  src: url('/fonts/Ritmica-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: block;
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
