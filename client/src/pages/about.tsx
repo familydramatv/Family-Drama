@@ -953,7 +953,7 @@ function Slide3WorkSpeaks() {
           willChange: "transform, opacity",
         }}
       >
-        The Work Speaks
+        Over 1 Billion Views and Counting
       </h2>
       <p
         ref={subtitleRef}
