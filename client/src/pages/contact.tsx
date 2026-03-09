@@ -1,6 +1,87 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { offices, teamMembers, salesReps } from "@/lib/data";
 import { MapPin, Phone } from "lucide-react";
+
+function HoverPhoto({ src, parentRef }: { src: string; parentRef: React.RefObject<HTMLDivElement | null> }) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [visible, setVisible] = useState(false);
+  const pos = useRef({ x: 0, y: 0, targetX: 0, targetY: 0, raf: 0 });
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+    const parent = parentRef.current;
+    if (!parent) return;
+
+    const onEnter = () => setVisible(true);
+    const onLeave = () => setVisible(false);
+    const onMove = (e: MouseEvent) => {
+      const rect = parent.getBoundingClientRect();
+      pos.current.targetX = e.clientX - rect.left - 100;
+      pos.current.targetY = e.clientY - rect.top - 150;
+    };
+
+    parent.addEventListener("mouseenter", onEnter);
+    parent.addEventListener("mouseleave", onLeave);
+    parent.addEventListener("mousemove", onMove);
+
+    const animate = () => {
+      pos.current.x += (pos.current.targetX - pos.current.x) * 0.08;
+      pos.current.y += (pos.current.targetY - pos.current.y) * 0.08;
+      if (imgRef.current) {
+        imgRef.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
+      }
+      pos.current.raf = requestAnimationFrame(animate);
+    };
+    pos.current.raf = requestAnimationFrame(animate);
+
+    return () => {
+      parent.removeEventListener("mouseenter", onEnter);
+      parent.removeEventListener("mouseleave", onLeave);
+      parent.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(pos.current.raf);
+    };
+  }, [parentRef]);
+
+  return (
+    <img
+      ref={imgRef}
+      src={src}
+      alt=""
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: 200,
+        height: 300,
+        objectFit: "cover",
+        pointerEvents: "none",
+        zIndex: -1,
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.35s ease",
+        willChange: "transform",
+      }}
+    />
+  );
+}
+
+function TeamMember({ member, index, showHoverPhoto }: { member: { name: string; role: string; email: string }; index: number; showHoverPhoto: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      ref={ref}
+      data-testid={`team-member-${member.name.toLowerCase().replace(/\s+/g, '-')}`}
+      style={{ position: "relative" }}
+    >
+      {showHoverPhoto && <HoverPhoto src="/images/sarah-garza.jpg" parentRef={ref} />}
+      <div>
+        <a href={`mailto:${member.email}`} className="text-white text-lg font-medium opacity-80 hover:opacity-100 transition-opacity">
+          <RevealText text={member.name} delay={index * 60} />
+        </a>
+        <p className="text-white/40 text-sm mt-1">{member.role}</p>
+      </div>
+    </div>
+  );
+}
 
 function RevealText({ text, delay = 0, className = "", style = {} }: { text: string; delay?: number; className?: string; style?: Record<string, string | number> }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -83,19 +164,12 @@ export default function Contact() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {teamMembers.map((member, i) => (
-              <div
-                key={member.name}
-                data-testid={`team-member-${member.name.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                <div>
-                  <a href={`mailto:${member.email}`} className="text-white text-lg font-medium opacity-80 hover:opacity-100 transition-opacity">
-                    <RevealText text={member.name} delay={i * 60} />
-                  </a>
-                  <p className="text-white/40 text-sm mt-1">{member.role}</p>
-                </div>
-              </div>
-            ))}
+            {teamMembers.map((member, i) => {
+              const isSarah = member.name === "Sarah Garza";
+              return (
+                <TeamMember key={member.name} member={member} index={i} showHoverPhoto={isSarah} />
+              );
+            })}
           </div>
         </div>
 
