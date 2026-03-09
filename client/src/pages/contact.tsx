@@ -55,7 +55,7 @@ function HoverPhoto({ src, parentRef }: { src: string; parentRef: React.RefObjec
         height: 300,
         objectFit: "cover",
         pointerEvents: "none",
-        zIndex: -1,
+        zIndex: 1,
         opacity: visible ? 1 : 0,
         transition: "opacity 0.35s ease",
         willChange: "transform",
@@ -70,10 +70,10 @@ function TeamMember({ member, index, showHoverPhoto }: { member: { name: string;
     <div
       ref={ref}
       data-testid={`team-member-${member.name.toLowerCase().replace(/\s+/g, '-')}`}
-      style={{ position: "relative" }}
+      style={{ position: "relative", padding: showHoverPhoto ? "10px 0" : undefined, cursor: showHoverPhoto ? "pointer" : undefined }}
     >
       {showHoverPhoto && <HoverPhoto src="/images/sarah-garza.jpg" parentRef={ref} />}
-      <div>
+      <div style={{ position: "relative", zIndex: 2 }}>
         <a href={`mailto:${member.email}`} className="text-white text-lg font-medium opacity-80 hover:opacity-100 transition-opacity">
           <RevealText text={member.name} delay={index * 60} />
         </a>
