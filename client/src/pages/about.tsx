@@ -1022,7 +1022,7 @@ function SlideScatterCollage() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "160vw",
+        width: "130vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
