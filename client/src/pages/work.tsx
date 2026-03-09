@@ -257,7 +257,7 @@ export default function Work() {
             data-testid={`tab-${cat.value}`}
           >
             <span
-              className={`md:text-base transition-colors duration-200 cursor-pointer text-[14px] sm:text-[17px] ${
+              className={`md:text-[19px] transition-colors duration-200 cursor-pointer text-[17px] sm:text-[20px] ${
                 activeCategory === cat.value ? "text-white" : "text-white/40 hover:text-white"
               }`}
               style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 300 }}
