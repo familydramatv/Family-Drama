@@ -970,7 +970,7 @@ function Slide3WorkSpeaks() {
           willChange: "transform, opacity",
         }}
       >
-        A decade of content for the world's most recognized brands.
+        We love our work, but we get even more excited when it sticks and resonates.
       </p>
     </section>
   );
