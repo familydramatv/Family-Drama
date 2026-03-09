@@ -181,7 +181,7 @@ function ProjectCard({
         </div>
         <div className="relative">
           <span
-            className="text-white text-xs sm:text-sm md:text-base block will-change-transform text-left"
+            className="text-white text-[17px] sm:text-[19px] md:text-[21px] block will-change-transform text-left"
             style={{
               fontFamily: "'Ritmica', sans-serif",
               fontWeight: 300,
