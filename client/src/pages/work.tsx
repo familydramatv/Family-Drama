@@ -195,7 +195,7 @@ function ProjectCard({
           </span>
           {displayDirector && (
             <span
-              className="text-white/50 text-xs md:text-sm block absolute left-0 will-change-transform"
+              className={`text-white/50 text-xs md:text-sm block absolute will-change-transform ${!isMobile && isRightColumn ? "right-0 text-right" : "left-0 text-left"}`}
               style={{
                 opacity: showDetails ? 1 : 0,
                 transform: showDetails ? "translate3d(0, 0, 0)" : "translate3d(0, 8px, 0)",
