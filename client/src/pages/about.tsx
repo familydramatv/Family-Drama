@@ -69,11 +69,9 @@ const reachText = {
 };
 
 const rosterLines = [
-  "Producers who've managed $10M+ campaigns...",
-  "Directors of photography who paint with light...",
-  "Editors who find the story in the footage...",
-  "VFX artists who make the impossible real...",
-  "A production team that treats every project like it's personal.",
+  "1B+ Views Generated",
+  "40+ Fortune 500 Client Partners",
+  "$100M+ Revenue Created",
 ];
 
 const impactLines = [
@@ -1645,7 +1643,7 @@ function Slide8Roster() {
     return () => window.removeEventListener("horizontalscroll", onHScroll);
   }, []);
 
-  const headlineText = "Built Different";
+  const headlineText = "The Impact";
 
   return (
     <section
@@ -1688,7 +1686,7 @@ function Slide8Roster() {
             opacity: 0,
           }}
         >
-          One Team
+          
         </p>
         <h2
           ref={headlineRef}
