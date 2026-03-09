@@ -195,7 +195,7 @@ function ProjectCard({
           </span>
           {displayDirector && (
             <span
-              className={`text-white/50 text-[18px] sm:text-[20px] md:text-[22px] block absolute will-change-transform ${!isMobile && isRightColumn ? "right-0 text-right" : "left-0 text-left"}`}
+              className={`text-white text-[18px] sm:text-[20px] md:text-[22px] block absolute will-change-transform ${!isMobile && isRightColumn ? "right-0 text-right" : "left-0 text-left"}`}
               style={{
                 fontFamily: "'Ritmica', sans-serif",
                 fontWeight: 300,
