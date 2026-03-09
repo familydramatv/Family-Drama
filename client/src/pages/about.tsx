@@ -978,16 +978,16 @@ function Slide3WorkSpeaks() {
 }
 
 const scatterImages = [
-  { left: "3vw", top: "8vh", width: "22vw", height: "28vh", color: "#0D3B3B", label: "BTS: Director on set with crew", speed: 0.06 },
-  { left: "30vw", top: "5vh", width: "18vw", height: "22vh", color: "#3B2A0D", label: "SHOT: Product hero close-up", speed: 0.12 },
-  { left: "55vw", top: "15vh", width: "28vw", height: "35vh", color: "#3B0D1A", label: "CAMPAIGN: Brand launch event", speed: 0.04 },
-  { left: "88vw", top: "3vh", width: "20vw", height: "25vh", color: "#0D1A3B", label: "PORTRAIT: Talent in studio", speed: 0.09 },
-  { left: "8vw", top: "52vh", width: "16vw", height: "20vh", color: "#1A2B0D", label: "ACTION: Stunt sequence wide", speed: 0.14 },
-  { left: "32vw", top: "45vh", width: "24vw", height: "30vh", color: "#3B2A0D", label: "AERIAL: Drone establishing shot", speed: 0.03 },
-  { left: "65vw", top: "58vh", width: "20vw", height: "26vh", color: "#0D3B3B", label: "DETAIL: Wardrobe texture macro", speed: 0.11 },
-  { left: "92vw", top: "48vh", width: "18vw", height: "24vh", color: "#3B0D1A", label: "LIVE: Concert crowd energy", speed: 0.07 },
-  { left: "115vw", top: "12vh", width: "25vw", height: "32vh", color: "#1A2B0D", label: "SET: Production design detail", speed: 0.05 },
-  { left: "120vw", top: "55vh", width: "22vw", height: "28vh", color: "#0D1A3B", label: "POST: Color grading before/after", speed: 0.13 },
+  { left: "3vw", top: "6vh", width: "16vw", src: "/images/collage/img1.jpg", aspect: 3/4, speed: 0.06 },
+  { left: "28vw", top: "3vh", width: "14vw", src: "/images/collage/img2.jpg", aspect: 3/4, speed: 0.12 },
+  { left: "52vw", top: "12vh", width: "24vw", src: "/images/collage/img4.jpg", aspect: 533/800, speed: 0.04 },
+  { left: "85vw", top: "5vh", width: "15vw", src: "/images/collage/img3.jpg", aspect: 4/3, speed: 0.09 },
+  { left: "6vw", top: "55vh", width: "20vw", src: "/images/collage/img6.jpg", aspect: 534/800, speed: 0.14 },
+  { left: "35vw", top: "48vh", width: "18vw", src: "/images/collage/img5.jpg", aspect: 4/3, speed: 0.03 },
+  { left: "62vw", top: "56vh", width: "22vw", src: "/images/collage/img7.jpg", aspect: 533/800, speed: 0.11 },
+  { left: "95vw", top: "42vh", width: "20vw", src: "/images/collage/img8.jpg", aspect: 3/4, speed: 0.07 },
+  { left: "118vw", top: "8vh", width: "22vw", src: "/images/collage/img9.jpg", aspect: 533/800, speed: 0.05 },
+  { left: "122vw", top: "52vh", width: "26vw", src: "/images/collage/img10.jpg", aspect: 450/800, speed: 0.13 },
 ];
 
 function SlideScatterCollage() {
@@ -1041,14 +1041,18 @@ function SlideScatterCollage() {
             left: img.left,
             top: img.top,
             width: img.width,
-            height: img.height,
             willChange: "transform",
           }}
         >
-          <PlaceholderImage
-            label={img.label}
-            color={img.color}
-            style={{ width: "100%", height: "100%" }}
+          <img
+            src={img.src}
+            alt=""
+            loading="lazy"
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+            }}
           />
         </div>
       ))}
