@@ -26,9 +26,9 @@ const slide2LetterParams = Array.from({ length: allBannerText.length + 1 }, (_, 
 }));
 
 const rolodexSlides = [
-  "Whatever a traditional production company looks like, we've never been that…",
-  "We're a different kind of company. Intentionally.",
-  "A company that treats every project like it's personal, every director like they're family, and every frame like it's the one people remember.",
+  "Whatever a traditional production company looks like, that's not us.",
+  "We built something intentionally different.",
+  "Where projects are personal, clients are family, and content should be remembered.",
 ];
 
 const cyclingWords = [
