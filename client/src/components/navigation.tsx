@@ -77,18 +77,18 @@ export default function Navigation() {
         transition={{ duration: 0.3 }}
       >
         <Link href="/" data-testid="link-home">
-          <Logo className="h-9 md:h-[2.625rem]" />
+          <Logo className="h-[41px] md:h-[48px]" />
         </Link>
       </motion.div>
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="group fixed top-5 right-6 md:right-10 z-[10002] text-white p-2 w-10 h-10 flex items-center justify-center"
+        className="group fixed top-5 right-6 md:right-10 z-[10002] text-white p-2 w-[50px] h-[50px] flex items-center justify-center"
         data-testid="button-menu-toggle"
         aria-label="Toggle menu"
         animate={{ y: hidden && !isOpen ? -80 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="relative w-7 flex flex-col items-end gap-[5px]">
+        <div className="relative w-[35px] flex flex-col items-end gap-[6px]">
           <span className="block h-[1.5px] bg-white w-full transition-transform duration-300 group-hover:translate-x-1" />
           <motion.span
             className="block h-[1.5px] bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:w-full"
@@ -111,7 +111,7 @@ export default function Navigation() {
           >
             <div className="absolute top-0 left-0 right-0 px-6 md:px-10 py-5 flex items-center justify-between z-20">
               <Link href="/" onClick={() => setIsOpen(false)} data-testid="link-menu-home">
-                <Logo className="h-9 md:h-[2.625rem]" />
+                <Logo className="h-[41px] md:h-[48px]" />
               </Link>
             </div>
 
