@@ -213,10 +213,10 @@ function HeroTicker() {
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const rows = [
-    { text: "CREATING CONTENT", size: "clamp(60px, 14vw, 240px)" },
-    { text: "AND ENTERTAINMENT", size: "clamp(55px, 12.5vw, 210px)" },
-    { text: "AT THE SPEED", size: "clamp(65px, 17vw, 280px)" },
-    { text: "OF CULTURE", size: "clamp(70px, 20vw, 340px)" },
+    { text: "CREATING CONTENT", size: "clamp(40px, 11vw, 180px)" },
+    { text: "AND ENTERTAINMENT", size: "clamp(38px, 10vw, 165px)" },
+    { text: "AT THE SPEED", size: "clamp(45px, 14vw, 220px)" },
+    { text: "OF CULTURE", size: "clamp(50px, 16vw, 260px)" },
   ];
   const offsets = [-200, -600, -350, -900];
 
