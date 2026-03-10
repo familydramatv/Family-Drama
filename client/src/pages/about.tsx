@@ -1058,7 +1058,6 @@ function SlideScatterCollage() {
               alt=""
               loading="eager"
               decoding="async"
-              fetchPriority="high"
               style={{
                 width: "100%",
                 height: "auto",
@@ -1098,11 +1097,9 @@ function Slide4Manifesto() {
       const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.3)));
 
       if (imgRef.current) {
-        const imgEnter = Math.max(0, Math.min(1, p / (vr * 0.4)));
         const imgExit = Math.max(0, Math.min(1, (p - (1 - vr * 0.1)) / (vr * 0.8)));
-        const scale = 0.4 + imgEnter * 0.6 - imgExit * 0.4;
-        imgRef.current.style.transform = `scale(${scale})`;
-        imgRef.current.style.opacity = String(Math.min(1, imgEnter * 2) * (1 - imgExit));
+        imgRef.current.style.transform = `scale(1)`;
+        imgRef.current.style.opacity = String(1 - imgExit);
       }
 
       if (labelRef.current) {
