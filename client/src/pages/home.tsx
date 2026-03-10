@@ -310,7 +310,8 @@ function HeroTypography() {
         style={{
           position: "relative",
           zIndex: 1,
-          mixBlendMode: "difference",
+          mixBlendMode: "screen",
+          backgroundColor: "#000",
           padding: "0 32px",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 700,
