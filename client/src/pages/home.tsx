@@ -237,7 +237,7 @@ export default function Home() {
                   fontSize: "clamp(60px, 17vw, 280px)",
                   lineHeight: 1,
                   letterSpacing: "-0.03em",
-                  wordSpacing: "-0.15em",
+                  wordSpacing: "0.1em",
                   textTransform: "uppercase",
                   whiteSpace: "nowrap",
                 }}
