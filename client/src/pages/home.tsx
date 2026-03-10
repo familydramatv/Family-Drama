@@ -218,8 +218,7 @@ export default function Home() {
         {[0, 1, 2, 3].map((row) => {
           const direction = row % 2 === 0 ? "right-to-left" : "left-to-right";
           const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
-          const separator = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0";
-          const repeated = Array(6).fill(phrase).join(separator) + separator;
+          const repeated = Array(6).fill(phrase).join(" ") + " ";
 
           return (
             <div
