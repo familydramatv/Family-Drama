@@ -843,7 +843,6 @@ function FilmstripSlides() {
       <Slide5CoreBeliefs />
       <SlideScatterCollage />
       <Slide7Reach />
-      <Slide8Roster />
       <Slide9Impact />
       <Slide10Partners />
       <Slide11Closing />
