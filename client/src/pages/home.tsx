@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
+import "@mux/mux-video";
 
 const homeProjects = [
   projects[5],  // Crown Royal - Chopped & Screwed
@@ -289,12 +290,12 @@ function HeroTypography() {
       style={{ backgroundColor: "#000" }}
       data-testid="section-hero"
     >
-      <video
-        src={`https://stream.mux.com/YaESPx2EjJxjEZ6U8rJWFFZZNSFr488TR4CtVGIAikk/high.mp4`}
-        autoPlay
+      <mux-video
+        playback-id="YaESPx2EjJxjEZ6U8rJWFFZZNSFr488TR4CtVGIAikk"
+        autoplay
         muted
         loop
-        playsInline
+        playsinline
         style={{
           position: "absolute",
           inset: 0,
