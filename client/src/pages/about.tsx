@@ -1564,7 +1564,7 @@ function Slide7Reach() {
       ref={slideRef}
       className="filmstrip-slide"
       style={{
-        width: "110vw",
+        width: "85vw",
         height: "100vh",
         flexShrink: 0,
         position: "relative",
