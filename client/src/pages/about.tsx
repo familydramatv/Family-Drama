@@ -1162,10 +1162,13 @@ function Slide4Manifesto() {
           opacity: 0,
         }}
       >
-        <PlaceholderImage
-          label="ACTION: Camera operator tracking shot through set"
-          color="#3B2A0D"
-          style={{ width: "100%", height: "100%" }}
+        <video
+          src="/images/services-video.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
 
