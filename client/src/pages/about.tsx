@@ -1094,7 +1094,7 @@ function Slide4Manifesto() {
       const p = Math.max(0, localScroll / slideWidth);
       const vr = vw / slideWidth;
 
-      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.3)));
+      const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.8)));
 
       if (imgRef.current) {
         const imgEnter = Math.max(0, Math.min(1, p / (vr * 0.3)));
