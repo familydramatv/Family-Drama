@@ -224,7 +224,7 @@ function FitLine({ text, containerRef }: { text: string; containerRef: React.Ref
       const container = containerRef.current;
       const span = spanRef.current;
       if (!container || !span) return;
-      const targetWidth = container.clientWidth;
+      const targetWidth = container.clientWidth - 64;
       let lo = 10, hi = 600, best = 10;
       while (lo <= hi) {
         const mid = Math.floor((lo + hi) / 2);
@@ -269,7 +269,7 @@ function HeroTypography() {
       <div
         ref={containerRef}
         style={{
-          padding: "0 2vw",
+          padding: "0 32px",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 700,
           color: "#f0efe9",
