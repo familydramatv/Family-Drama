@@ -1055,7 +1055,9 @@ function SlideScatterCollage() {
             <img
               src={img.src}
               alt=""
-              loading="lazy"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               style={{
                 width: "100%",
                 height: "auto",
