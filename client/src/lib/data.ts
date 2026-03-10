@@ -544,7 +544,7 @@ export const salesReps = [
   {
     region: "West",
     members: [
-      { name: "Marcus Vega", role: "Content", phone: "(310) 686-6006", email: "sales@familydrama.tv" },
+      { name: "Marcus Torelli", role: "Content", phone: "(310) 686-6006", email: "sales@familydrama.tv" },
       { name: "Lena Hartwell", role: "Experience", phone: "(917) 373-5658", email: "sales@familydrama.tv" },
     ],
   },
@@ -557,9 +557,9 @@ export const salesReps = [
   {
     region: "East",
     members: [
-      { name: "Camille Rousseau", role: "Content", phone: "(917) 237 6532", email: "sales@familydrama.tv" },
-      { name: "Theo Nakamura", role: "Content", phone: "(917) 593 6577", email: "sales@familydrama.tv" },
-      { name: "Ava Delgado", role: "Experience", phone: "(917) 733 4765", email: "sales@familydrama.tv" },
+      { name: "Elena Marsh", role: "Content", phone: "(917) 237 6532", email: "sales@familydrama.tv" },
+      { name: "David Cho", role: "Content", phone: "(917) 593 6577", email: "sales@familydrama.tv" },
+      { name: "Nina Castillo", role: "Experience", phone: "(917) 733 4765", email: "sales@familydrama.tv" },
     ],
   },
 ];
