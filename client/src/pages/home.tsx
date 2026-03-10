@@ -213,12 +213,12 @@ function HeroTicker() {
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const rows = [
-    { text: "CREATING CONTENT", size: "clamp(40px, 9vw, 155px)" },
-    { text: "AND ENTERTAINMENT", size: "clamp(36px, 8vw, 138px)" },
-    { text: "AT THE SPEED", size: "clamp(44px, 11.5vw, 195px)" },
-    { text: "OF CULTURE", size: "clamp(50px, 14vw, 235px)" },
+    { text: "CREATING CONTENT", size: "clamp(60px, 14vw, 240px)" },
+    { text: "AND ENTERTAINMENT", size: "clamp(55px, 12.5vw, 210px)" },
+    { text: "AT THE SPEED", size: "clamp(65px, 17vw, 280px)" },
+    { text: "OF CULTURE", size: "clamp(70px, 20vw, 340px)" },
   ];
-  const offsets = [-100, -400, -180, -500];
+  const offsets = [-200, -600, -350, -900];
 
   useEffect(() => {
     const onScroll = () => {
