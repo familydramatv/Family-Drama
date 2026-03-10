@@ -211,36 +211,41 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black">
       <section
-        className="relative h-screen flex items-center overflow-hidden bg-black"
+        className="relative h-screen flex flex-col justify-center overflow-hidden bg-black"
         data-testid="section-hero"
       >
-        <div className="w-full" style={{ padding: "0 1vw" }}>
-          {[
-            { text: "CREATING CONTENT", size: "clamp(32px, 11.5vw, 190px)" },
-            { text: "AT THE SPEED OF", size: "clamp(32px, 12vw, 198px)" },
-            { text: "CULTURE", size: "clamp(40px, 22vw, 360px)" },
-          ].map((line, i) => (
-            <motion.div
-              key={line.text}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 + i * 0.15 }}
-              style={{
-                fontFamily: "'Arial Black', 'Helvetica Neue', Impact, sans-serif",
-                fontWeight: 900,
-                fontStretch: "condensed",
-                color: "#f0efe9",
-                fontSize: line.size,
-                lineHeight: 0.92,
-                letterSpacing: "-0.03em",
-                textTransform: "uppercase",
-              }}
-              data-testid={`text-headline-${i}`}
+        {[0, 1, 2, 3].map((row) => {
+          const direction = row % 2 === 0 ? "right-to-left" : "left-to-right";
+          const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
+          const separator = "\u00A0\u00A0\u00A0\u2022\u00A0\u00A0\u00A0";
+          const repeated = Array(6).fill(phrase).join(separator) + separator;
+
+          return (
+            <div
+              key={row}
+              className="overflow-hidden flex-1 flex items-center"
+              data-testid={`text-headline-row-${row}`}
             >
-              {line.text}
-            </motion.div>
-          ))}
-        </div>
+              <div
+                className={`hero-ticker hero-ticker--${direction}`}
+                style={{
+                  fontFamily: "'Arial Black', 'Helvetica Neue', Impact, sans-serif",
+                  fontWeight: 900,
+                  fontStretch: "condensed",
+                  color: "#f0efe9",
+                  fontSize: "clamp(32px, 6vw, 100px)",
+                  lineHeight: 1,
+                  letterSpacing: "-0.03em",
+                  textTransform: "uppercase",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span>{repeated}</span>
+                <span>{repeated}</span>
+              </div>
+            </div>
+          );
+        })}
       </section>
 
       <section className="py-8 md:py-12 px-4 md:px-8" data-testid="section-showcase">
