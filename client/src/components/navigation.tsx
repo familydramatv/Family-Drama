@@ -88,7 +88,7 @@ export default function Navigation() {
         animate={{ y: hidden && !isOpen ? -80 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="relative w-[100px] flex flex-col items-end gap-[9px]">
+        <div className="relative w-[80px] flex flex-col items-end gap-[9px]">
           <span className="block h-[2.5px] bg-white w-full transition-transform duration-300 group-hover:translate-x-1" />
           <motion.span
             className="block h-[2.5px] bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:w-full"
