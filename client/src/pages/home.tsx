@@ -229,13 +229,13 @@ export default function Home() {
               <div
                 className={`hero-ticker hero-ticker--${direction}`}
                 style={{
-                  fontFamily: "'Arial Black', 'Helvetica Neue', Impact, sans-serif",
-                  fontWeight: 900,
-                  fontStretch: "condensed",
+                  fontFamily: "'Ritmica', sans-serif",
+                  fontWeight: 700,
                   color: "#f0efe9",
                   fontSize: "clamp(60px, 17vw, 280px)",
                   lineHeight: 1,
-                  letterSpacing: "-0.07em",
+                  letterSpacing: "-0.03em",
+                  wordSpacing: "-0.15em",
                   textTransform: "uppercase",
                   whiteSpace: "nowrap",
                 }}
