@@ -16,63 +16,34 @@ const serviceAreas = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-black">
-      <section className="relative h-screen flex items-center justify-center overflow-hidden" data-testid="section-hero">
-        <div className="absolute inset-0">
-          <img
-            src="/images/hero-bg.png"
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
-        <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10">
-          <motion.h1
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight tracking-tight"
-          >
-            We partner with brands and agencies to create{" "}
-            <span className="italic font-serif">breakthrough</span> content
-            and experiences that drive cultural conversation.
-          </motion.h1>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        >
-          <div className="w-px h-12 bg-white/30 animate-pulse" />
-        </motion.div>
-      </section>
-
       <section
         className="relative h-screen flex items-center overflow-hidden bg-black"
-        data-testid="section-headline"
+        data-testid="section-hero"
       >
-        <div className="w-full" style={{ padding: "0 1.5vw" }}>
-          {["CREATING", "CONTENT AT THE", "SPEED OF", "CULTURE"].map((line, i) => (
+        <div className="w-full" style={{ padding: "0 1vw" }}>
+          {[
+            { text: "CREATING CONTENT", size: "clamp(36px, 12.5vw, 210px)" },
+            { text: "AT THE SPEED OF", size: "clamp(36px, 13vw, 218px)" },
+            { text: "CULTURE", size: "clamp(48px, 25vw, 420px)" },
+          ].map((line, i) => (
             <motion.div
-              key={line}
-              initial={{ opacity: 0, y: 60 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.7, delay: i * 0.12 }}
+              key={line.text}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 + i * 0.15 }}
               style={{
                 fontFamily: "'Arial Black', 'Helvetica Neue', Impact, sans-serif",
                 fontWeight: 900,
                 fontStretch: "condensed",
                 color: "#f0efe9",
-                fontSize: "clamp(48px, 13vw, 220px)",
-                lineHeight: 0.95,
-                letterSpacing: "-0.04em",
+                fontSize: line.size,
+                lineHeight: 0.92,
+                letterSpacing: "-0.03em",
                 textTransform: "uppercase",
               }}
               data-testid={`text-headline-${i}`}
             >
-              {line}
+              {line.text}
             </motion.div>
           ))}
         </div>
