@@ -1163,7 +1163,7 @@ function Slide4Manifesto() {
         }}
       >
         <video
-          src="/images/services-video.mp4"
+          src="https://stream.mux.com/6IySfxFZTMqKmWrcetvqtYH7UIdrL21wnurqnTKjzPw/high.mp4"
           autoPlay
           muted
           loop
