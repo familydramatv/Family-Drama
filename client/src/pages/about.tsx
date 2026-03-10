@@ -1168,6 +1168,7 @@ function Slide4Manifesto() {
           muted
           loop
           playsInline
+          preload="auto"
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
