@@ -48,6 +48,36 @@ export default function Home() {
         </motion.div>
       </section>
 
+      <section
+        className="relative h-screen flex items-center overflow-hidden bg-black"
+        data-testid="section-headline"
+      >
+        <div className="w-full" style={{ padding: "0 1.5vw" }}>
+          {["CREATING", "CONTENT AT THE", "SPEED OF", "CULTURE"].map((line, i) => (
+            <motion.div
+              key={line}
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, delay: i * 0.12 }}
+              style={{
+                fontFamily: "'Arial Black', 'Helvetica Neue', Impact, sans-serif",
+                fontWeight: 900,
+                fontStretch: "condensed",
+                color: "#f0efe9",
+                fontSize: "clamp(48px, 13vw, 220px)",
+                lineHeight: 0.95,
+                letterSpacing: "-0.04em",
+                textTransform: "uppercase",
+              }}
+              data-testid={`text-headline-${i}`}
+            >
+              {line}
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
       <section className="py-20 md:py-32 px-6 md:px-10 max-w-7xl mx-auto" data-testid="section-featured-work">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {featuredProjects.slice(0, 2).map((project, i) => (
