@@ -1,17 +1,211 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
-import { ArrowUpRight, ArrowRight } from "lucide-react";
-import { projects, newsItems } from "@/lib/data";
-import ProjectCard from "@/components/project-card";
+import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
 
-const featuredProjects = projects.filter((p) => p.featured).slice(0, 8);
+const homeProjects = [
+  projects[5],  // Crown Royal - Chopped & Screwed
+  projects[6],  // Ferrari - Michael B. Jordan
+  projects[2],  // Porsche - Freedom
+  projects[3],  // Dr. Teal's - Stay Hungry
+  projects[0],  // LEGO - Play Unstoppable
+  projects[4],  // Adyen - Tap to Pay
+  projects[8],  // Verizon - Celebrate The Magic
+  projects[10], // Ferrari - Sedona
+  projects[14], // The Hour Glass - Maximilian Büsser
+  projects[16], // Vinted - Keep Searching
+].filter(Boolean);
 
-const serviceAreas = [
-  { label: "Ideation", id: "ideation" },
-  { label: "Content", id: "content" },
-  { label: "Experience", id: "experience" },
-  { label: "Creative Technology", id: "creative-technology" },
+const placeholderColors = [
+  "#1a1a2e", "#2d1b2e", "#1b2e1a", "#2e2a1a", "#1a2a2e",
+  "#2e1a1a", "#1a2e2d", "#2a1a2e", "#1e2e1a", "#2e1e1a",
 ];
+
+function ProjectThumbnail({ project, index }: { project: typeof projects[0]; index: number }) {
+  const src = project.muxPlaybackId
+    ? getMuxThumbnail(project.muxPlaybackId, project.thumbnailTime || 0, 1200)
+    : project.image;
+
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={`${project.client} - ${project.title}`}
+        className="w-full h-full object-cover"
+        loading={index < 2 ? "eager" : "lazy"}
+      />
+    );
+  }
+
+  return (
+    <div
+      className="w-full h-full"
+      style={{ backgroundColor: placeholderColors[index % placeholderColors.length] }}
+    />
+  );
+}
+
+type CardLayout = "full" | "wide" | "medium";
+
+interface ShowcaseItem {
+  type: "project";
+  project: typeof projects[0];
+  layout: CardLayout;
+}
+
+interface PressItem {
+  type: "press";
+  news: typeof newsItems[0];
+}
+
+type FeedItem = ShowcaseItem | PressItem;
+
+const feed: FeedItem[] = [
+  { type: "project", project: homeProjects[0], layout: "full" },
+  { type: "press", news: newsItems[0] },
+  { type: "project", project: homeProjects[1], layout: "full" },
+  { type: "project", project: homeProjects[2], layout: "wide" },
+  { type: "press", news: newsItems[1] },
+  { type: "project", project: homeProjects[3], layout: "full" },
+  { type: "project", project: homeProjects[4], layout: "wide" },
+  { type: "project", project: homeProjects[5], layout: "medium" },
+  { type: "project", project: homeProjects[6], layout: "full" },
+  { type: "project", project: homeProjects[7], layout: "wide" },
+  { type: "project", project: homeProjects[8], layout: "full" },
+  { type: "project", project: homeProjects[9], layout: "medium" },
+];
+
+function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
+  const { project, layout } = item;
+  const director = project.director || "";
+  const client = project.client;
+  const title = project.title;
+
+  const aspectClass = layout === "full"
+    ? "aspect-[16/9] md:aspect-[2.2/1]"
+    : layout === "wide"
+    ? "aspect-[16/10] md:aspect-[1.8/1]"
+    : "aspect-[4/3] md:aspect-[16/10]";
+
+  const widthClass = layout === "full"
+    ? "w-full"
+    : layout === "wide"
+    ? "w-[90%] md:w-[85%]"
+    : "w-[75%] md:w-[65%]";
+
+  const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7 }}
+      className={`${widthClass} ${layout !== "full" ? alignClass : ""}`}
+    >
+      <Link href={project.muxPlaybackId ? `/project/${project.id}` : "#"}>
+        <div
+          className={`relative ${aspectClass} overflow-hidden group cursor-pointer`}
+          data-testid={`card-home-project-${project.id}`}
+        >
+          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
+            <ProjectThumbnail project={project} index={index} />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
+          <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]">
+            <h2
+              className="text-white tracking-tight"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 600,
+                fontSize: layout === "full"
+                  ? "clamp(28px, 5vw, 72px)"
+                  : layout === "wide"
+                  ? "clamp(24px, 4vw, 56px)"
+                  : "clamp(20px, 3vw, 42px)",
+                lineHeight: 1,
+                letterSpacing: "-0.02em",
+              }}
+              data-testid={`text-home-director-${project.id}`}
+            >
+              {director || client}
+            </h2>
+            <p
+              className="text-white/80 mt-1 md:mt-2"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 400,
+                fontSize: layout === "full"
+                  ? "clamp(13px, 1.4vw, 22px)"
+                  : "clamp(12px, 1.2vw, 18px)",
+                letterSpacing: "0.02em",
+                textTransform: "uppercase",
+              }}
+              data-testid={`text-home-meta-${project.id}`}
+            >
+              <span style={{ fontWeight: 600 }}>{client}</span>
+              {" "}{title}
+            </p>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+function PressCard({ item, index }: { item: PressItem; index: number }) {
+  const { news } = item;
+  const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7 }}
+      className={`w-[75%] md:w-[65%] ${alignClass}`}
+    >
+      <a href={news.link} target="_blank" rel="noopener noreferrer">
+        <div
+          className="relative aspect-[16/10] overflow-hidden group cursor-pointer"
+          data-testid={`card-home-press-${news.id}`}
+        >
+          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
+            <img
+              src={news.image}
+              alt={news.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-[1]" />
+          <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-[2]">
+            <p
+              className="text-white leading-snug"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 400,
+                fontSize: "clamp(18px, 3vw, 42px)",
+                lineHeight: 1.2,
+              }}
+            >
+              {news.title}
+            </p>
+            <p
+              className="text-white/60 mt-2"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 400,
+                fontSize: "clamp(12px, 1.2vw, 18px)",
+              }}
+            >
+              {news.source}
+            </p>
+          </div>
+        </div>
+      </a>
+    </motion.div>
+  );
+}
 
 export default function Home() {
   return (
@@ -49,99 +243,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 md:py-32 px-6 md:px-10 max-w-7xl mx-auto" data-testid="section-featured-work">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {featuredProjects.slice(0, 2).map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} size="large" />
-          ))}
-        </div>
-
-        <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {newsItems.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="group cursor-pointer"
-              data-testid={`card-news-${item.id}`}
-            >
-              <div className="relative aspect-[16/10] overflow-hidden rounded-md bg-white/5">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                  <span className="text-white/50 text-xs uppercase tracking-widest">{item.source}</span>
-                  <p className="text-white text-sm md:text-base font-medium mt-2 leading-relaxed line-clamp-3">
-                    {item.title}
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 text-white/60 text-sm mt-3 transition-opacity group-hover:opacity-70">
-                    Read Article <ArrowUpRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProjects.slice(2, 8).map((project, i) => (
-            <ProjectCard key={project.id} project={project} index={i} size="medium" />
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-12 text-center"
-        >
-          <Link href="/work" data-testid="link-view-all-work">
-            <span className="inline-flex items-center gap-2 text-white/60 text-sm uppercase tracking-widest transition-opacity hover:opacity-70 duration-300">
-              View All Work <ArrowRight className="w-4 h-4" />
-            </span>
-          </Link>
-        </motion.div>
-      </section>
-
-      <section className="py-20 md:py-32 border-t border-white/5" data-testid="section-services">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-white/40 text-sm uppercase tracking-widest mb-12"
-          >
-            Working at the intersection of:
-          </motion.h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {serviceAreas.map((area, i) => (
-              <motion.div
-                key={area.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-              >
-                <Link href={`/about#${area.id}`}>
-                  <div className="group relative rounded-md border border-white/10 p-6 md:p-8 h-40 flex flex-col justify-end hover-elevate cursor-pointer" data-testid={`card-service-${area.id}`}>
-                    <h3 className="text-white text-xl md:text-2xl font-light">{area.label}</h3>
-                    <span className="inline-flex items-center gap-1.5 text-white/40 text-sm mt-2 transition-opacity group-hover:opacity-70">
-                      Explore <ArrowUpRight className="w-3.5 h-3.5" />
-                    </span>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+      <section className="py-8 md:py-12 px-4 md:px-8" data-testid="section-showcase">
+        <div className="flex flex-col gap-8 md:gap-16 lg:gap-20">
+          {feed.map((item, i) => {
+            if (item.type === "project") {
+              return <ProjectCard key={item.project.id} item={item} index={i} />;
+            }
+            return <PressCard key={item.news.id} item={item} index={i} />;
+          })}
         </div>
       </section>
     </div>
