@@ -300,7 +300,7 @@ function HeroTypography() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          gap: 0,
+          gap: "1.5vh",
         }}
       >
         {heroLines.map((line, i) => (
