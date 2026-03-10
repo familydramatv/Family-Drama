@@ -168,6 +168,7 @@ export default function Contact() {
               const hoverPhoto = member.name === "Sarah Garza" ? "/images/sarah-garza.jpg"
                 : member.name === "Nate Simmons" ? "/images/nate-simmons.jpg"
                 : member.name === "Nick Simmons" ? "/images/nick-simmons.jpg"
+                : member.name === "Colton Gatlin" ? "/images/colton-gatlin.jpg"
                 : null;
               return (
                 <TeamMember key={member.name} member={member} index={i} hoverPhotoSrc={hoverPhoto} />
