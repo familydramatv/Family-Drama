@@ -22,9 +22,9 @@ export default function Home() {
       >
         <div className="w-full" style={{ padding: "0 1vw" }}>
           {[
-            { text: "CREATING CONTENT", size: "clamp(36px, 12.5vw, 210px)" },
-            { text: "AT THE SPEED OF", size: "clamp(36px, 13vw, 218px)" },
-            { text: "CULTURE", size: "clamp(48px, 25vw, 420px)" },
+            { text: "CREATING CONTENT", size: "clamp(32px, 11.5vw, 190px)" },
+            { text: "AT THE SPEED OF", size: "clamp(32px, 12vw, 198px)" },
+            { text: "CULTURE", size: "clamp(40px, 22vw, 360px)" },
           ].map((line, i) => (
             <motion.div
               key={line.text}
