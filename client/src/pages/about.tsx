@@ -840,9 +840,9 @@ function FilmstripSlides() {
       <Slide6Mission />
       <Slide3WorkSpeaks />
       <SlideScatterCollage />
-      <Slide4Manifesto />
       <Slide5CoreBeliefs />
       <Slide7Reach />
+      <Slide4Manifesto />
       <Slide8Roster />
       <Slide9Impact />
       <Slide10Partners />
