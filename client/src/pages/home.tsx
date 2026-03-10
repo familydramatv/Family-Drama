@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
@@ -208,63 +208,85 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
   );
 }
 
-function HeroTicker() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
-  const repeated = Array(8).fill(phrase).join(" ") + " ";
+const heroLines = [
+  "CREATING CONTENT",
+  "AT THE SPEED",
+  "OF CULTURE",
+  "AND ENTERTAINMENT",
+];
 
-  const offsets = [-200, -800, -400, -1100];
+function FitLine({ text, containerRef }: { text: string; containerRef: React.RefObject<HTMLDivElement | null> }) {
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const [fontSize, setFontSize] = useState(10);
 
   useEffect(() => {
-    const onScroll = () => {
-      const scrollY = window.scrollY;
-      const speed = 0.5;
-      rowRefs.current.forEach((row, i) => {
-        if (!row) return;
-        const direction = i % 2 === 0 ? -1 : 1;
-        row.style.transform = `translateX(${offsets[i] + direction * scrollY * speed}px)`;
-      });
+    const fit = () => {
+      const container = containerRef.current;
+      const span = spanRef.current;
+      if (!container || !span) return;
+      const targetWidth = container.clientWidth;
+      let lo = 10, hi = 600, best = 10;
+      while (lo <= hi) {
+        const mid = Math.floor((lo + hi) / 2);
+        span.style.fontSize = `${mid}px`;
+        if (span.scrollWidth <= targetWidth) {
+          best = mid;
+          lo = mid + 1;
+        } else {
+          hi = mid - 1;
+        }
+      }
+      setFontSize(best);
     };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [text, containerRef]);
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  return (
+    <span
+      ref={spanRef}
+      style={{
+        fontSize: `${fontSize}px`,
+        display: "block",
+        lineHeight: 0.9,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {text}
+    </span>
+  );
+}
+
+function HeroTypography() {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
     <section
-      ref={sectionRef}
-      className="relative h-screen flex flex-col justify-start overflow-hidden bg-black"
-      style={{ paddingTop: "70px" }}
+      className="relative h-screen flex flex-col justify-center overflow-hidden bg-black"
       data-testid="section-hero"
     >
-      {[0, 1, 2, 3].map((row) => (
-        <div
-          key={row}
-          className="overflow-hidden flex-1 flex items-end"
-          style={{ marginBottom: "-1vh" }}
-          data-testid={`text-headline-row-${row}`}
-        >
-          <div
-            ref={(el) => { rowRefs.current[row] = el; }}
-            style={{
-              fontFamily: "'Ritmica', sans-serif",
-              fontWeight: 700,
-              color: "#f0efe9",
-              fontSize: "clamp(60px, 17vw, 280px)",
-              lineHeight: 1,
-              letterSpacing: "-0.03em",
-              wordSpacing: "0.1em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
-              willChange: "transform",
-            }}
-          >
-            <span>{repeated}</span>
+      <div
+        ref={containerRef}
+        style={{
+          padding: "0 2vw",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 700,
+          color: "#f0efe9",
+          letterSpacing: "-0.03em",
+          textTransform: "uppercase",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 0,
+        }}
+      >
+        {heroLines.map((line, i) => (
+          <div key={i} data-testid={`text-headline-${i}`}>
+            <FitLine text={line} containerRef={containerRef} />
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }
@@ -272,7 +294,7 @@ function HeroTicker() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-black">
-      <HeroTicker />
+      <HeroTypography />
 
       <section className="py-8 md:py-12 px-4 md:px-8" data-testid="section-showcase">
         <div className="flex flex-col gap-8 md:gap-16 lg:gap-20">
