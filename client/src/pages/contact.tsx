@@ -191,7 +191,7 @@ export default function Contact() {
                 <div className="space-y-6">
                   {region.members.map((member) => (
                     <div key={member.name}>
-                      <a href={`mailto:${member.email}`} className="group">
+                      <a href={`mailto:${member.email}?subject=${encodeURIComponent(`Inquiry - ${region.region}`)}`} className="group">
                         <h4 className="text-white text-base font-medium opacity-80 group-hover:opacity-100 transition-opacity">
                           <RevealText text={member.name} />
                         </h4>
