@@ -931,8 +931,9 @@ function Slide3WorkSpeaks() {
         }}
       >
         <img
-          src="/images/work-speaks.jpg"
+          src="/images/billion-views.jpg"
           alt="Production shot"
+          loading="eager"
           style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
         />
       </div>
