@@ -910,7 +910,7 @@ function Slide3WorkSpeaks() {
     <section
       ref={slideRef}
       className="filmstrip-slide"
-      style={{ width: "calc(120vw - 200px)", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      style={{ width: "100vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
       aria-label="The Work Speaks"
       data-testid="slide-3-workspeaks"
     >
