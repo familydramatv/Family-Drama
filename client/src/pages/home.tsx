@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
@@ -207,41 +208,62 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
   );
 }
 
-function HeroSection() {
-  const lines = [
-    "CREATING CONTENT",
-    "AND ENTERTAINMENT",
-    "AT THE SPEED",
-    "OF CULTURE",
-  ];
+function HeroTicker() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
+  const repeated = Array(8).fill(phrase).join(" ") + " ";
+
+  const offsets = [-200, -800, -400, -1100];
+
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const speed = 0.5;
+      rowRefs.current.forEach((row, i) => {
+        if (!row) return;
+        const direction = i % 2 === 0 ? -1 : 1;
+        row.style.transform = `translateX(${offsets[i] + direction * scrollY * speed}px)`;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <section
-      className="relative h-screen flex flex-col justify-end bg-black overflow-hidden"
-      style={{ padding: "0 1vw 4vh" }}
+      ref={sectionRef}
+      className="relative h-screen flex flex-col justify-start overflow-hidden bg-black"
+      style={{ paddingTop: "70px" }}
       data-testid="section-hero"
     >
-      {lines.map((text, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
-          style={{
-            fontFamily: "'Arial Black', 'Helvetica Neue', Impact, sans-serif",
-            fontWeight: 900,
-            fontStretch: "condensed",
-            color: "#f0efe9",
-            fontSize: "19.5vw",
-            lineHeight: 0.88,
-            letterSpacing: "-0.04em",
-            textTransform: "uppercase",
-            whiteSpace: "nowrap",
-          }}
-          data-testid={`text-headline-${i}`}
+      {[0, 1, 2, 3].map((row) => (
+        <div
+          key={row}
+          className="overflow-hidden flex-1 flex items-end"
+          style={{ marginBottom: "-1vh" }}
+          data-testid={`text-headline-row-${row}`}
         >
-          {text}
-        </motion.div>
+          <div
+            ref={(el) => { rowRefs.current[row] = el; }}
+            style={{
+              fontFamily: "'Ritmica', sans-serif",
+              fontWeight: 700,
+              color: "#f0efe9",
+              fontSize: "clamp(60px, 17vw, 280px)",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              wordSpacing: "0.1em",
+              textTransform: "uppercase",
+              whiteSpace: "nowrap",
+              willChange: "transform",
+            }}
+          >
+            <span>{repeated}</span>
+          </div>
+        </div>
       ))}
     </section>
   );
@@ -250,7 +272,7 @@ function HeroSection() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-black">
-      <HeroSection />
+      <HeroTicker />
 
       <section className="py-8 md:py-12 px-4 md:px-8" data-testid="section-showcase">
         <div className="flex flex-col gap-8 md:gap-16 lg:gap-20">
