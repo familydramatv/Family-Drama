@@ -235,7 +235,7 @@ export default function Home() {
                   color: "#f0efe9",
                   fontSize: "clamp(60px, 17vw, 280px)",
                   lineHeight: 1,
-                  letterSpacing: "-0.03em",
+                  letterSpacing: "-0.07em",
                   textTransform: "uppercase",
                   whiteSpace: "nowrap",
                 }}
