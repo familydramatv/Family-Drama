@@ -209,36 +209,38 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
 
 function HeroSection() {
   const lines = [
-    { text: "CREATING CONTENT", size: "clamp(48px, 13.5vw, 224px)" },
-    { text: "AND ENTERTAINMENT", size: "clamp(44px, 12.5vw, 206px)" },
-    { text: "AT THE SPEED", size: "clamp(56px, 18vw, 296px)" },
-    { text: "OF CULTURE", size: "clamp(64px, 22vw, 362px)" },
+    "CREATING CONTENT",
+    "AND ENTERTAINMENT",
+    "AT THE SPEED",
+    "OF CULTURE",
   ];
 
   return (
     <section
-      className="relative h-screen flex flex-col justify-center bg-black"
-      style={{ padding: "70px 1.5vw 0" }}
+      className="relative h-screen flex flex-col justify-end bg-black overflow-hidden"
+      style={{ padding: "0 1vw 4vh" }}
       data-testid="section-hero"
     >
-      {lines.map((line, i) => (
+      {lines.map((text, i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 + i * 0.12 }}
+          transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
           style={{
-            fontFamily: "'Ritmica', sans-serif",
-            fontWeight: 700,
+            fontFamily: "'Arial Black', 'Helvetica Neue', Impact, sans-serif",
+            fontWeight: 900,
+            fontStretch: "condensed",
             color: "#f0efe9",
-            fontSize: line.size,
-            lineHeight: 0.95,
-            letterSpacing: "-0.03em",
+            fontSize: "19.5vw",
+            lineHeight: 0.88,
+            letterSpacing: "-0.04em",
             textTransform: "uppercase",
+            whiteSpace: "nowrap",
           }}
           data-testid={`text-headline-${i}`}
         >
-          {line.text}
+          {text}
         </motion.div>
       ))}
     </section>
