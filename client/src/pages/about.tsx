@@ -839,10 +839,10 @@ function FilmstripSlides() {
     <div ref={containerRef} style={{ display: "contents" }}>
       <Slide6Mission />
       <Slide3WorkSpeaks />
+      <Slide4Manifesto />
       <SlideScatterCollage />
       <Slide5CoreBeliefs />
       <Slide7Reach />
-      <Slide4Manifesto />
       <Slide8Roster />
       <Slide9Impact />
       <Slide10Partners />
