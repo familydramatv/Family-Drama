@@ -544,22 +544,22 @@ export const salesReps = [
   {
     region: "West",
     members: [
-      { name: "Charlie McBrearty", role: "Content", phone: "(310) 686-6006", email: "sales@shortlistmgmt.com" },
-      { name: "Gully Flowers", role: "Experience", phone: "(917) 373-5658", email: "gully@heyhustle.com" },
+      { name: "Marcus Vega", role: "Content", phone: "(310) 686-6006", email: "sales@familydrama.tv" },
+      { name: "Lena Hartwell", role: "Experience", phone: "(917) 373-5658", email: "sales@familydrama.tv" },
     ],
   },
   {
     region: "Mid West",
     members: [
-      { name: "Sean Sullivan", role: "Content & Experience", phone: "(646) 361-0933", email: "sean@collectivemanagement.tv" },
+      { name: "Jordan Kessler", role: "Content & Experience", phone: "(646) 361-0933", email: "sales@familydrama.tv" },
     ],
   },
   {
     region: "East",
     members: [
-      { name: "Sasha Stern", role: "Content", phone: "(917) 237 6532", email: "sasha@miss-smith.tv" },
-      { name: "Jamie Scalera", role: "Content", phone: "(917) 593 6577", email: "jamie@miss-smith.tv" },
-      { name: "Jake Neske", role: "Experience", phone: "(917) 733 4765", email: "jake@hustle.rs" },
+      { name: "Camille Rousseau", role: "Content", phone: "(917) 237 6532", email: "sales@familydrama.tv" },
+      { name: "Theo Nakamura", role: "Content", phone: "(917) 593 6577", email: "sales@familydrama.tv" },
+      { name: "Ava Delgado", role: "Experience", phone: "(917) 733 4765", email: "sales@familydrama.tv" },
     ],
   },
 ];
