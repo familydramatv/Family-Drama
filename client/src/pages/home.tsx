@@ -209,10 +209,10 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
 
 function HeroSection() {
   const lines = [
-    { text: "CREATING CONTENT", size: "clamp(40px, 11vw, 180px)" },
-    { text: "AND ENTERTAINMENT", size: "clamp(38px, 10vw, 165px)" },
-    { text: "AT THE SPEED", size: "clamp(45px, 14vw, 220px)" },
-    { text: "OF CULTURE", size: "clamp(50px, 16vw, 260px)" },
+    { text: "CREATING CONTENT", size: "clamp(48px, 12.2vw, 200px)" },
+    { text: "AND ENTERTAINMENT", size: "clamp(44px, 11vw, 182px)" },
+    { text: "AT THE SPEED", size: "clamp(56px, 16vw, 264px)" },
+    { text: "OF CULTURE", size: "clamp(64px, 19vw, 314px)" },
   ];
 
   return (
