@@ -285,21 +285,41 @@ function HeroTypography() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen flex flex-col justify-center overflow-hidden bg-black"
+      className="relative h-screen overflow-hidden"
+      style={{ backgroundColor: "#000" }}
       data-testid="section-hero"
     >
+      <video
+        src={`https://stream.mux.com/YaESPx2EjJxjEZ6U8rJWFFZZNSFr488TR4CtVGIAikk/high.mp4`}
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
+        }}
+      />
       <div
         ref={containerRef}
         style={{
+          position: "relative",
+          zIndex: 1,
+          mixBlendMode: "difference",
           padding: "0 32px",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 500,
-          color: "#f0efe9",
+          color: "#ffffff",
           letterSpacing: "-0.03em",
           textTransform: "uppercase",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          height: "100%",
           gap: "1.5vh",
         }}
       >
