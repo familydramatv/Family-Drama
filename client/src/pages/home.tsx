@@ -211,7 +211,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black">
       <section
-        className="relative h-screen flex flex-col justify-center overflow-hidden bg-black"
+        className="relative h-screen flex flex-col justify-start overflow-hidden bg-black"
+        style={{ paddingTop: "70px" }}
         data-testid="section-hero"
       >
         {[0, 1, 2, 3].map((row) => {
@@ -223,7 +224,8 @@ export default function Home() {
           return (
             <div
               key={row}
-              className="overflow-hidden flex-1 flex items-center"
+              className="overflow-hidden flex-1 flex items-end"
+              style={{ marginBottom: "-1vh" }}
               data-testid={`text-headline-row-${row}`}
             >
               <div
