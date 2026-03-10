@@ -260,9 +260,31 @@ function FitLine({ text, containerRef }: { text: string; containerRef: React.Ref
 
 function HeroTypography() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const progress = Math.max(0, -rect.top / (rect.height * 0.8));
+
+      lineRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const direction = i % 2 === 0 ? -1 : 1;
+        const shift = progress * direction * 120;
+        el.style.transform = `translateX(${shift}vw)`;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       className="relative h-screen flex flex-col justify-center overflow-hidden bg-black"
       data-testid="section-hero"
     >
@@ -282,7 +304,12 @@ function HeroTypography() {
         }}
       >
         {heroLines.map((line, i) => (
-          <div key={i} data-testid={`text-headline-${i}`}>
+          <div
+            key={i}
+            ref={(el) => { lineRefs.current[i] = el; }}
+            style={{ willChange: "transform" }}
+            data-testid={`text-headline-${i}`}
+          >
             <FitLine text={line} containerRef={containerRef} />
           </div>
         ))}
