@@ -1158,8 +1158,8 @@ function Slide4Manifesto() {
           top: "12vh",
           zIndex: 1,
           willChange: "transform, opacity",
-          transform: "scale(0.4)",
-          opacity: 0,
+          transform: "scale(1)",
+          opacity: 1,
         }}
       >
         <video
