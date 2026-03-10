@@ -271,7 +271,7 @@ function HeroTypography() {
         style={{
           padding: "0 32px",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 700,
+          fontWeight: 500,
           color: "#f0efe9",
           letterSpacing: "-0.03em",
           textTransform: "uppercase",
