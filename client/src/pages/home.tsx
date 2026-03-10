@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
-import "@mux/mux-video";
 
 const homeProjects = [
   projects[5],  // Crown Royal - Chopped & Screwed
@@ -286,42 +285,21 @@ function HeroTypography() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen overflow-hidden"
-      style={{ backgroundColor: "#000" }}
+      className="relative h-screen flex flex-col justify-center overflow-hidden bg-black"
       data-testid="section-hero"
     >
-      <mux-video
-        playback-id="YaESPx2EjJxjEZ6U8rJWFFZZNSFr488TR4CtVGIAikk"
-        autoplay
-        muted
-        loop
-        playsinline
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: 0,
-        }}
-      />
       <div
         ref={containerRef}
         style={{
-          position: "relative",
-          zIndex: 1,
-          mixBlendMode: "screen",
-          backgroundColor: "#000",
           padding: "0 32px",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 700,
-          color: "#ffffff",
+          fontWeight: 500,
+          color: "#f0efe9",
           letterSpacing: "-0.03em",
           textTransform: "uppercase",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          height: "100%",
           gap: "1.5vh",
         }}
       >
