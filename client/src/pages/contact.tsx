@@ -197,10 +197,6 @@ export default function Contact() {
                         </h4>
                         <p className="text-white/40 text-sm mt-0.5">{member.role}</p>
                       </a>
-                      <a href={`tel:${member.phone}`} className="flex items-center gap-2 mt-1.5 text-white/30 opacity-80 hover:opacity-100 transition-opacity">
-                        <Phone className="w-3 h-3" />
-                        <span className="text-xs">{member.phone}</span>
-                      </a>
                     </div>
                   ))}
                 </div>
