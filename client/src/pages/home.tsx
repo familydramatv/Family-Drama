@@ -233,7 +233,7 @@ export default function Home() {
                   fontWeight: 900,
                   fontStretch: "condensed",
                   color: "#f0efe9",
-                  fontSize: "clamp(32px, 6vw, 100px)",
+                  fontSize: "clamp(60px, 17vw, 280px)",
                   lineHeight: 1,
                   letterSpacing: "-0.03em",
                   textTransform: "uppercase",
