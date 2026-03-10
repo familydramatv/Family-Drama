@@ -1097,9 +1097,12 @@ function Slide4Manifesto() {
       const exitP = Math.max(0, Math.min(1, (p - (1 - vr * 0.2)) / (vr * 0.3)));
 
       if (imgRef.current) {
-        const imgExit = Math.max(0, Math.min(1, (p - (1 - vr * 0.1)) / (vr * 0.8)));
-        imgRef.current.style.transform = `scale(1)`;
-        imgRef.current.style.opacity = String(1 - imgExit);
+        const imgEnter = Math.max(0, Math.min(1, p / (vr * 0.3)));
+        const imgExit = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
+        const scale = 0.6 + imgEnter * 0.4 - imgExit * 0.3;
+        const xShift = (1 - imgEnter) * 15 - imgExit * 20;
+        imgRef.current.style.transform = `scale(${scale}) translateX(${xShift}%)`;
+        imgRef.current.style.opacity = String(Math.min(1, imgEnter * 2) * (1 - imgExit));
       }
 
       if (labelRef.current) {
@@ -1155,8 +1158,8 @@ function Slide4Manifesto() {
           top: "12vh",
           zIndex: 1,
           willChange: "transform, opacity",
-          transform: "scale(1)",
-          opacity: 1,
+          transform: "scale(0.6) translateX(15%)",
+          opacity: 0,
         }}
       >
         <PlaceholderImage
