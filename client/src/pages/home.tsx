@@ -313,7 +313,7 @@ function HeroTypography() {
           mixBlendMode: "difference",
           padding: "0 32px",
           fontFamily: "'Ritmica', sans-serif",
-          fontWeight: 500,
+          fontWeight: 700,
           color: "#ffffff",
           letterSpacing: "-0.03em",
           textTransform: "uppercase",
