@@ -211,10 +211,14 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
 function HeroTicker() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
-  const repeated = Array(8).fill(phrase).join(" ") + " ";
 
-  const offsets = [-200, -800, -400, -1100];
+  const rows = [
+    { text: "CREATING CONTENT", size: "clamp(60px, 14vw, 240px)" },
+    { text: "AND ENTERTAINMENT", size: "clamp(55px, 12.5vw, 210px)" },
+    { text: "AT THE SPEED", size: "clamp(65px, 17vw, 280px)" },
+    { text: "OF CULTURE", size: "clamp(70px, 20vw, 340px)" },
+  ];
+  const offsets = [-200, -600, -350, -900];
 
   useEffect(() => {
     const onScroll = () => {
@@ -239,32 +243,35 @@ function HeroTicker() {
       style={{ paddingTop: "70px" }}
       data-testid="section-hero"
     >
-      {[0, 1, 2, 3].map((row) => (
-        <div
-          key={row}
-          className="overflow-hidden flex-1 flex items-end"
-          style={{ marginBottom: "-1vh" }}
-          data-testid={`text-headline-row-${row}`}
-        >
+      {rows.map((row, i) => {
+        const repeated = Array(10).fill(row.text).join(" ") + " ";
+        return (
           <div
-            ref={(el) => { rowRefs.current[row] = el; }}
-            style={{
-              fontFamily: "'Ritmica', sans-serif",
-              fontWeight: 700,
-              color: "#f0efe9",
-              fontSize: "clamp(60px, 17vw, 280px)",
-              lineHeight: 1,
-              letterSpacing: "-0.03em",
-              wordSpacing: "0.1em",
-              textTransform: "uppercase",
-              whiteSpace: "nowrap",
-              willChange: "transform",
-            }}
+            key={i}
+            className="overflow-hidden flex-1 flex items-end"
+            style={{ marginBottom: "-1vh" }}
+            data-testid={`text-headline-row-${i}`}
           >
-            <span>{repeated}</span>
+            <div
+              ref={(el) => { rowRefs.current[i] = el; }}
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 700,
+                color: "#f0efe9",
+                fontSize: row.size,
+                lineHeight: 1,
+                letterSpacing: "-0.03em",
+                wordSpacing: "0.1em",
+                textTransform: "uppercase",
+                whiteSpace: "nowrap",
+                willChange: "transform",
+              }}
+            >
+              <span>{repeated}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 }
