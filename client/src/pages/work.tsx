@@ -76,7 +76,7 @@ function ProjectCard({
 }) {
   const videoRef = useRef<HTMLElement | null>(null);
   const [hovered, setHovered] = useState(false);
-  const [mediaReady, setMediaReady] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const isMobile = useIsMobile();
   const showDetails = hovered || isMobile;
   const isRightColumn = index % 2 === 1;
@@ -84,28 +84,6 @@ function ProjectCard({
   const displayClient = (muxMeta?.client || project.client);
   const displayTitle = (muxMeta?.title || project.title);
   const displayDirector = (muxMeta?.director || project.director);
-
-  useEffect(() => {
-    setMediaReady(false);
-    if (isMobile) {
-      setMediaReady(true);
-      return;
-    }
-    if (project.muxPlaybackId) {
-      const checkVideo = () => {
-        const video = videoRef.current as HTMLVideoElement | null;
-        if (video && video.readyState >= 1) {
-          setMediaReady(true);
-        } else if (video) {
-          video.addEventListener("loadeddata", () => setMediaReady(true), { once: true });
-        }
-      };
-      const timer = setTimeout(checkVideo, 50);
-      return () => clearTimeout(timer);
-    } else {
-      setMediaReady(true);
-    }
-  }, [project.muxPlaybackId, isMobile]);
 
   const handleMobileTap = useCallback((e: React.MouseEvent) => {
     if (!isMobile || !project.muxPlaybackId || !onMobilePlay) return;
@@ -118,55 +96,59 @@ function ProjectCard({
     ? getMuxThumbnail(project.muxPlaybackId, 0, 800)
     : project.image;
 
+  useEffect(() => {
+    if (!hovered || isMobile || !project.muxPlaybackId) return;
+    const video = videoRef.current as HTMLVideoElement | null;
+    if (video) {
+      if (video.readyState >= 1) {
+        setVideoLoaded(true);
+        video.play().catch(() => {});
+      } else {
+        video.addEventListener("loadeddata", () => {
+          setVideoLoaded(true);
+          video.play().catch(() => {});
+        }, { once: true });
+      }
+    }
+  }, [hovered, isMobile, project.muxPlaybackId]);
+
   const cardContent = (
     <div
       className="relative aspect-[2.39/1] overflow-hidden group cursor-pointer card-video"
-      style={{ opacity: mediaReady ? 1 : 0, transition: "opacity 0.4s ease" }}
       data-testid={`card-project-${project.id}`}
       onClick={isMobile ? handleMobileTap : undefined}
       onMouseEnter={() => {
         if (isMobile) return;
         setHovered(true);
-        if (project.muxPlaybackId) {
-          const video = videoRef.current as HTMLVideoElement | null;
-          if (video) video.play().catch(() => {});
-        }
       }}
       onMouseLeave={() => {
         if (isMobile) return;
         setHovered(false);
+        setVideoLoaded(false);
         if (project.muxPlaybackId) {
           const video = videoRef.current as HTMLVideoElement | null;
           if (video) { video.pause(); video.currentTime = 0; }
         }
       }}
     >
-      {project.muxPlaybackId ? (
-        isMobile ? (
-          <img
-            src={thumbnailUrl}
-            alt={`${displayClient} - ${displayTitle}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            onLoad={() => setMediaReady(true)}
+      <img
+        src={thumbnailUrl}
+        alt={`${displayClient} - ${displayTitle}`}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+      />
+      {!isMobile && hovered && project.muxPlaybackId && (
+        <div
+          className="video-cover-wrap transition-transform duration-500 ease-out group-hover:scale-105"
+          style={{ opacity: videoLoaded ? 1 : 0, transition: "opacity 0.3s ease" }}
+        >
+          <mux-video
+            ref={(el: HTMLElement | null) => { videoRef.current = el; }}
+            playback-id={project.muxPlaybackId}
+            preload="auto"
+            muted
+            loop
           />
-        ) : (
-          <div className="video-cover-wrap transition-transform duration-500 ease-out group-hover:scale-105">
-            <mux-video
-              ref={(el: HTMLElement | null) => { videoRef.current = el; }}
-              playback-id={project.muxPlaybackId}
-              preload="auto"
-              muted
-              loop
-            />
-          </div>
-        )
-      ) : (
-        <img
-          src={project.image}
-          alt={`${displayClient} - ${displayTitle}`}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-          onLoad={() => setMediaReady(true)}
-        />
+        </div>
       )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 z-[2]" />
       <div className="absolute inset-0 p-3 sm:p-5 md:p-7 flex flex-col justify-between z-[4]">
