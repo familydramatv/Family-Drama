@@ -82,7 +82,7 @@ export default function Navigation() {
       </motion.div>
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="group fixed top-5 right-6 md:right-10 z-[10002] text-white p-2 w-[60px] h-[60px] flex items-center justify-center"
+        className="group fixed top-5 right-6 md:right-10 z-[10002] text-white p-2 w-[120px] h-[60px] flex items-center justify-end"
         data-testid="button-menu-toggle"
         aria-label="Toggle menu"
         animate={{ y: hidden && !isOpen ? -80 : 0 }}
