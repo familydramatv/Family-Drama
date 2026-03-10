@@ -1115,29 +1115,3 @@
   }
 }
 
-.hero-ticker {
-  display: flex;
-  width: max-content;
-}
-
-.hero-ticker span {
-  flex-shrink: 0;
-}
-
-.hero-ticker--right-to-left {
-  animation: ticker-rtl 144s linear infinite;
-}
-
-.hero-ticker--left-to-right {
-  animation: ticker-ltr 144s linear infinite;
-}
-
-@keyframes ticker-rtl {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes ticker-ltr {
-  0% { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
-}

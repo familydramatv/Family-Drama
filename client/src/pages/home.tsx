@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
@@ -207,47 +208,69 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
   );
 }
 
+function HeroTicker() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
+  const repeated = Array(8).fill(phrase).join(" ") + " ";
+
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollY = window.scrollY;
+      const speed = 0.5;
+      rowRefs.current.forEach((row, i) => {
+        if (!row) return;
+        const direction = i % 2 === 0 ? -1 : 1;
+        row.style.transform = `translateX(${direction * scrollY * speed}px)`;
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative h-screen flex flex-col justify-start overflow-hidden bg-black"
+      style={{ paddingTop: "70px" }}
+      data-testid="section-hero"
+    >
+      {[0, 1, 2, 3].map((row) => (
+        <div
+          key={row}
+          className="overflow-hidden flex-1 flex items-end"
+          style={{ marginBottom: "-1vh" }}
+          data-testid={`text-headline-row-${row}`}
+        >
+          <div
+            ref={(el) => { rowRefs.current[row] = el; }}
+            style={{
+              fontFamily: "'Ritmica', sans-serif",
+              fontWeight: 700,
+              color: "#f0efe9",
+              fontSize: "clamp(60px, 17vw, 280px)",
+              lineHeight: 1,
+              letterSpacing: "-0.03em",
+              wordSpacing: "0.1em",
+              textTransform: "uppercase",
+              whiteSpace: "nowrap",
+              willChange: "transform",
+            }}
+          >
+            <span>{repeated}</span>
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-black">
-      <section
-        className="relative h-screen flex flex-col justify-start overflow-hidden bg-black"
-        style={{ paddingTop: "70px" }}
-        data-testid="section-hero"
-      >
-        {[0, 1, 2, 3].map((row) => {
-          const direction = row % 2 === 0 ? "right-to-left" : "left-to-right";
-          const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
-          const repeated = Array(6).fill(phrase).join(" ") + " ";
-
-          return (
-            <div
-              key={row}
-              className="overflow-hidden flex-1 flex items-end"
-              style={{ marginBottom: "-1vh" }}
-              data-testid={`text-headline-row-${row}`}
-            >
-              <div
-                className={`hero-ticker hero-ticker--${direction}`}
-                style={{
-                  fontFamily: "'Ritmica', sans-serif",
-                  fontWeight: 700,
-                  color: "#f0efe9",
-                  fontSize: "clamp(60px, 17vw, 280px)",
-                  lineHeight: 1,
-                  letterSpacing: "-0.03em",
-                  wordSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <span>{repeated}</span>
-                <span>{repeated}</span>
-              </div>
-            </div>
-          );
-        })}
-      </section>
+      <HeroTicker />
 
       <section className="py-8 md:py-12 px-4 md:px-8" data-testid="section-showcase">
         <div className="flex flex-col gap-8 md:gap-16 lg:gap-20">
