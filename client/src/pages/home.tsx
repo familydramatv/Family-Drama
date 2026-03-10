@@ -214,6 +214,8 @@ function HeroTicker() {
   const phrase = "CREATING CONTENT AT THE SPEED OF CULTURE";
   const repeated = Array(8).fill(phrase).join(" ") + " ";
 
+  const offsets = [-200, -800, -400, -1100];
+
   useEffect(() => {
     const onScroll = () => {
       const scrollY = window.scrollY;
@@ -221,7 +223,7 @@ function HeroTicker() {
       rowRefs.current.forEach((row, i) => {
         if (!row) return;
         const direction = i % 2 === 0 ? -1 : 1;
-        row.style.transform = `translateX(${direction * scrollY * speed}px)`;
+        row.style.transform = `translateX(${offsets[i] + direction * scrollY * speed}px)`;
       });
     };
 
