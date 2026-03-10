@@ -1098,7 +1098,7 @@ function Slide4Manifesto() {
 
       if (imgRef.current) {
         const imgEnter = Math.max(0, Math.min(1, p / (vr * 0.3)));
-        const imgExit = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.3)));
+        const imgExit = Math.max(0, Math.min(1, (p - (1 - vr * 0.15)) / (vr * 0.8)));
         const scale = 0.6 + imgEnter * 0.4 - imgExit * 0.3;
         const xShift = (1 - imgEnter) * 15 - imgExit * 20;
         imgRef.current.style.transform = `scale(${scale}) translateX(${xShift}%)`;
