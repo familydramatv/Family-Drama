@@ -1761,10 +1761,11 @@ function Slide8Roster() {
           opacity: 0,
         }}
       >
-        <PlaceholderImage
-          label="PORTRAIT: Producer reviewing shot list on location"
-          color="#0D3B3B"
-          style={{ width: "100%", height: "100%" }}
+        <img
+          src="/images/billion-views.jpg"
+          alt=""
+          loading="eager"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
 
