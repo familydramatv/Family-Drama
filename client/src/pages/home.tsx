@@ -215,14 +215,7 @@ const heroLines = [
   "AND ENTERTAINMENT",
 ];
 
-interface FitLineProps {
-  text: string;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-  maskedWord?: string;
-  maskedVideoId?: string;
-}
-
-function FitLine({ text, containerRef, maskedWord, maskedVideoId }: FitLineProps) {
+function FitLine({ text, containerRef }: { text: string; containerRef: React.RefObject<HTMLDivElement | null> }) {
   const spanRef = useRef<HTMLSpanElement>(null);
   const [fontSize, setFontSize] = useState(10);
 
@@ -249,63 +242,6 @@ function FitLine({ text, containerRef, maskedWord, maskedVideoId }: FitLineProps
     window.addEventListener("resize", fit);
     return () => window.removeEventListener("resize", fit);
   }, [text, containerRef]);
-
-  if (maskedWord && maskedVideoId && text.includes(maskedWord)) {
-    const parts = text.split(maskedWord);
-    return (
-      <span
-        ref={spanRef}
-        style={{
-          fontSize: `${fontSize}px`,
-          display: "block",
-          lineHeight: 0.9,
-          whiteSpace: "nowrap",
-        }}
-      >
-        {parts[0]}
-        <span
-          style={{
-            position: "relative",
-            display: "inline-block",
-            overflow: "hidden",
-            isolation: "isolate",
-          }}
-        >
-          <video
-            src={`https://stream.mux.com/${maskedVideoId}/high.mp4`}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              zIndex: 0,
-            }}
-          />
-          <span
-            style={{
-              position: "relative",
-              zIndex: 1,
-              backgroundColor: "black",
-              color: "white",
-              mixBlendMode: "screen",
-              display: "inline-block",
-              WebkitTextFillColor: "white",
-            }}
-          >
-            {maskedWord}
-          </span>
-        </span>
-        {parts[1]}
-      </span>
-    );
-  }
 
   return (
     <span
@@ -374,12 +310,7 @@ function HeroTypography() {
             style={{ willChange: "transform" }}
             data-testid={`text-headline-${i}`}
           >
-            <FitLine
-              text={line}
-              containerRef={containerRef}
-              maskedWord={i === 0 ? "CONTENT" : undefined}
-              maskedVideoId={i === 0 ? "7vOzTkKlOqpXAsT1Yfl015EjbAxae0101TFYPnQ3Tl2gKk" : undefined}
-            />
+            <FitLine text={line} containerRef={containerRef} />
           </div>
         ))}
       </div>
