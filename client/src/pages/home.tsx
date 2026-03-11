@@ -2,11 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
+import "@mux/mux-video";
 import legoHomeImage from "@assets/Screenshot_2024-06-14_at_2.42.21_PM_1773265929514.png";
 
 const homeImageOverrides: Record<string, string> = {
   "lego-play-unstoppable": legoHomeImage,
 };
+
+const videoLoopIds = new Set([
+  "dr-teals-stay-hungry",
+]);
 
 const homeProjects = [
   projects[5],  // Crown Royal - Chopped & Screwed
@@ -27,6 +32,20 @@ const placeholderColors = [
 ];
 
 function ProjectThumbnail({ project, index }: { project: typeof projects[0]; index: number }) {
+  if (videoLoopIds.has(project.id) && project.muxPlaybackId) {
+    return (
+      <mux-video
+        playback-id={project.muxPlaybackId}
+        muted
+        autoplay
+        loop
+        playsinline
+        style={{ width: "100%", height: "100%", objectFit: "cover" } as React.CSSProperties}
+        data-testid={`video-loop-${project.id}`}
+      />
+    );
+  }
+
   const overrideImage = homeImageOverrides[project.id];
   const src = overrideImage
     ? overrideImage
