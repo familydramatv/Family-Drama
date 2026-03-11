@@ -146,7 +146,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               {title}
             </motion.h2>
             <motion.p
-              className="text-white/80 mt-1 md:mt-2"
+              className="text-white mt-1 md:mt-2"
               style={{
                 fontFamily: "'Ritmica', sans-serif",
                 fontWeight: 400,
@@ -164,7 +164,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               }
             >
               <span style={{ fontWeight: 600 }}>{client}</span>
-              {director && <>{" "}<span style={{ fontWeight: 400, opacity: 0.7 }}>DIRECTED BY</span>{" "}{director}</>}
+              {director && <>{" "}<span style={{ fontWeight: 400 }}>DIRECTED BY</span>{" "}{director}</>}
             </motion.p>
           </motion.div>
         </motion.div>
@@ -221,7 +221,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
               {news.title}
             </motion.p>
             <motion.p
-              className="text-white/60 mt-2"
+              className="text-white mt-2"
               style={{
                 fontFamily: "'Ritmica', sans-serif",
                 fontWeight: 400,
