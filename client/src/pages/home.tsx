@@ -62,11 +62,10 @@ type FeedItem = ShowcaseItem | PressItem;
 
 const feed: FeedItem[] = [
   { type: "project", project: homeProjects[0], layout: "full" },
-  { type: "press", news: newsItems[0] },
+  { type: "project", project: homeProjects[3], layout: "medium" },
   { type: "project", project: homeProjects[1], layout: "full" },
   { type: "project", project: homeProjects[2], layout: "wide" },
   { type: "press", news: newsItems[1] },
-  { type: "project", project: homeProjects[3], layout: "full" },
   { type: "project", project: homeProjects[4], layout: "wide" },
   { type: "project", project: homeProjects[5], layout: "medium" },
   { type: "project", project: homeProjects[6], layout: "full" },
@@ -110,9 +109,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           fontWeight: 600,
           fontSize: layout === "full"
             ? "clamp(28px, 5vw, 72px)"
-            : layout === "wide"
-            ? "clamp(24px, 4vw, 56px)"
-            : "clamp(20px, 3vw, 42px)",
+            : "clamp(28px, 5vw, 64px)",
           lineHeight: 1,
           letterSpacing: "-0.02em",
         }}
@@ -190,8 +187,8 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               ref={textRef}
               className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
                 bleedLeft
-                  ? "left-[-5%] right-[30%]"
-                  : "left-[5%] right-[-5%]"
+                  ? "left-[-50%] right-[20%]"
+                  : "right-[-50%] left-[20%]"
               }`}
               whileHover={{ y: -6 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
@@ -247,8 +244,8 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
             ref={textRef}
             className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
               bleedLeft
-                ? "left-[-5%] right-[30%]"
-                : "left-[5%] right-[-5%]"
+                ? "left-[-50%] right-[20%]"
+                : "right-[-50%] left-[20%]"
             }`}
           >
             <motion.p
@@ -256,7 +253,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
               style={{
                 fontFamily: "'Ritmica', sans-serif",
                 fontWeight: 400,
-                fontSize: "clamp(18px, 3vw, 42px)",
+                fontSize: "clamp(28px, 5vw, 64px)",
                 lineHeight: 1.2,
               }}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
