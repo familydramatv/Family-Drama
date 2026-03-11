@@ -99,75 +99,107 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
     : "w-[75%] md:w-[65%]";
 
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
+  const bleedLeft = layout !== "full" && alignClass === "ml-auto";
+
+  const textContent = (
+    <>
+      <motion.h2
+        className="text-white tracking-tight"
+        style={{
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 600,
+          fontSize: layout === "full"
+            ? "clamp(28px, 5vw, 72px)"
+            : layout === "wide"
+            ? "clamp(24px, 4vw, 56px)"
+            : "clamp(20px, 3vw, 42px)",
+          lineHeight: 1,
+          letterSpacing: "-0.02em",
+        }}
+        data-testid={`text-home-title-${project.id}`}
+        initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
+        animate={inView
+          ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.3 } }
+          : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
+        }
+      >
+        {title}
+      </motion.h2>
+      <motion.p
+        className="text-white mt-1 md:mt-2"
+        style={{
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 400,
+          fontSize: layout === "full"
+            ? "clamp(13px, 1.4vw, 22px)"
+            : "clamp(12px, 1.2vw, 18px)",
+          letterSpacing: "0.02em",
+          textTransform: "uppercase",
+        }}
+        data-testid={`text-home-meta-${project.id}`}
+        initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
+        animate={inView
+          ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.45 } }
+          : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
+        }
+      >
+        <span style={{ fontWeight: 600 }}>{client}</span>
+        {director && <>{" "}<span style={{ fontWeight: 400 }}>DIRECTED BY</span>{" "}{director}</>}
+      </motion.p>
+    </>
+  );
 
   return (
     <div
       ref={cardRef}
-      className={`${widthClass} ${layout !== "full" ? alignClass : ""}`}
+      className={`relative ${widthClass} ${layout !== "full" ? alignClass : ""}`}
     >
       <Link href={project.muxPlaybackId ? `/project/${project.id}` : "#"}>
-        <motion.div
-          className={`relative ${aspectClass} overflow-hidden cursor-pointer group`}
-          data-testid={`card-home-project-${project.id}`}
-          initial={{ opacity: 0 }}
-          animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
-            <ProjectThumbnail project={project} index={index} />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
+        <div className="relative">
           <motion.div
-            ref={textRef}
-            className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
-            whileHover={{ y: -6 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            className={`relative ${aspectClass} overflow-hidden cursor-pointer group`}
+            data-testid={`card-home-project-${project.id}`}
+            initial={{ opacity: 0 }}
+            animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <motion.h2
-              className="text-white tracking-tight"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 600,
-                fontSize: layout === "full"
-                  ? "clamp(28px, 5vw, 72px)"
-                  : layout === "wide"
-                  ? "clamp(24px, 4vw, 56px)"
-                  : "clamp(20px, 3vw, 42px)",
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
-              }}
-              data-testid={`text-home-title-${project.id}`}
-              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
-              animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.3 } }
-                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
-              }
-            >
-              {title}
-            </motion.h2>
-            <motion.p
-              className="text-white mt-1 md:mt-2"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 400,
-                fontSize: layout === "full"
-                  ? "clamp(13px, 1.4vw, 22px)"
-                  : "clamp(12px, 1.2vw, 18px)",
-                letterSpacing: "0.02em",
-                textTransform: "uppercase",
-              }}
-              data-testid={`text-home-meta-${project.id}`}
-              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
-              animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.45 } }
-                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
-              }
-            >
-              <span style={{ fontWeight: 600 }}>{client}</span>
-              {director && <>{" "}<span style={{ fontWeight: 400 }}>DIRECTED BY</span>{" "}{director}</>}
-            </motion.p>
+            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
+              <ProjectThumbnail project={project} index={index} />
+            </div>
+            {layout === "full" ? (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
+            ) : bleedLeft ? (
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[1]" />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[1]" />
+            )}
+            {layout === "full" && (
+              <motion.div
+                ref={textRef}
+                className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                {textContent}
+              </motion.div>
+            )}
           </motion.div>
-        </motion.div>
+
+          {layout !== "full" && (
+            <motion.div
+              ref={textRef}
+              className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
+                bleedLeft
+                  ? "left-[-5%] right-[30%]"
+                  : "left-[5%] right-[-5%]"
+              }`}
+              whileHover={{ y: -6 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+              {textContent}
+            </motion.div>
+          )}
+        </div>
       </Link>
     </div>
   );
@@ -176,6 +208,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
 function PressCard({ item, index }: { item: PressItem; index: number }) {
   const { news } = item;
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
+  const bleedLeft = alignClass === "ml-auto";
   const cardRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const cardInView = useInView(cardRef, { once: false, margin: "-80px 0px" });
@@ -187,23 +220,37 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
       initial={{ opacity: 0 }}
       animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={`w-[75%] md:w-[65%] ${alignClass}`}
+      className={`relative w-[75%] md:w-[65%] ${alignClass}`}
     >
       <a href={news.link} target="_blank" rel="noopener noreferrer">
-        <div
-          className="relative aspect-[16/10] overflow-hidden group cursor-pointer"
-          data-testid={`card-home-press-${news.id}`}
-        >
-          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
-            <img
-              src={news.image}
-              alt={news.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
+        <div className="relative">
+          <div
+            className="relative aspect-[16/10] overflow-hidden group cursor-pointer"
+            data-testid={`card-home-press-${news.id}`}
+          >
+            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
+              <img
+                src={news.image}
+                alt={news.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            {bleedLeft ? (
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[1]" />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[1]" />
+            )}
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-[1]" />
-          <div ref={textRef} className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-[2]">
+
+          <motion.div
+            ref={textRef}
+            className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
+              bleedLeft
+                ? "left-[-5%] right-[30%]"
+                : "left-[5%] right-[-5%]"
+            }`}
+          >
             <motion.p
               className="text-white leading-snug"
               style={{
@@ -235,7 +282,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
             >
               {news.source}
             </motion.p>
-          </div>
+          </motion.div>
         </div>
       </a>
     </motion.div>
