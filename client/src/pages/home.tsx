@@ -287,7 +287,7 @@ function HeroTypography() {
       <div
         ref={containerRef}
         style={{
-          padding: "80px 32px 80px",
+          padding: "80px 32px 48px",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 500,
           color: "#f0efe9",
