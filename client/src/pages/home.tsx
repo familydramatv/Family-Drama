@@ -82,7 +82,9 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const title = project.title;
 
   const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, { once: false, margin: "-80px 0px" });
+  const textRef = useRef<HTMLDivElement>(null);
+  const cardInView = useInView(cardRef, { once: false, margin: "-80px 0px" });
+  const inView = useInView(textRef, { once: false, margin: "0px" });
 
   const aspectClass = layout === "full"
     ? "aspect-[16/9] md:aspect-[2.2/1]"
@@ -108,7 +110,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           className={`relative ${aspectClass} overflow-hidden cursor-pointer group`}
           data-testid={`card-home-project-${project.id}`}
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
+          animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
@@ -116,6 +118,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
           <motion.div
+            ref={textRef}
             className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
             whileHover={{ y: -6 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
@@ -174,13 +177,15 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
   const { news } = item;
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
   const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, { once: false, margin: "-80px 0px" });
+  const textRef = useRef<HTMLDivElement>(null);
+  const cardInView = useInView(cardRef, { once: false, margin: "-80px 0px" });
+  const inView = useInView(textRef, { once: false, margin: "0px" });
 
   return (
     <motion.div
       ref={cardRef}
       initial={{ opacity: 0 }}
-      animate={inView ? { opacity: 1 } : { opacity: 0 }}
+      animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.5 }}
       className={`w-[75%] md:w-[65%] ${alignClass}`}
     >
@@ -198,7 +203,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-[1]" />
-          <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-[2]">
+          <div ref={textRef} className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-[2]">
             <motion.p
               className="text-white leading-snug"
               style={{
