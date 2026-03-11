@@ -215,61 +215,53 @@ const heroLines = [
   "AND ENTERTAINMENT",
 ];
 
-function FitLine({ text, containerRef }: { text: string; containerRef: React.RefObject<HTMLDivElement | null> }) {
-  const spanRef = useRef<HTMLSpanElement>(null);
-  const [fontSize, setFontSize] = useState(10);
-  const [scaleX, setScaleX] = useState(1);
-
-  useEffect(() => {
-    const fit = () => {
-      const container = containerRef.current;
-      const span = spanRef.current;
-      if (!container || !span) return;
-      const targetWidth = container.clientWidth - 64;
-      span.style.transform = "scaleX(1)";
-      let lo = 10, hi = 600, best = 10;
-      while (lo <= hi) {
-        const mid = Math.floor((lo + hi) / 2);
-        span.style.fontSize = `${mid}px`;
-        if (span.scrollWidth <= targetWidth) {
-          best = mid;
-          lo = mid + 1;
-        } else {
-          hi = mid - 1;
-        }
-      }
-      span.style.fontSize = `${best}px`;
-      const actualWidth = span.scrollWidth;
-      const scale = actualWidth > 0 ? targetWidth / actualWidth : 1;
-      setFontSize(best);
-      setScaleX(scale);
-    };
-    fit();
-    window.addEventListener("resize", fit);
-    return () => window.removeEventListener("resize", fit);
-  }, [text, containerRef]);
-
-  return (
-    <span
-      ref={spanRef}
-      style={{
-        fontSize: `${fontSize}px`,
-        display: "block",
-        lineHeight: 0.9,
-        whiteSpace: "nowrap",
-        transform: `scaleX(${scaleX})`,
-        transformOrigin: "left center",
-      }}
-    >
-      {text}
-    </span>
-  );
-}
-
 function HeroTypography() {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const spanRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [fontSize, setFontSize] = useState(10);
+  const [scales, setScales] = useState<number[]>(heroLines.map(() => 1));
+
+  useEffect(() => {
+    const fitAll = () => {
+      const container = containerRef.current;
+      const spans = spanRefs.current;
+      if (!container || spans.some(s => !s)) return;
+      const targetWidth = container.clientWidth - 64;
+
+      let minSize = 600;
+      for (const span of spans) {
+        if (!span) continue;
+        span.style.transform = "scaleX(1)";
+        let lo = 10, hi = 600, best = 10;
+        while (lo <= hi) {
+          const mid = Math.floor((lo + hi) / 2);
+          span.style.fontSize = `${mid}px`;
+          if (span.scrollWidth <= targetWidth) {
+            best = mid;
+            lo = mid + 1;
+          } else {
+            hi = mid - 1;
+          }
+        }
+        if (best < minSize) minSize = best;
+      }
+
+      const newScales: number[] = [];
+      for (const span of spans) {
+        if (!span) { newScales.push(1); continue; }
+        span.style.fontSize = `${minSize}px`;
+        const actualWidth = span.scrollWidth;
+        newScales.push(actualWidth > 0 ? targetWidth / actualWidth : 1);
+      }
+      setFontSize(minSize);
+      setScales(newScales);
+    };
+    fitAll();
+    window.addEventListener("resize", fitAll);
+    return () => window.removeEventListener("resize", fitAll);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -318,7 +310,19 @@ function HeroTypography() {
             style={{ willChange: "transform" }}
             data-testid={`text-headline-${i}`}
           >
-            <FitLine text={line} containerRef={containerRef} />
+            <span
+              ref={(el) => { spanRefs.current[i] = el; }}
+              style={{
+                fontSize: `${fontSize}px`,
+                display: "block",
+                lineHeight: 0.9,
+                whiteSpace: "nowrap",
+                transform: `scaleX(${scales[i] ?? 1})`,
+                transformOrigin: "left center",
+              }}
+            >
+              {line}
+            </span>
           </div>
         ))}
       </div>
