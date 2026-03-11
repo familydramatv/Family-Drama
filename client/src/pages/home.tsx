@@ -180,12 +180,15 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
 function PressCard({ item, index }: { item: PressItem; index: number }) {
   const { news } = item;
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
+  const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { once: true, margin: "-80px 0px" });
+  const ease = [0.16, 1, 0.3, 1] as const;
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       transition={{ duration: 0.7 }}
       className={`w-[75%] md:w-[65%] ${alignClass}`}
     >
@@ -204,27 +207,41 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-[1]" />
           <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-[2]">
-            <p
-              className="text-white leading-snug"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 400,
-                fontSize: "clamp(18px, 3vw, 42px)",
-                lineHeight: 1.2,
-              }}
-            >
-              {news.title}
-            </p>
-            <p
-              className="text-white/60 mt-2"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 400,
-                fontSize: "clamp(12px, 1.2vw, 18px)",
-              }}
-            >
-              {news.source}
-            </p>
+            <div style={{ overflow: "hidden" }}>
+              <motion.p
+                className="text-white leading-snug"
+                style={{
+                  fontFamily: "'Ritmica', sans-serif",
+                  fontWeight: 400,
+                  fontSize: "clamp(18px, 3vw, 42px)",
+                  lineHeight: 1.2,
+                }}
+                initial={{ y: "110%" }}
+                animate={inView
+                  ? { y: "0%", transition: { duration: 0.65, ease, delay: 0.1 } }
+                  : { y: "110%" }
+                }
+              >
+                {news.title}
+              </motion.p>
+            </div>
+            <div style={{ overflow: "hidden" }}>
+              <motion.p
+                className="text-white/60 mt-2"
+                style={{
+                  fontFamily: "'Ritmica', sans-serif",
+                  fontWeight: 400,
+                  fontSize: "clamp(12px, 1.2vw, 18px)",
+                }}
+                initial={{ y: "110%" }}
+                animate={inView
+                  ? { y: "0%", transition: { duration: 0.65, ease, delay: 0.22 } }
+                  : { y: "110%" }
+                }
+              >
+                {news.source}
+              </motion.p>
+            </div>
           </div>
         </div>
       </a>
