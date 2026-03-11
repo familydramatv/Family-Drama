@@ -81,6 +81,7 @@ export const projects: Project[] = [
     id: "lego-play-unstoppable",
     title: "Play Unstoppable",
     client: "LEGO",
+    director: "Peter King",
     image: "",
     categories: ["featured", "content"],
     muxPlaybackId: "YtMByMlUh5xCQWHAllei6sxaRxApD021flcJ9mln7vvA",

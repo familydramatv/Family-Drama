@@ -107,9 +107,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
         style={{
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 600,
-          fontSize: layout === "full"
-            ? "clamp(28px, 5vw, 72px)"
-            : "clamp(28px, 5vw, 64px)",
+          fontSize: "clamp(28px, 5vw, 72px)",
           lineHeight: 1,
           letterSpacing: "-0.02em",
         }}
@@ -127,9 +125,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
         style={{
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 400,
-          fontSize: layout === "full"
-            ? "clamp(13px, 1.4vw, 22px)"
-            : "clamp(12px, 1.2vw, 18px)",
+          fontSize: "clamp(13px, 1.4vw, 22px)",
           letterSpacing: "0.02em",
           textTransform: "uppercase",
         }}
@@ -253,12 +249,13 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
             }`}
           >
             <motion.p
-              className="text-white leading-snug"
+              className="text-white tracking-tight"
               style={{
                 fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 400,
-                fontSize: "clamp(28px, 5vw, 64px)",
-                lineHeight: 1.2,
+                fontWeight: 600,
+                fontSize: "clamp(28px, 5vw, 72px)",
+                lineHeight: 1,
+                letterSpacing: "-0.02em",
               }}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
               animate={inView
@@ -273,7 +270,9 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
               style={{
                 fontFamily: "'Ritmica', sans-serif",
                 fontWeight: 400,
-                fontSize: "clamp(12px, 1.2vw, 18px)",
+                fontSize: "clamp(13px, 1.4vw, 22px)",
+                letterSpacing: "0.02em",
+                textTransform: "uppercase" as const,
               }}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
               animate={inView
