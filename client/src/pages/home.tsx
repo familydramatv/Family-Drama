@@ -218,6 +218,7 @@ const heroLines = [
 function FitLine({ text, containerRef }: { text: string; containerRef: React.RefObject<HTMLDivElement | null> }) {
   const spanRef = useRef<HTMLSpanElement>(null);
   const [fontSize, setFontSize] = useState(10);
+  const [scaleX, setScaleX] = useState(1);
 
   useEffect(() => {
     const fit = () => {
@@ -225,6 +226,7 @@ function FitLine({ text, containerRef }: { text: string; containerRef: React.Ref
       const span = spanRef.current;
       if (!container || !span) return;
       const targetWidth = container.clientWidth - 64;
+      span.style.transform = "scaleX(1)";
       let lo = 10, hi = 600, best = 10;
       while (lo <= hi) {
         const mid = Math.floor((lo + hi) / 2);
@@ -236,7 +238,11 @@ function FitLine({ text, containerRef }: { text: string; containerRef: React.Ref
           hi = mid - 1;
         }
       }
+      span.style.fontSize = `${best}px`;
+      const actualWidth = span.scrollWidth;
+      const scale = actualWidth > 0 ? targetWidth / actualWidth : 1;
       setFontSize(best);
+      setScaleX(scale);
     };
     fit();
     window.addEventListener("resize", fit);
@@ -251,6 +257,8 @@ function FitLine({ text, containerRef }: { text: string; containerRef: React.Ref
         display: "block",
         lineHeight: 0.9,
         whiteSpace: "nowrap",
+        transform: `scaleX(${scaleX})`,
+        transformOrigin: "left center",
       }}
     >
       {text}
