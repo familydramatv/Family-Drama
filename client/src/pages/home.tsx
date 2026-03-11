@@ -98,8 +98,6 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
 
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
 
-  const ease = [0.16, 1, 0.3, 1] as const;
-
   return (
     <div
       ref={cardRef}
@@ -122,53 +120,49 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
             whileHover={{ y: -6 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            <div style={{ overflow: "hidden" }}>
-              <motion.h2
-                className="text-white tracking-tight"
-                style={{
-                  fontFamily: "'Ritmica', sans-serif",
-                  fontWeight: 600,
-                  fontSize: layout === "full"
-                    ? "clamp(28px, 5vw, 72px)"
-                    : layout === "wide"
-                    ? "clamp(24px, 4vw, 56px)"
-                    : "clamp(20px, 3vw, 42px)",
-                  lineHeight: 1,
-                  letterSpacing: "-0.02em",
-                }}
-                data-testid={`text-home-director-${project.id}`}
-                initial={{ y: "105%" }}
-                animate={inView
-                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.25 } }
-                  : { y: "105%" }
-                }
-              >
-                {director || client}
-              </motion.h2>
-            </div>
-            <div style={{ overflow: "hidden" }}>
-              <motion.p
-                className="text-white/80 mt-1 md:mt-2"
-                style={{
-                  fontFamily: "'Ritmica', sans-serif",
-                  fontWeight: 400,
-                  fontSize: layout === "full"
-                    ? "clamp(13px, 1.4vw, 22px)"
-                    : "clamp(12px, 1.2vw, 18px)",
-                  letterSpacing: "0.02em",
-                  textTransform: "uppercase",
-                }}
-                data-testid={`text-home-meta-${project.id}`}
-                initial={{ y: "105%" }}
-                animate={inView
-                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.38 } }
-                  : { y: "105%" }
-                }
-              >
-                <span style={{ fontWeight: 600 }}>{client}</span>
-                {" "}{title}
-              </motion.p>
-            </div>
+            <motion.h2
+              className="text-white tracking-tight"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 600,
+                fontSize: layout === "full"
+                  ? "clamp(28px, 5vw, 72px)"
+                  : layout === "wide"
+                  ? "clamp(24px, 4vw, 56px)"
+                  : "clamp(20px, 3vw, 42px)",
+                lineHeight: 1,
+                letterSpacing: "-0.02em",
+              }}
+              data-testid={`text-home-director-${project.id}`}
+              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
+              animate={inView
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.2 } }
+                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
+              }
+            >
+              {director || client}
+            </motion.h2>
+            <motion.p
+              className="text-white/80 mt-1 md:mt-2"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 400,
+                fontSize: layout === "full"
+                  ? "clamp(13px, 1.4vw, 22px)"
+                  : "clamp(12px, 1.2vw, 18px)",
+                letterSpacing: "0.02em",
+                textTransform: "uppercase",
+              }}
+              data-testid={`text-home-meta-${project.id}`}
+              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
+              animate={inView
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.38 } }
+                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
+              }
+            >
+              <span style={{ fontWeight: 600 }}>{client}</span>
+              {" "}{title}
+            </motion.p>
           </motion.div>
         </motion.div>
       </Link>
@@ -181,7 +175,6 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
   const cardRef = useRef<HTMLDivElement>(null);
   const inView = useInView(cardRef, { once: true, margin: "-80px 0px" });
-  const ease = [0.16, 1, 0.3, 1] as const;
 
   return (
     <motion.div
@@ -206,41 +199,37 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
           </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-[1]" />
           <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 z-[2]">
-            <div style={{ overflow: "hidden" }}>
-              <motion.p
-                className="text-white leading-snug"
-                style={{
-                  fontFamily: "'Ritmica', sans-serif",
-                  fontWeight: 400,
-                  fontSize: "clamp(18px, 3vw, 42px)",
-                  lineHeight: 1.2,
-                }}
-                initial={{ y: "105%" }}
-                animate={inView
-                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.25 } }
-                  : { y: "105%" }
-                }
-              >
-                {news.title}
-              </motion.p>
-            </div>
-            <div style={{ overflow: "hidden" }}>
-              <motion.p
-                className="text-white/60 mt-2"
-                style={{
-                  fontFamily: "'Ritmica', sans-serif",
-                  fontWeight: 400,
-                  fontSize: "clamp(12px, 1.2vw, 18px)",
-                }}
-                initial={{ y: "105%" }}
-                animate={inView
-                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.38 } }
-                  : { y: "105%" }
-                }
-              >
-                {news.source}
-              </motion.p>
-            </div>
+            <motion.p
+              className="text-white leading-snug"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 400,
+                fontSize: "clamp(18px, 3vw, 42px)",
+                lineHeight: 1.2,
+              }}
+              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
+              animate={inView
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.2 } }
+                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
+              }
+            >
+              {news.title}
+            </motion.p>
+            <motion.p
+              className="text-white/60 mt-2"
+              style={{
+                fontFamily: "'Ritmica', sans-serif",
+                fontWeight: 400,
+                fontSize: "clamp(12px, 1.2vw, 18px)",
+              }}
+              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
+              animate={inView
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.38 } }
+                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
+              }
+            >
+              {news.source}
+            </motion.p>
           </div>
         </div>
       </a>
