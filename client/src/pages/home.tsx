@@ -187,8 +187,12 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               ref={textRef}
               className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
                 bleedLeft
-                  ? "left-[-50%] right-[20%]"
-                  : "right-[-50%] left-[20%]"
+                  ? layout === "wide"
+                    ? "left-[-12%] right-[20%]"
+                    : "left-[-45%] right-[20%]"
+                  : layout === "wide"
+                    ? "right-[-12%] left-[20%]"
+                    : "right-[-45%] left-[20%]"
               }`}
               whileHover={{ y: -6 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
@@ -244,8 +248,8 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
             ref={textRef}
             className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
               bleedLeft
-                ? "left-[-50%] right-[20%]"
-                : "right-[-50%] left-[20%]"
+                ? "left-[-12%] right-[20%]"
+                : "right-[-12%] left-[20%]"
             }`}
           >
             <motion.p
