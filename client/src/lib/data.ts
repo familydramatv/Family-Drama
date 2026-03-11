@@ -113,6 +113,7 @@ export const projects: Project[] = [
     id: "dr-teals-stay-hungry",
     title: "Stay Hungry",
     client: "Dr. Teal's",
+    director: "Greenwood",
     image: "",
     categories: ["featured", "content"],
     muxPlaybackId: "Suz9ZUBQoxegDECIKhvGzyVHBQM9c02jdsM38JuH6qhE",
