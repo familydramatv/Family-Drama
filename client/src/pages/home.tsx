@@ -109,9 +109,9 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
         <motion.div
           className={`relative ${aspectClass} overflow-hidden cursor-pointer group`}
           data-testid={`card-home-project-${project.id}`}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-          transition={{ duration: 0.7 }}
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.5 }}
         >
           <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
             <ProjectThumbnail project={project} index={index} />
@@ -119,7 +119,6 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
           <motion.div
             className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
-            animate={inView ? { y: 0 } : {}}
             whileHover={{ y: -6 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
@@ -138,10 +137,10 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
                   letterSpacing: "-0.02em",
                 }}
                 data-testid={`text-home-director-${project.id}`}
-                initial={{ y: "110%", opacity: 0 }}
+                initial={{ y: "105%" }}
                 animate={inView
-                  ? { y: "0%", opacity: 1, transition: { duration: 0.65, ease, delay: 0.1 } }
-                  : { y: "110%", opacity: 0 }
+                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.25 } }
+                  : { y: "105%" }
                 }
               >
                 {director || client}
@@ -160,10 +159,10 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
                   textTransform: "uppercase",
                 }}
                 data-testid={`text-home-meta-${project.id}`}
-                initial={{ y: "110%", opacity: 0 }}
+                initial={{ y: "105%" }}
                 animate={inView
-                  ? { y: "0%", opacity: 1, transition: { duration: 0.65, ease, delay: 0.22 } }
-                  : { y: "110%", opacity: 0 }
+                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.38 } }
+                  : { y: "105%" }
                 }
               >
                 <span style={{ fontWeight: 600 }}>{client}</span>
@@ -187,9 +186,9 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-      transition={{ duration: 0.7 }}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.5 }}
       className={`w-[75%] md:w-[65%] ${alignClass}`}
     >
       <a href={news.link} target="_blank" rel="noopener noreferrer">
@@ -216,10 +215,10 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
                   fontSize: "clamp(18px, 3vw, 42px)",
                   lineHeight: 1.2,
                 }}
-                initial={{ y: "110%" }}
+                initial={{ y: "105%" }}
                 animate={inView
-                  ? { y: "0%", transition: { duration: 0.65, ease, delay: 0.1 } }
-                  : { y: "110%" }
+                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.25 } }
+                  : { y: "105%" }
                 }
               >
                 {news.title}
@@ -233,10 +232,10 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
                   fontWeight: 400,
                   fontSize: "clamp(12px, 1.2vw, 18px)",
                 }}
-                initial={{ y: "110%" }}
+                initial={{ y: "105%" }}
                 animate={inView
-                  ? { y: "0%", transition: { duration: 0.65, ease, delay: 0.22 } }
-                  : { y: "110%" }
+                  ? { y: "0%", transition: { duration: 0.7, ease, delay: 0.38 } }
+                  : { y: "105%" }
                 }
               >
                 {news.source}
