@@ -2,6 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
+import legoHomeImage from "@assets/Screenshot_2024-06-14_at_2.42.21_PM_1773265929514.png";
+
+const homeImageOverrides: Record<string, string> = {
+  "lego-play-unstoppable": legoHomeImage,
+};
 
 const homeProjects = [
   projects[5],  // Crown Royal - Chopped & Screwed
@@ -22,11 +27,14 @@ const placeholderColors = [
 ];
 
 function ProjectThumbnail({ project, index }: { project: typeof projects[0]; index: number }) {
-  const src = project.homeImage
-    ? project.homeImage
-    : project.muxPlaybackId
-      ? getMuxThumbnail(project.muxPlaybackId, project.thumbnailTime || 0, 1200)
-      : project.image;
+  const overrideImage = homeImageOverrides[project.id];
+  const src = overrideImage
+    ? overrideImage
+    : project.homeImage
+      ? project.homeImage
+      : project.muxPlaybackId
+        ? getMuxThumbnail(project.muxPlaybackId, project.thumbnailTime || 0, 1200)
+        : project.image;
 
   if (src) {
     return (
