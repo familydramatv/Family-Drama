@@ -305,20 +305,6 @@
   object-fit: cover !important;
 }
 
-mux-video[data-testid^="video-loop-"] {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-mux-video[data-testid^="video-loop-"] video,
-mux-video[data-testid^="video-loop-"]::part(video) {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
-
 .custom-player-wrapper {
   position: relative;
 }
