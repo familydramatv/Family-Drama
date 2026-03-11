@@ -231,7 +231,7 @@ function FitLine({ text, containerRef }: { text: string; containerRef: React.Ref
       while (lo <= hi) {
         const mid = Math.floor((lo + hi) / 2);
         span.style.fontSize = `${mid}px`;
-        if (span.scrollWidth <= targetWidth) {
+        if (span.getBoundingClientRect().width <= targetWidth) {
           best = mid;
           lo = mid + 1;
         } else {
@@ -239,10 +239,12 @@ function FitLine({ text, containerRef }: { text: string; containerRef: React.Ref
         }
       }
       span.style.fontSize = `${best}px`;
-      const actualWidth = span.scrollWidth;
-      const scale = actualWidth > 0 ? targetWidth / actualWidth : 1;
-      setFontSize(best);
-      setScaleX(scale);
+      requestAnimationFrame(() => {
+        const actualWidth = span.getBoundingClientRect().width;
+        const scale = actualWidth > 0 ? targetWidth / actualWidth : 1;
+        setFontSize(best);
+        setScaleX(scale);
+      });
     };
     fit();
     window.addEventListener("resize", fit);
