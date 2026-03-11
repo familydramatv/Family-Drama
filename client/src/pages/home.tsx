@@ -281,7 +281,7 @@ function HeroTypography() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen flex flex-col justify-center overflow-hidden bg-black"
+      className="relative min-h-screen flex flex-col justify-start overflow-hidden bg-black"
       data-testid="section-hero"
     >
       <div
