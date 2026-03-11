@@ -36,10 +36,12 @@ function ProjectThumbnail({ project, index }: { project: typeof projects[0]; ind
     return (
       <mux-video
         playback-id={project.muxPlaybackId}
+        poster={getMuxThumbnail(project.muxPlaybackId, project.thumbnailTime || 0, 1200)}
         muted
         autoplay
         loop
         playsinline
+        preload="auto"
         style={{ width: "100%", height: "100%", objectFit: "cover" } as React.CSSProperties}
         data-testid={`video-loop-${project.id}`}
       />
