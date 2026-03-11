@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
 
@@ -81,6 +81,9 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const client = project.client;
   const title = project.title;
 
+  const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { once: true, margin: "-80px 0px" });
+
   const aspectClass = layout === "full"
     ? "aspect-[16/9] md:aspect-[2.2/1]"
     : layout === "wide"
@@ -95,42 +98,29 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
 
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
 
-  const textVariants = {
-    hidden: { y: "105%", opacity: 0 },
-    visible: (delay: number) => ({
-      y: "0%",
-      opacity: 1,
-      transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1], delay },
-    }),
-  };
+  const ease = [0.16, 1, 0.3, 1] as const;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7 }}
+    <div
+      ref={cardRef}
       className={`${widthClass} ${layout !== "full" ? alignClass : ""}`}
     >
       <Link href={project.muxPlaybackId ? `/project/${project.id}` : "#"}>
         <motion.div
-          className={`relative ${aspectClass} overflow-hidden cursor-pointer`}
+          className={`relative ${aspectClass} overflow-hidden cursor-pointer group`}
           data-testid={`card-home-project-${project.id}`}
-          whileHover="hover"
-          initial="rest"
-          animate="rest"
+          initial={{ opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+          transition={{ duration: 0.7 }}
         >
-          <motion.div
-            className="absolute inset-0"
-            variants={{ rest: { scale: 1 }, hover: { scale: 1.05 } }}
-            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-          >
+          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
             <ProjectThumbnail project={project} index={index} />
-          </motion.div>
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
           <motion.div
             className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
-            variants={{ rest: { y: 0 }, hover: { y: -6 } }}
+            animate={inView ? { y: 0 } : {}}
+            whileHover={{ y: -6 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             <div style={{ overflow: "hidden" }}>
@@ -148,11 +138,11 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
                   letterSpacing: "-0.02em",
                 }}
                 data-testid={`text-home-director-${project.id}`}
-                custom={0}
-                variants={textVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                initial={{ y: "110%", opacity: 0 }}
+                animate={inView
+                  ? { y: "0%", opacity: 1, transition: { duration: 0.65, ease, delay: 0.1 } }
+                  : { y: "110%", opacity: 0 }
+                }
               >
                 {director || client}
               </motion.h2>
@@ -170,11 +160,11 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
                   textTransform: "uppercase",
                 }}
                 data-testid={`text-home-meta-${project.id}`}
-                custom={0.12}
-                variants={textVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                initial={{ y: "110%", opacity: 0 }}
+                animate={inView
+                  ? { y: "0%", opacity: 1, transition: { duration: 0.65, ease, delay: 0.22 } }
+                  : { y: "110%", opacity: 0 }
+                }
               >
                 <span style={{ fontWeight: 600 }}>{client}</span>
                 {" "}{title}
@@ -183,7 +173,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           </motion.div>
         </motion.div>
       </Link>
-    </motion.div>
+    </div>
   );
 }
 
