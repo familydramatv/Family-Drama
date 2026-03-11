@@ -133,14 +133,14 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
                 lineHeight: 1,
                 letterSpacing: "-0.02em",
               }}
-              data-testid={`text-home-director-${project.id}`}
+              data-testid={`text-home-title-${project.id}`}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
               animate={inView
                 ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.5 } }
                 : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
               }
             >
-              {director || client}
+              {title}
             </motion.h2>
             <motion.p
               className="text-white/80 mt-1 md:mt-2"
@@ -161,7 +161,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               }
             >
               <span style={{ fontWeight: 600 }}>{client}</span>
-              {" "}{title}
+              {director && <>{" "}<span style={{ fontWeight: 400, opacity: 0.7 }}>DIRECTED BY</span>{" "}{director}</>}
             </motion.p>
           </motion.div>
         </motion.div>
