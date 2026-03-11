@@ -80,8 +80,8 @@ type FeedItem = ShowcaseItem | PressItem;
 const feed: FeedItem[] = [
   { type: "project", project: homeProjects[4], layout: "full" },
   { type: "project", project: homeProjects[3], layout: "medium" },
-  { type: "project", project: homeProjects[2], layout: "wide" },
   { type: "project", project: homeProjects[1], layout: "full" },
+  { type: "project", project: homeProjects[2], layout: "wide" },
   { type: "press", news: newsItems[1] },
   { type: "project", project: homeProjects[0], layout: "wide" },
   { type: "project", project: homeProjects[5], layout: "medium" },
