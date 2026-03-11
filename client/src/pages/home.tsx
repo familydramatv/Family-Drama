@@ -281,13 +281,13 @@ function HeroTypography() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col justify-start overflow-hidden bg-black"
+      className="relative flex flex-col justify-start overflow-hidden bg-black"
       data-testid="section-hero"
     >
       <div
         ref={containerRef}
         style={{
-          padding: "80px 32px 0",
+          padding: "80px 32px 80px",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 500,
           color: "#f0efe9",
