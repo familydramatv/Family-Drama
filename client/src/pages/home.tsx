@@ -82,7 +82,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const title = project.title;
 
   const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, { once: true, margin: "-80px 0px" });
+  const inView = useInView(cardRef, { once: false, margin: "-80px 0px" });
 
   const aspectClass = layout === "full"
     ? "aspect-[16/9] md:aspect-[2.2/1]"
@@ -174,7 +174,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
   const { news } = item;
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
   const cardRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(cardRef, { once: true, margin: "-80px 0px" });
+  const inView = useInView(cardRef, { once: false, margin: "-80px 0px" });
 
   return (
     <motion.div
