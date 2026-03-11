@@ -24,6 +24,7 @@ export interface Project {
   tags?: string[];
   image: string;
   homeImage?: string;
+  homeVideoLoop?: boolean;
   featured?: boolean;
   categories: ProjectCategory[];
   muxPlaybackId?: string;
@@ -118,6 +119,7 @@ export const projects: Project[] = [
     client: "Dr. Teal's",
     director: "Nate Simmons",
     image: "",
+    homeVideoLoop: true,
     categories: ["featured", "content"],
     muxPlaybackId: "Suz9ZUBQoxegDECIKhvGzyVHBQM9c02jdsM38JuH6qhE",
     muxProjectPlaybackId: "m1FlwgNrObAAkfSWeQ5KdX5pPCNs3rhoAZz7HFZ15Dg",

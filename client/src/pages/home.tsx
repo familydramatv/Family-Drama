@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "wouter";
 import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
+import "@mux/mux-video";
 
 const homeProjects = [
   projects[5],  // Crown Royal - Chopped & Screwed
@@ -22,6 +23,20 @@ const placeholderColors = [
 ];
 
 function ProjectThumbnail({ project, index }: { project: typeof projects[0]; index: number }) {
+  if (project.homeVideoLoop && project.muxPlaybackId) {
+    return (
+      <mux-video
+        playback-id={project.muxPlaybackId}
+        preload="auto"
+        autoplay
+        muted
+        loop
+        playsinline
+        style={{ width: "100%", height: "100%", objectFit: "cover" } as React.CSSProperties}
+      />
+    );
+  }
+
   const src = project.homeImage
     ? project.homeImage
     : project.muxPlaybackId
