@@ -77,7 +77,7 @@ export default function Navigation() {
         transition={{ duration: 0.3 }}
       >
         <Link href="/" data-testid="link-home">
-          <Logo className="h-[50px] md:h-[58px]" />
+          <Logo className="h-[42px] md:h-[49px]" />
         </Link>
       </motion.div>
       <motion.button
@@ -111,7 +111,7 @@ export default function Navigation() {
           >
             <div className="absolute top-0 left-0 right-0 px-6 md:px-10 py-5 flex items-center justify-between z-20">
               <Link href="/" onClick={() => setIsOpen(false)} data-testid="link-menu-home">
-                <Logo className="h-[50px] md:h-[58px]" />
+                <Logo className="h-[42px] md:h-[49px]" />
               </Link>
             </div>
 
