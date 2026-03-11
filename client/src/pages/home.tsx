@@ -136,7 +136,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               data-testid={`text-home-title-${project.id}`}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
               animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.5 } }
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.3 } }
                 : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
               }
             >
@@ -156,7 +156,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               data-testid={`text-home-meta-${project.id}`}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
               animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.7 } }
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.45 } }
                 : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
               }
             >
@@ -209,7 +209,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
               }}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
               animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.5 } }
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.3 } }
                 : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
               }
             >
@@ -224,7 +224,7 @@ function PressCard({ item, index }: { item: PressItem; index: number }) {
               }}
               initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
               animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 1, ease: [0.4, 0, 0.2, 1], delay: 0.7 } }
+                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.45 } }
                 : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
               }
             >
