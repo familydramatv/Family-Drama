@@ -220,7 +220,7 @@ function HeroTypography() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const spanRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const [fontSize, setFontSize] = useState(10);
+  const [fontSizes, setFontSizes] = useState<number[]>(heroLines.map(() => 10));
   const [scales, setScales] = useState<number[]>(heroLines.map(() => 1));
 
   useEffect(() => {
@@ -230,9 +230,10 @@ function HeroTypography() {
       if (!container || spans.some(s => !s)) return;
       const targetWidth = container.clientWidth - 64;
 
-      let minSize = 600;
+      const newSizes: number[] = [];
+      const newScales: number[] = [];
       for (const span of spans) {
-        if (!span) continue;
+        if (!span) { newSizes.push(10); newScales.push(1); continue; }
         span.style.transform = "scaleX(1)";
         let lo = 10, hi = 600, best = 10;
         while (lo <= hi) {
@@ -245,17 +246,12 @@ function HeroTypography() {
             hi = mid - 1;
           }
         }
-        if (best < minSize) minSize = best;
-      }
-
-      const newScales: number[] = [];
-      for (const span of spans) {
-        if (!span) { newScales.push(1); continue; }
-        span.style.fontSize = `${minSize}px`;
+        span.style.fontSize = `${best}px`;
         const actualWidth = span.scrollWidth;
+        newSizes.push(best);
         newScales.push(actualWidth > 0 ? targetWidth / actualWidth : 1);
       }
-      setFontSize(minSize);
+      setFontSizes(newSizes);
       setScales(newScales);
     };
     fitAll();
@@ -313,7 +309,7 @@ function HeroTypography() {
             <span
               ref={(el) => { spanRefs.current[i] = el; }}
               style={{
-                fontSize: `${fontSize}px`,
+                fontSize: `${fontSizes[i] ?? 10}px`,
                 display: "block",
                 lineHeight: 0.9,
                 whiteSpace: "nowrap",
