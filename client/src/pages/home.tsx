@@ -267,8 +267,8 @@ function FitLine({ text, containerRef, maskedWord, maskedVideoId }: FitLineProps
           style={{
             position: "relative",
             display: "inline-block",
-            color: "transparent",
             overflow: "hidden",
+            isolation: "isolate",
           }}
         >
           <video
@@ -277,15 +277,14 @@ function FitLine({ text, containerRef, maskedWord, maskedVideoId }: FitLineProps
             muted
             loop
             playsInline
+            preload="auto"
             style={{
               position: "absolute",
-              top: "50%",
-              left: "0",
+              top: 0,
+              left: 0,
               width: "100%",
-              height: "auto",
-              minHeight: "100%",
+              height: "100%",
               objectFit: "cover",
-              transform: "translateY(-50%)",
               zIndex: 0,
             }}
           />
@@ -293,10 +292,11 @@ function FitLine({ text, containerRef, maskedWord, maskedVideoId }: FitLineProps
             style={{
               position: "relative",
               zIndex: 1,
-              background: "black",
+              backgroundColor: "black",
               color: "white",
-              mixBlendMode: "multiply",
+              mixBlendMode: "screen",
               display: "inline-block",
+              WebkitTextFillColor: "white",
             }}
           >
             {maskedWord}
