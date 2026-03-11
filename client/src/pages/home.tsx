@@ -95,6 +95,15 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
 
   const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
 
+  const textVariants = {
+    hidden: { y: "105%", opacity: 0 },
+    visible: (delay: number) => ({
+      y: "0%",
+      opacity: 1,
+      transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1], delay },
+    }),
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -104,50 +113,75 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
       className={`${widthClass} ${layout !== "full" ? alignClass : ""}`}
     >
       <Link href={project.muxPlaybackId ? `/project/${project.id}` : "#"}>
-        <div
-          className={`relative ${aspectClass} overflow-hidden group cursor-pointer`}
+        <motion.div
+          className={`relative ${aspectClass} overflow-hidden cursor-pointer`}
           data-testid={`card-home-project-${project.id}`}
+          whileHover="hover"
+          initial="rest"
+          animate="rest"
         >
-          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
+          <motion.div
+            className="absolute inset-0"
+            variants={{ rest: { scale: 1 }, hover: { scale: 1.05 } }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
             <ProjectThumbnail project={project} index={index} />
-          </div>
+          </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
-          <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]">
-            <h2
-              className="text-white tracking-tight"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 600,
-                fontSize: layout === "full"
-                  ? "clamp(28px, 5vw, 72px)"
-                  : layout === "wide"
-                  ? "clamp(24px, 4vw, 56px)"
-                  : "clamp(20px, 3vw, 42px)",
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
-              }}
-              data-testid={`text-home-director-${project.id}`}
-            >
-              {director || client}
-            </h2>
-            <p
-              className="text-white/80 mt-1 md:mt-2"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 400,
-                fontSize: layout === "full"
-                  ? "clamp(13px, 1.4vw, 22px)"
-                  : "clamp(12px, 1.2vw, 18px)",
-                letterSpacing: "0.02em",
-                textTransform: "uppercase",
-              }}
-              data-testid={`text-home-meta-${project.id}`}
-            >
-              <span style={{ fontWeight: 600 }}>{client}</span>
-              {" "}{title}
-            </p>
-          </div>
-        </div>
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
+            variants={{ rest: { y: 0 }, hover: { y: -6 } }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <div style={{ overflow: "hidden" }}>
+              <motion.h2
+                className="text-white tracking-tight"
+                style={{
+                  fontFamily: "'Ritmica', sans-serif",
+                  fontWeight: 600,
+                  fontSize: layout === "full"
+                    ? "clamp(28px, 5vw, 72px)"
+                    : layout === "wide"
+                    ? "clamp(24px, 4vw, 56px)"
+                    : "clamp(20px, 3vw, 42px)",
+                  lineHeight: 1,
+                  letterSpacing: "-0.02em",
+                }}
+                data-testid={`text-home-director-${project.id}`}
+                custom={0}
+                variants={textVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+              >
+                {director || client}
+              </motion.h2>
+            </div>
+            <div style={{ overflow: "hidden" }}>
+              <motion.p
+                className="text-white/80 mt-1 md:mt-2"
+                style={{
+                  fontFamily: "'Ritmica', sans-serif",
+                  fontWeight: 400,
+                  fontSize: layout === "full"
+                    ? "clamp(13px, 1.4vw, 22px)"
+                    : "clamp(12px, 1.2vw, 18px)",
+                  letterSpacing: "0.02em",
+                  textTransform: "uppercase",
+                }}
+                data-testid={`text-home-meta-${project.id}`}
+                custom={0.12}
+                variants={textVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+              >
+                <span style={{ fontWeight: 600 }}>{client}</span>
+                {" "}{title}
+              </motion.p>
+            </div>
+          </motion.div>
+        </motion.div>
       </Link>
     </motion.div>
   );
