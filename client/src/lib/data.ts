@@ -23,6 +23,7 @@ export interface Project {
   director?: string;
   tags?: string[];
   image: string;
+  homeImage?: string;
   featured?: boolean;
   categories: ProjectCategory[];
   muxPlaybackId?: string;

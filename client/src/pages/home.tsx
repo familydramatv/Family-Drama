@@ -22,9 +22,11 @@ const placeholderColors = [
 ];
 
 function ProjectThumbnail({ project, index }: { project: typeof projects[0]; index: number }) {
-  const src = project.muxPlaybackId
-    ? getMuxThumbnail(project.muxPlaybackId, project.thumbnailTime || 0, 1200)
-    : project.image;
+  const src = project.homeImage
+    ? project.homeImage
+    : project.muxPlaybackId
+      ? getMuxThumbnail(project.muxPlaybackId, project.thumbnailTime || 0, 1200)
+      : project.image;
 
   if (src) {
     return (
