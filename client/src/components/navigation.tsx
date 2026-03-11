@@ -82,16 +82,16 @@ export default function Navigation() {
       </motion.div>
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="group fixed top-5 right-6 md:right-10 z-[10002] text-white p-2 w-[120px] h-[60px] flex items-center justify-end"
+        className="group fixed top-5 right-6 md:right-10 z-[10002] text-white p-2 w-[96px] h-[48px] flex items-center justify-end"
         data-testid="button-menu-toggle"
         aria-label="Toggle menu"
         animate={{ y: hidden && !isOpen ? -80 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="relative w-[80px] flex flex-col items-end gap-[9px]">
-          <span className="block h-[2.5px] bg-white w-full transition-transform duration-300 group-hover:translate-x-1" />
+        <div className="relative w-[64px] flex flex-col items-end gap-[7px]">
+          <span className="block h-[2px] bg-white w-full transition-transform duration-300 group-hover:translate-x-1" />
           <motion.span
-            className="block h-[2.5px] bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:w-full"
+            className="block h-[2px] bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:w-full"
             initial={false}
             animate={{ width: isOpen ? "100%" : "71%" }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
