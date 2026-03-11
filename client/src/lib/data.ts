@@ -230,6 +230,7 @@ export const projects: Project[] = [
     client: "Crown Royal",
     director: "Nate Simmons",
     image: "/images/project-2.png",
+    homeImage: "/images/home/crown-royal-chopped-screwed.jpg",
     featured: true,
     categories: ["featured", "content"],
     muxPlaybackId: "HMl3XojTjJCOU02zqPuYn7gSbiAUH4kTA5g4wU683HHE",
