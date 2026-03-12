@@ -518,7 +518,7 @@ export const newsItems: NewsItem[] = [
     id: "ai-commercial-landscape",
     source: "Ad Age",
     title: "How AI is reshaping the commercial production landscape in 2026",
-    image: "/images/about-experience.jpg",
+    image: "/images/ai-coca-cola.png",
     link: "/news/ai-commercial-landscape",
     date: "January 15, 2026",
     category: "Ad Age",
@@ -528,7 +528,6 @@ export const newsItems: NewsItem[] = [
     externalUrl: "https://adage.com",
     body: [
       { type: "paragraph", text: "AI was a major focus for Family Drama in 2025, as the production company launched a consulting service that works with brands and agencies to modernize their marketing content creation workflow with AI." },
-      { type: "image", src: "/images/about-experience.jpg", caption: "Family Drama's experiential production work" },
       { type: "paragraph", text: "AI was also central to brand projects, which invited consumers to create their own personalized content experiences, made possible by Family Drama's custom AI pipeline, game engine layers, and virtual production." },
       { type: "paragraph", text: "Along with employing creative technology, Family Drama also made some standout content pieces, many of which leaned into humor and cultural relevance — a hallmark of the company's directorial roster." },
     ],
