@@ -1116,10 +1116,16 @@
 }
 
 [data-testid="page-talent"] .about-word {
-  padding: 0 0 0.22em 0;
-  line-height: 1.15;
+  padding: 0 0 0.12em 0;
+  line-height: 1.1;
 }
 [data-testid="page-talent"] .about-word-inner {
-  line-height: 1.15;
+  line-height: 1.1;
+}
+[data-testid="page-talent"] nav > div {
+  margin-top: -0.12em;
+}
+[data-testid="page-talent"] nav > div:first-child {
+  margin-top: 0;
 }
 
