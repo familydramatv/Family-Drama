@@ -5,8 +5,8 @@ import { projects, getMuxThumbnail } from "@/lib/data";
 import "@mux/mux-video";
 
 const homeProjects = [
-  projects[5],  // Crown Royal - Chopped & Screwed
-  projects[6],  // Ferrari - Michael B. Jordan
+  projects[5],  // European Wax Center - Keep Exploring
+  projects[6],  // Crown Royal - Chopped & Screwed
   projects[2],  // Porsche - Freedom
   projects[3],  // Dr. Teal's - Stay Hungry
   projects[0],  // LEGO - Play Unstoppable
@@ -78,7 +78,7 @@ const feed: FeedItem[] = [
   { type: "project", project: homeProjects[3], layout: "medium" },
   { type: "project", project: homeProjects[1], layout: "full" },
   { type: "project", project: homeProjects[2], layout: "medium", textSide: "right" },
-  { type: "project", project: homeProjects[0], layout: "wide" },
+  { type: "project", project: homeProjects[0], layout: "medium", textSide: "left" },
   { type: "project", project: homeProjects[5], layout: "medium" },
   { type: "project", project: homeProjects[6], layout: "full" },
   { type: "project", project: homeProjects[7], layout: "wide" },
