@@ -136,7 +136,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const textContent = (
     <>
       <motion.h2
-        className={`text-white tracking-tight md:whitespace-normal ${isMobile && !bleedLeft ? "whitespace-nowrap" : ""}`}
+        className="text-white tracking-tight"
         style={{
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 600,
@@ -213,7 +213,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           style={isMobile
             ? bleedLeft
               ? { left: "-25%", right: "5%", textAlign: "left" as const }
-              : { right: "-50%", textAlign: "right" as const }
+              : { right: "-25%", left: "5%", textAlign: "right" as const }
             : bleedLeft
               ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%", textAlign: "left" as const }
               : { right: layout === "wide" ? "-12%" : "-45%", left: "20%", textAlign: "right" as const }
