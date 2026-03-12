@@ -212,7 +212,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           className="absolute top-1/2 -translate-y-1/2 z-10 md:px-8 pointer-events-none"
           style={isMobile
             ? bleedLeft
-              ? { left: "5%", right: "5%", textAlign: "left" as const }
+              ? { left: "-10%", right: "5%", textAlign: "left" as const }
               : { right: "-50%", textAlign: "right" as const }
             : bleedLeft
               ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%", textAlign: "left" as const }
