@@ -120,6 +120,31 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-black pt-28 md:pt-36">
       <div className="max-w-7xl mx-auto px-6 md:px-10 pb-20 md:pb-32">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 md:gap-16 mb-24 md:mb-32" data-testid="section-inquiries">
+          {[
+            { label: "General Inquiries", linkText: "Inquiries", email: "hello@familydrama.tv", subject: "General Inquiry" },
+            { label: "Commercial Sales", linkText: "Sales", email: "sales@familydrama.tv", subject: "Commercial Inquiry" },
+            { label: "Press Inquiries", linkText: "Press", email: "press@familydrama.tv", subject: "PR Inquiry" },
+          ].map((item, i) => (
+            <div key={item.label}>
+              <p className="text-white/40 text-sm mb-2">
+                <RevealText text={item.label} delay={i * 80} />
+              </p>
+              <a
+                href={`mailto:${item.email}?subject=${encodeURIComponent(item.subject)}`}
+                className="block text-white opacity-80 hover:opacity-100 transition-opacity"
+                data-testid={`link-contact-${item.linkText.toLowerCase()}`}
+              >
+                <RevealText
+                  text={item.linkText}
+                  delay={i * 80 + 40}
+                  className="text-4xl md:text-5xl font-light"
+                />
+              </a>
+            </div>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 md:gap-16 mb-24 md:mb-32" data-testid="section-offices">
           {offices.map((office, i) => (
             <div
