@@ -28,9 +28,9 @@ export default function Footer() {
           <div>
             <h4 className="text-white/40 text-xs uppercase tracking-widest mb-4">Offices</h4>
             <div className="flex flex-col gap-2">
+              <span className="text-white/60 text-sm">Austin, TX</span>
               <span className="text-white/60 text-sm">Los Angeles, CA</span>
-              <span className="text-white/60 text-sm">Gent, Belgium</span>
-              <span className="text-white/60 text-sm">Saint Cloud, France</span>
+              <span className="text-white/60 text-sm">London</span>
             </div>
           </div>
 
