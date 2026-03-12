@@ -518,7 +518,7 @@ export const newsItems: NewsItem[] = [
     id: "ai-commercial-landscape",
     source: "Ad Age",
     title: "How AI is reshaping the commercial production landscape in 2026",
-    image: "/images/ai-coca-cola.png",
+    image: "/images/ai-coca-cola.jpg",
     link: "/news/ai-commercial-landscape",
     date: "January 15, 2026",
     category: "Ad Age",
