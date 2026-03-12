@@ -1546,7 +1546,7 @@ function Slide7Reach() {
       cities.forEach((el) => {
         el.style.fontWeight = "700";
         el.style.color = "#FFFFFF";
-        el.style.opacity = String(1 - exitP);
+        el.style.opacity = "1";
       });
 
       const crescendo = textRef.current.querySelector<HTMLElement>(".reach-crescendo");
