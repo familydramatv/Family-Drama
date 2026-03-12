@@ -115,9 +115,10 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
     ? "w-[90%] md:w-[85%]"
     : "w-[75%] md:w-[65%]";
 
+  const naturalAlign = index % 2 === 0 ? "mr-auto" : "ml-auto";
   const alignClass = flip
-    ? (index % 2 === 0 ? "ml-auto" : "mr-auto")
-    : (index % 2 === 0 ? "mr-auto" : "ml-auto");
+    ? (naturalAlign === "mr-auto" ? "ml-auto" : "mr-auto")
+    : naturalAlign;
   const bleedLeft = layout !== "full" && alignClass === "ml-auto";
 
   const textContent = (
@@ -201,15 +202,11 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
           {layout !== "full" && (
             <motion.div
               ref={textRef}
-              className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
-                bleedLeft
-                  ? layout === "wide"
-                    ? "left-[-12%] right-[20%]"
-                    : "left-[-45%] right-[20%]"
-                  : layout === "wide"
-                    ? "right-[-12%] left-[20%]"
-                    : "right-[-45%] left-[20%]"
-              }`}
+              className="absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none"
+              style={bleedLeft
+                ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%" }
+                : { right: layout === "wide" ? "-12%" : "-45%", left: "20%" }
+              }
               whileHover={{ y: -6 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
