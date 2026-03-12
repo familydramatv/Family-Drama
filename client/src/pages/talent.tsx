@@ -70,16 +70,16 @@ export default function Talent() {
                       fontSize: "clamp(3rem, 7.2vw, 6rem)",
                       whiteSpace: "nowrap",
                       zIndex: hoveredId === director.id ? 30 : 10,
-                      color: (typeof window !== "undefined" && window.innerWidth < 768)
-                        ? "#ffffff"
-                        : hoveredId === null
-                          ? "rgba(255,255,255,0.5)"
-                          : hoveredId === director.id
-                            ? "#ffffff"
-                            : "rgba(255,255,255,0.25)",
+                      color: hoveredId === null
+                        ? "rgba(255,255,255,0.5)"
+                        : hoveredId === director.id
+                          ? "#ffffff"
+                          : "rgba(255,255,255,0.25)",
                     }}
                     onMouseEnter={() => setHoveredId(director.id)}
                     onMouseLeave={() => setHoveredId(null)}
+                    onTouchStart={() => setHoveredId(director.id)}
+                    onTouchEnd={() => setHoveredId(null)}
                     data-testid={`text-talent-${director.id}`}
                   >
                     {words.map((word, wi) => (
