@@ -8,6 +8,7 @@ const EASE = 0.05;
 const SCROLL_DAMPEN = 0.5;
 const HERO_LOCK_MULTIPLIER = 1;
 const SLIDE2_LOCK_MULTIPLIER = 2;
+const CLOSING_LOCK_MULTIPLIER = 1.5;
 
 const slide2Line1 = "We're All";
 const slide2UseLogo = true;
@@ -96,6 +97,8 @@ function useHorizontalScroll() {
   const maxVirtual = useRef(0);
   const heroLockDist = useRef(0);
   const slide2LockDist = useRef(0);
+  const closingLockDist = useRef(0);
+  const closingStartV = useRef(0);
   const rafId = useRef<number>(0);
   const isMobile = useRef(false);
 
@@ -111,8 +114,12 @@ function useHorizontalScroll() {
     const vw = window.innerWidth;
     heroLockDist.current = vw * HERO_LOCK_MULTIPLIER;
     slide2LockDist.current = vw * SLIDE2_LOCK_MULTIPLIER;
+    closingLockDist.current = vw * CLOSING_LOCK_MULTIPLIER;
     const wrapperMax = wrapperRef.current.scrollWidth - vw;
-    maxVirtual.current = wrapperMax + heroLockDist.current + slide2LockDist.current;
+    // Closing slide is 150vw wide; it centers when scrollX = wrapperMax - 0.25vw
+    const closingTrigger = Math.max(0, wrapperMax - vw * 0.25);
+    closingStartV.current = heroLockDist.current + slide2LockDist.current + closingTrigger;
+    maxVirtual.current = wrapperMax + heroLockDist.current + slide2LockDist.current + closingLockDist.current;
   }, []);
 
   useEffect(() => {
@@ -122,10 +129,17 @@ function useHorizontalScroll() {
       const vw = window.innerWidth;
       const hLock = heroLockDist.current;
       const s2Lock = slide2LockDist.current;
+      const cLock = closingLockDist.current;
+      const cStartV = closingStartV.current;
       let r = Math.max(0, v - hLock);
       if (v > hLock + vw) {
         const s2Progress = v - (hLock + vw);
         const consumed = Math.min(s2Lock, s2Progress);
+        r = r - consumed;
+      }
+      if (v > cStartV) {
+        const cProgress = v - cStartV;
+        const consumed = Math.min(cLock, cProgress);
         r = r - consumed;
       }
       return r;
