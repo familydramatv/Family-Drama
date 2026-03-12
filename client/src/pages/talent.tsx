@@ -50,7 +50,7 @@ export default function Talent() {
     <div className="min-h-screen bg-black pt-[40px] md:pt-[56px]" data-testid="page-talent">
       <div
         className="relative px-4 sm:px-6 md:px-10 lg:px-16 py-6 sm:py-8 md:py-12"
-        style={{ paddingLeft: "clamp(1.5rem, 5vw + 40px, calc(4rem + 70px))" }}
+        style={{ paddingLeft: "clamp(1rem, 5vw + 10px, calc(4rem + 70px))" }}
       >
         <nav className="flex flex-col" data-testid="talent-list">
           {directors.map((director, i) => {
