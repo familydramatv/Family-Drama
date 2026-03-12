@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "6d0O38LBVqAlNcQskS-QR"
+uri = "file://client/public/images/og-image.jpg"
+type = "image"
+title = "OG Image Preview"
