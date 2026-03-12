@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "wouter";
-import { projects, newsItems, getMuxThumbnail } from "@/lib/data";
+import { projects, getMuxThumbnail } from "@/lib/data";
 import "@mux/mux-video";
 
 const homeProjects = [
@@ -71,19 +71,13 @@ interface ShowcaseItem {
   textSide?: "left" | "right";
 }
 
-interface PressItem {
-  type: "press";
-  news: typeof newsItems[0];
-}
-
-type FeedItem = ShowcaseItem | PressItem;
+type FeedItem = ShowcaseItem;
 
 const feed: FeedItem[] = [
   { type: "project", project: homeProjects[4], layout: "full" },
   { type: "project", project: homeProjects[3], layout: "medium" },
   { type: "project", project: homeProjects[1], layout: "full" },
   { type: "project", project: homeProjects[2], layout: "medium", textSide: "right" },
-  { type: "press", news: newsItems[1] },
   { type: "project", project: homeProjects[0], layout: "wide" },
   { type: "project", project: homeProjects[5], layout: "medium" },
   { type: "project", project: homeProjects[6], layout: "full" },
@@ -217,92 +211,6 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   );
 }
 
-function PressCard({ item, index }: { item: PressItem; index: number }) {
-  const { news } = item;
-  const alignClass = index % 2 === 0 ? "mr-auto" : "ml-auto";
-  const bleedLeft = alignClass === "ml-auto";
-  const cardRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const cardInView = useInView(cardRef, { once: false, margin: "-80px 0px" });
-  const inView = useInView(textRef, { once: false, margin: "0px" });
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0 }}
-      animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`relative w-[75%] md:w-[65%] ${alignClass}`}
-    >
-      <a href={news.link} target="_blank" rel="noopener noreferrer">
-        <div className="relative">
-          <div
-            className="relative aspect-[16/10] overflow-hidden group cursor-pointer"
-            data-testid={`card-home-press-${news.id}`}
-          >
-            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
-              <img
-                src={news.image}
-                alt={news.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            {bleedLeft ? (
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[1]" />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[1]" />
-            )}
-          </div>
-
-          <motion.div
-            ref={textRef}
-            className={`absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none ${
-              bleedLeft
-                ? "left-[-12%] right-[20%]"
-                : "right-[-12%] left-[20%]"
-            }`}
-          >
-            <motion.p
-              className="text-white tracking-tight"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 600,
-                fontSize: "clamp(28px, 5vw, 72px)",
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
-              }}
-              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
-              animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.3 } }
-                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
-              }
-            >
-              {news.title}
-            </motion.p>
-            <motion.p
-              className="text-white mt-2"
-              style={{
-                fontFamily: "'Ritmica', sans-serif",
-                fontWeight: 400,
-                fontSize: "clamp(13px, 1.4vw, 22px)",
-                letterSpacing: "0.02em",
-                textTransform: "uppercase" as const,
-              }}
-              initial={{ clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }}
-              animate={inView
-                ? { clipPath: "polygon(0 0%, 100% 0%, 100% 100%, 0 100%)", transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.45 } }
-                : { clipPath: "polygon(0 100%, 100% 100%, 100% 100%, 0 100%)" }
-              }
-            >
-              {news.source}
-            </motion.p>
-          </motion.div>
-        </div>
-      </a>
-    </motion.div>
-  );
-}
 
 const heroLines = [
   "CREATING CONTENT",
@@ -429,12 +337,9 @@ export default function Home() {
 
       <section className="py-8 md:py-12 px-4 md:px-8" data-testid="section-showcase">
         <div className="flex flex-col gap-8 md:gap-16 lg:gap-20">
-          {feed.map((item, i) => {
-            if (item.type === "project") {
-              return <ProjectCard key={item.project.id} item={item} index={i} />;
-            }
-            return <PressCard key={item.news.id} item={item} index={i} />;
-          })}
+          {feed.map((item, i) => (
+            <ProjectCard key={item.project.id} item={item} index={i} />
+          ))}
         </div>
       </section>
     </div>
