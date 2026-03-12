@@ -359,6 +359,7 @@ export const projects: Project[] = [
     id: "essentia-water-advice",
     title: "Advice To Your Future Self",
     client: "Essentia Water",
+    director: "Nate Simmons",
     image: "",
     homeVideoLoop: true,
     categories: ["featured", "content"],
