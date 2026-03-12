@@ -20,7 +20,7 @@ const menuLinks = [
   { label: "Work", href: "/work" },
   { label: "Talent", href: "/talent" },
   { label: "About", href: "/about" },
-  { label: "News", href: "/work" },
+  { label: "News", href: "/news" },
   { label: "Contact", href: "/contact" },
 ];
 

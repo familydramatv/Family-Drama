@@ -54,6 +54,9 @@ export interface NewsItem {
   title: string;
   image: string;
   link: string;
+  date: string;
+  category?: string;
+  isExternal?: boolean;
 }
 
 export interface Service {
@@ -444,6 +447,9 @@ export const newsItems: NewsItem[] = [
     title: "The Hybrid Approach: How Marketers Can Blend AI And Traditional Production",
     image: "/images/about-hero-small.jpg",
     link: "#",
+    date: "March 5, 2026",
+    category: "Forbes",
+    isExternal: true,
   },
   {
     id: "5-minutes-with-dustin",
@@ -451,6 +457,85 @@ export const newsItems: NewsItem[] = [
     title: "President of Tool speaks about building a new framework for commercial production and the next golden age of AI",
     image: "/images/about-abstract.jpg",
     link: "#",
+    date: "February 20, 2026",
+    category: "Little Black Book",
+    isExternal: true,
+  },
+  {
+    id: "future-of-production",
+    source: "Shots",
+    title: "Inside the studio redefining what it means to produce at scale",
+    image: "/images/about-production-1.jpg",
+    link: "#",
+    date: "February 12, 2026",
+    category: "Shots",
+  },
+  {
+    id: "creative-innovation-awards",
+    source: "LBB Online",
+    title: "Tool of North America wins Creative Innovation Award for groundbreaking campaign work",
+    image: "/images/about-content.jpg",
+    link: "#",
+    date: "January 28, 2026",
+    category: "LBB Online",
+    isExternal: true,
+  },
+  {
+    id: "ai-commercial-landscape",
+    source: "Ad Age",
+    title: "How AI is reshaping the commercial production landscape in 2026",
+    image: "/images/about-experience.jpg",
+    link: "#",
+    date: "January 15, 2026",
+    category: "Ad Age",
+    isExternal: true,
+  },
+  {
+    id: "director-spotlight-colton",
+    source: "Shots",
+    title: "Director Spotlight: Colton Gatlin on blending cinematic storytelling with digital craft",
+    image: "/images/colton-gatlin.jpg",
+    link: "#",
+    date: "January 8, 2026",
+    category: "Shots",
+  },
+  {
+    id: "billion-views-milestone",
+    source: "The Drum",
+    title: "Tool of North America crosses one billion views milestone across digital campaigns",
+    image: "/images/billion-views.jpg",
+    link: "#",
+    date: "December 18, 2025",
+    category: "The Drum",
+    isExternal: true,
+  },
+  {
+    id: "production-innovation",
+    source: "Shots",
+    title: "The new production playbook: Why traditional agencies are rethinking their approach",
+    image: "/images/about-production-2.jpg",
+    link: "#",
+    date: "December 5, 2025",
+    category: "Shots",
+  },
+  {
+    id: "virtual-production-studio",
+    source: "Variety",
+    title: "Inside Tool's state-of-the-art virtual production studio and what it means for the industry",
+    image: "/images/about-abstract-1.jpg",
+    link: "#",
+    date: "November 20, 2025",
+    category: "Variety",
+    isExternal: true,
+  },
+  {
+    id: "talent-pipeline",
+    source: "Shots",
+    title: "Building the next generation of directors: How Tool nurtures emerging creative talent",
+    image: "/images/about-services-photo.jpg",
+    link: "#",
+    date: "November 8, 2025",
+    category: "Shots",
   },
 ];
 
