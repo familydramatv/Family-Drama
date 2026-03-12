@@ -1115,13 +1115,11 @@
   }
 }
 
-@media (max-width: 767px) {
-  [data-testid="page-talent"] .about-word {
-    padding: 0.1em 0 0.65em 0;
-    line-height: 1.4;
-  }
-  [data-testid="page-talent"] .about-word-inner {
-    line-height: 1.4;
-  }
+[data-testid="page-talent"] .about-word {
+  padding: 0.1em 0 0.65em 0;
+  line-height: 1.4;
+}
+[data-testid="page-talent"] .about-word-inner {
+  line-height: 1.4;
 }
 
