@@ -359,13 +359,24 @@ function HeroTypography() {
 
 export default function Home() {
   useEffect(() => {
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
     const saved = sessionStorage.getItem("homeScrollY");
     if (saved) {
       sessionStorage.removeItem("homeScrollY");
+      const y = Number(saved);
       requestAnimationFrame(() => {
-        window.scrollTo({ top: Number(saved), behavior: "instant" });
+        requestAnimationFrame(() => {
+          window.scrollTo(0, y);
+        });
       });
     }
+    return () => {
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "auto";
+      }
+    };
   }, []);
 
   return (
