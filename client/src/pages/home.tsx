@@ -111,6 +111,8 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const textRef = useRef<HTMLDivElement>(null);
   const cardInView = useInView(cardRef, { once: false, margin: "-80px 0px" });
   const inView = useInView(textRef, { once: false, margin: "0px" });
+  const isMobileRef = useRef(typeof window !== "undefined" && window.innerWidth < 768);
+  const isMobile = isMobileRef.current;
 
   const aspectClass = layout === "tall"
     ? "aspect-[16/9]"
@@ -130,8 +132,6 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const alignClass = textSide === "right" ? "mr-auto" : textSide === "left" ? "ml-auto" : defaultAlign;
   const isFullWidth = layout === "full" || layout === "tall";
   const bleedLeft = !isFullWidth && alignClass === "ml-auto";
-
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   const textContent = (
     <>
@@ -184,7 +184,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
         animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
+        <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105" style={{ willChange: "transform" }}>
           <ProjectThumbnail project={project} index={index} />
         </div>
         {isFullWidth ? (

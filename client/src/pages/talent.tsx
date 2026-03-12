@@ -109,6 +109,7 @@ export default function Talent() {
                     transition: hoveredId === director.id
                       ? "clip-path 0.27s cubic-bezier(0.25, 0.1, 0.25, 1)"
                       : "clip-path 0.18s cubic-bezier(0.25, 0.1, 0.25, 1)",
+                    willChange: "clip-path",
                     zIndex: 20,
                   }}
                 >
