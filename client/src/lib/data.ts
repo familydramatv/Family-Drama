@@ -627,10 +627,10 @@ export const services: Service[] = [
 export const teamMembers: TeamMember[] = [
   { name: "Nate Simmons", role: "Founder, Executive Producer", email: "nate@familydrama.tv" },
   { name: "Nick Simmons", role: "Co-Founder, Executive Producer", email: "nick@familydrama.tv" },
-  { name: "Colton Gatlin", role: "Managing Director - Post Production", email: "colton@familydrama.tv" },
-  { name: "Cris Rodriguez", role: "Managing Director - Content", email: "cris@familydrama.tv" },
-  { name: "Sarah Garza", role: "Managing Director - Experience", email: "sarah@familydrama.tv" },
-  { name: "Isabelle Wilson", role: "Head of Finance", email: "isabelle@familydrama.tv" },
+  { name: "Colton Gatlin", role: "Managing Director - Post Production", email: "c.gatlin@familydrama.tv" },
+  { name: "Cris Rodriguez", role: "Managing Director - Content", email: "c.rodriguez@familydrama.tv" },
+  { name: "Sarah Garza", role: "Managing Director - Experience", email: "s.garza@familydrama.tv" },
+  { name: "Isabelle Wilson", role: "Head of Finance", email: "finance@familydrama.tv" },
 ];
 
 export const offices: Office[] = [
@@ -677,22 +677,22 @@ export const salesReps = [
   {
     region: "West",
     members: [
-      { name: "Marcus Torelli", role: "Content", email: "sales@familydrama.tv" },
-      { name: "Lena Hartwell", role: "Experience", email: "sales@familydrama.tv" },
+      { name: "Marcus Torelli", role: "Content", email: "m.torelli@familydrama.tv" },
+      { name: "Lena Hartwell", role: "Experience", email: "lena.hartwell@familydrama.tv" },
     ],
   },
   {
     region: "Mid West",
     members: [
-      { name: "Jordan Kessler", role: "Content & Experience", email: "sales@familydrama.tv" },
+      { name: "Jordan Kessler", role: "Content & Experience", email: "j.kessler@familydrama.tv" },
     ],
   },
   {
     region: "East",
     members: [
-      { name: "Elena Marsh", role: "Content", email: "sales@familydrama.tv" },
-      { name: "David Cho", role: "Content", email: "sales@familydrama.tv" },
-      { name: "Nina Castillo", role: "Experience", email: "sales@familydrama.tv" },
+      { name: "Elena Marsh", role: "Content", email: "e.marsh@familydrama.tv" },
+      { name: "David Cho", role: "Content", email: "david.cho@familydrama.tv" },
+      { name: "Nina Castillo", role: "Experience", email: "nina.castillo@familydrama.tv" },
     ],
   },
 ];
