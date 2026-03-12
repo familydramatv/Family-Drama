@@ -202,8 +202,8 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
               ref={textRef}
               className="absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none"
               style={bleedLeft
-                ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%" }
-                : { right: layout === "wide" ? "-12%" : "-45%", left: "20%" }
+                ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%", textAlign: "left" }
+                : { right: layout === "wide" ? "-12%" : "-45%", left: "20%", textAlign: "right" }
               }
               whileHover={{ y: -6 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
