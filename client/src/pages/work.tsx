@@ -154,7 +154,7 @@ function ProjectCard({
       <div className="absolute inset-0 p-3 sm:p-5 md:p-7 flex flex-col justify-between z-[4]">
         <div className={`flex items-start ${!isMobile && isRightColumn ? "justify-end" : "justify-start"}`}>
           <span
-            className="text-white text-[28px] sm:text-[30px] md:text-[32px] tracking-wide"
+            className="text-white text-[18px] sm:text-[20px] md:text-[26px] lg:text-[32px] tracking-wide"
             style={{ fontFamily: "'Ritmica', sans-serif", fontWeight: 400 }}
             data-testid={`text-client-${project.id}`}
           >
@@ -163,7 +163,7 @@ function ProjectCard({
         </div>
         <div className="relative">
           <span
-            className={`text-white text-[20px] sm:text-[22px] md:text-[24px] block will-change-transform ${!isMobile && isRightColumn ? "text-right" : "text-left"}`}
+            className={`text-white text-[13px] sm:text-[15px] md:text-[18px] lg:text-[24px] block will-change-transform ${!isMobile && isRightColumn ? "text-right" : "text-left"}`}
             style={{
               fontFamily: "'Ritmica', sans-serif",
               fontWeight: 300,
@@ -177,7 +177,7 @@ function ProjectCard({
           </span>
           {displayDirector && (
             <span
-              className={`text-white text-[14px] sm:text-[16px] md:text-[18px] block absolute will-change-transform ${!isMobile && isRightColumn ? "right-0 text-right" : "left-0 text-left"}`}
+              className={`text-white text-[10px] sm:text-[11px] md:text-[13px] lg:text-[18px] block absolute will-change-transform ${!isMobile && isRightColumn ? "right-0 text-right" : "left-0 text-left"}`}
               style={{
                 fontFamily: "'Ritmica', sans-serif",
                 fontWeight: 300,
