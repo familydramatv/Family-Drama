@@ -62,7 +62,7 @@ const missionText = {
 
 const reachText = {
   intro: "Based in ",
-  cities: ["Texas,", "Los Angeles,", "New York,", "Miami"],
+  cities: ["Houston,", "Los Angeles,", "New York,", "Miami"],
   mid: " with productions spanning ",
   after: " and locations worldwide, ",
   crescendo: "WE GO WHERE THE STORY TAKES US.",
@@ -1636,7 +1636,7 @@ function Slide7Reach() {
         }}
       >
         <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>Based in </span>
-        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Texas, </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Houston, </span>
         <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>with productions spanning </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Los Angeles, </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>New York, </span>
