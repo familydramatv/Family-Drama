@@ -1551,7 +1551,7 @@ function Slide7Reach() {
 
       const crescendo = textRef.current.querySelector<HTMLElement>(".reach-crescendo");
       if (crescendo) {
-        const cP = Math.max(0, Math.min(1, (p - vr * 0.99) / (vr * 0.08)));
+        const cP = Math.max(0, Math.min(1, (p - vr * 0.88) / (vr * 0.08)));
         crescendo.style.color = "#FFFFFF";
         crescendo.style.opacity = String(cP);
         crescendo.style.fontWeight = "700";
