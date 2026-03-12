@@ -205,7 +205,6 @@ export const projects: Project[] = [
     id: "tap-to-pay",
     title: "Grit & Glory",
     client: "Journey To The Draft",
-    director: "Greenwood",
     image: "",
     homeImage: "/images/home/tap-to-pay.jpg",
     categories: ["featured", "content"],
