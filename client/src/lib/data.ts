@@ -203,8 +203,8 @@ export const projects: Project[] = [
   // === Featured row 3: Adyen + European Wax Center (lifestyle, warm tones) ===
   {
     id: "tap-to-pay",
-    title: "Tap to Pay",
-    client: "Adyen",
+    title: "Grit & Glory",
+    client: "Journey To The Draft",
     director: "Greenwood",
     image: "",
     homeImage: "/images/home/tap-to-pay.jpg",
