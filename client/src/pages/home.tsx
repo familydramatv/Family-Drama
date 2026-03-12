@@ -68,7 +68,7 @@ interface ShowcaseItem {
   type: "project";
   project: typeof projects[0];
   layout: CardLayout;
-  flip?: boolean;
+  textSide?: "left" | "right";
 }
 
 interface PressItem {
@@ -82,7 +82,7 @@ const feed: FeedItem[] = [
   { type: "project", project: homeProjects[4], layout: "full" },
   { type: "project", project: homeProjects[3], layout: "medium" },
   { type: "project", project: homeProjects[1], layout: "full" },
-  { type: "project", project: homeProjects[2], layout: "medium", flip: true },
+  { type: "project", project: homeProjects[2], layout: "medium", textSide: "right" },
   { type: "press", news: newsItems[1] },
   { type: "project", project: homeProjects[0], layout: "wide" },
   { type: "project", project: homeProjects[5], layout: "medium" },
@@ -93,7 +93,7 @@ const feed: FeedItem[] = [
 ];
 
 function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
-  const { project, layout, flip } = item;
+  const { project, layout, textSide } = item;
   const director = project.director || "";
   const client = project.client;
   const title = project.title;
@@ -115,10 +115,8 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
     ? "w-[90%] md:w-[85%]"
     : "w-[75%] md:w-[65%]";
 
-  const naturalAlign = index % 2 === 0 ? "mr-auto" : "ml-auto";
-  const alignClass = flip
-    ? (naturalAlign === "mr-auto" ? "ml-auto" : "mr-auto")
-    : naturalAlign;
+  const defaultAlign = index % 2 === 0 ? "mr-auto" : "ml-auto";
+  const alignClass = textSide === "right" ? "mr-auto" : textSide === "left" ? "ml-auto" : defaultAlign;
   const bleedLeft = layout !== "full" && alignClass === "ml-auto";
 
   const textContent = (
