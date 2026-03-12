@@ -1538,8 +1538,8 @@ function Slide7Reach() {
 
       const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.55) / (vr * 0.35)));
       textRef.current.querySelectorAll<HTMLElement>(".reach-context").forEach((el) => {
-        const revealColor = Math.round(contextRevealP * 255);
-        el.style.color = `rgb(${revealColor}, ${revealColor}, ${revealColor})`;
+        el.style.color = "#FFFFFF";
+        el.style.opacity = String(contextRevealP);
       });
 
       const cities = textRef.current.querySelectorAll<HTMLElement>(".city-name");
@@ -1552,7 +1552,8 @@ function Slide7Reach() {
       const crescendo = textRef.current.querySelector<HTMLElement>(".reach-crescendo");
       if (crescendo) {
         const cP = Math.max(0, Math.min(1, (p - vr * 0.72) / (vr * 0.3)));
-        crescendo.style.color = `rgb(${Math.round(cP * 255)}, ${Math.round(cP * 255)}, ${Math.round(cP * 255)})`;
+        crescendo.style.color = "#FFFFFF";
+        crescendo.style.opacity = String(cP);
         crescendo.style.fontWeight = "700";
       }
     };
@@ -1635,16 +1636,16 @@ function Slide7Reach() {
           willChange: "opacity",
         }}
       >
-        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>Based in </span>
+        <span className="reach-context" style={{ color: "#FFFFFF", opacity: 0 }}>Based in </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Texas, </span>
-        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>with production teams spanning </span>
+        <span className="reach-context" style={{ color: "#FFFFFF", opacity: 0 }}>with production teams spanning </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Los Angeles, </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>New York, </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Miami, </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Mexico, </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>London </span>
-        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>and locations worldwide, </span>
-        <span className="reach-crescendo" style={{ color: "rgb(0,0,0)", display: "block", marginTop: "20px", fontWeight: 700 }}>
+        <span className="reach-context" style={{ color: "#FFFFFF", opacity: 0 }}>and locations worldwide, </span>
+        <span className="reach-crescendo" style={{ color: "#FFFFFF", opacity: 0, display: "block", marginTop: "20px", fontWeight: 700 }}>
           WE GO WHERE THE STORY TAKES US.
         </span>
       </div>
