@@ -462,7 +462,7 @@ export const newsItems: NewsItem[] = [
     body: [
       { type: "paragraph", text: "Family Drama is thrilled to announce the addition of award-winning director Chris Strong to its roster for US commercial representation. Known for his dynamic and visually striking films, Chris brings a wealth of experience spanning a diverse range of media, including commercials, branded content, AR/VR, music videos, and experiential media." },
       { type: "paragraph", text: "With a portfolio that boasts work for top-tier brands and recognition from prestigious award shows, including two Cannes Lions and two London International Awards, Chris's innovative approach to filmmaking blends artistry with strategic insight. His ability to craft compelling narratives across location-based shoots, animation, and post-production makes him a perfect fit for Family Drama's expanding team of creative talent." },
-      { type: "paragraph", text: "\"We are incredibly excited to welcome Chris to the FD family, his wealth of experience and vision positions Bolt to uniquely serve our clients globally.\" says Nate Simmons, Founder & Executive Producer. \"His ability to push creative boundaries and deliver fresh, vibrant content aligns perfectly with our vision to create work that resonates with audiences across all platforms and grow this division through 2025.\"" },
+      { type: "paragraph", text: "\"We are incredibly excited to welcome Chris to the FD family, his wealth of experience and vision positions Family Drama to uniquely serve our clients globally.\" says Nate Simmons, Founder & Executive Producer. \"His ability to push creative boundaries and deliver fresh, vibrant content aligns perfectly with our vision to create work that resonates with audiences across all platforms and grow this division through 2025.\"" },
       { type: "paragraph", text: "From big-brand campaigns to immersive experiences, Chris's work demonstrates his versatility and keen eye for detail. His unique directorial style is sure to elevate the commercial offerings Family Drama provides to clients in the US. \"I'm so excited to join forces with the folks over at Family Drama. I'm really looking forward to us creating some amazing work together!\" says Chris Strong. We look forward to seeing the incredible work that Chris will create with us in the future." },
     ],
   },
@@ -486,16 +486,16 @@ export const newsItems: NewsItem[] = [
   {
     id: "grit-glory-prnewswire",
     source: "PR Newswire",
-    title: "Bolt TV Announces Original Series with Quarterback Bo Nix \"Grit & Glory: Journey To The Draft\"",
+    title: "Family Drama Announces Original Series with Quarterback Bo Nix \"Grit & Glory: Journey To The Draft\"",
     image: "/images/grit-glory-promo.jpg",
     link: "/news/grit-glory-prnewswire",
     date: "March 8, 2026",
     category: "PR Newswire",
     isExternal: true,
-    subtitle: "Bolt TV launches an exclusive documentary series following collegiate quarterback Bo Nix as he prepares for the NFL Draft.",
+    subtitle: "Family Drama launches an exclusive documentary series following collegiate quarterback Bo Nix as he prepares for the NFL Draft.",
     externalUrl: "https://www.prnewswire.com/news-releases/bolt-tv-announces-original-series-with-quarterback-bo-nix-grit--glory-journey-to-the-draft-302129545.html",
     body: [
-      { type: "paragraph", text: "Bolt TV is thrilled to announce the launch of its original documentary series with Quarterback Bo Nix \"Grit & Glory: Journey To The Draft\", directed by Nate Simmons and produced by Bolt TV. The series offers an exclusive inside look into the life of collegiate quarterback Bo Nix as he prepares for the biggest night of his career: the NFL Draft." },
+      { type: "paragraph", text: "Family Drama is thrilled to announce the launch of its original documentary series with Quarterback Bo Nix \"Grit & Glory: Journey To The Draft\", directed by Nate Simmons and produced by Family Drama. The series offers an exclusive inside look into the life of collegiate quarterback Bo Nix as he prepares for the biggest night of his career: the NFL Draft." },
     ],
   },
   {
