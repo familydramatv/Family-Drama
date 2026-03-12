@@ -843,6 +843,7 @@ function FilmstripSlides() {
       <Slide5CoreBeliefs />
       <SlideScatterCollage />
       <Slide7Reach />
+      <Slide11Closing />
     </div>
   );
 }
@@ -1841,6 +1842,116 @@ function Slide8Roster() {
   );
 }
 
+
+function Slide11Closing() {
+  const slideRef = useRef<HTMLDivElement>(null);
+  const line1Ref = useRef<HTMLParagraphElement>(null);
+  const line2Ref = useRef<HTMLParagraphElement>(null);
+  const emailRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (window.innerWidth <= 1024) return;
+
+    const onHScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const scrollX = detail.scrollX as number;
+      const vw = window.innerWidth;
+      if (!slideRef.current) return;
+
+      const slideLeft = slideRef.current.offsetLeft;
+      const slideWidth = slideRef.current.offsetWidth;
+      const localScroll = scrollX - slideLeft + vw;
+      const p = Math.max(0, localScroll / slideWidth);
+      const vr = vw / slideWidth;
+
+      if (line1Ref.current) {
+        const enterP = Math.max(0, Math.min(1, p / (vr * 0.2)));
+        line1Ref.current.style.opacity = String(enterP);
+      }
+
+      if (line2Ref.current) {
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.05) / (vr * 0.2)));
+        line2Ref.current.style.opacity = String(enterP);
+      }
+
+      if (emailRef.current) {
+        const enterP = Math.max(0, Math.min(1, (p - vr * 0.1) / (vr * 0.2)));
+        emailRef.current.style.opacity = String(enterP);
+      }
+    };
+
+    window.addEventListener("horizontalscroll", onHScroll);
+    return () => window.removeEventListener("horizontalscroll", onHScroll);
+  }, []);
+
+  return (
+    <section
+      ref={slideRef}
+      className="filmstrip-slide"
+      style={{
+        width: "150vw",
+        height: "100vh",
+        flexShrink: 0,
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      aria-label="The Closing"
+      data-testid="slide-11-closing"
+    >
+      <p
+        ref={line1Ref}
+        style={{
+          fontSize: "clamp(22px, 3vw, 42px)",
+          color: "#FFFFFF",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 400,
+          textAlign: "center",
+          opacity: 0,
+          willChange: "opacity",
+          maxWidth: "80vw",
+        }}
+      >
+        We'd love the opportunity to build something meaningful.
+      </p>
+      <p
+        ref={line2Ref}
+        style={{
+          fontSize: "clamp(28px, 3.8vw, 52px)",
+          color: "#FFFFFF",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 700,
+          textAlign: "center",
+          marginTop: "10px",
+          opacity: 0,
+          willChange: "opacity",
+        }}
+      >
+        Together.
+      </p>
+      <a
+        ref={emailRef}
+        href="mailto:hello@familydrama.tv"
+        style={{
+          fontSize: "14px",
+          color: "#FFFFFF",
+          letterSpacing: "0.1em",
+          fontFamily: "'Ritmica', sans-serif",
+          fontWeight: 400,
+          marginTop: "60px",
+          opacity: 0,
+          willChange: "opacity",
+          textDecoration: "none",
+        }}
+      >
+        hello@familydrama.tv
+      </a>
+    </section>
+  );
+}
 
 export default function About() {
   const { wrapperRef } = useHorizontalScroll();
