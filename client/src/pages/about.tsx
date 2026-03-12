@@ -1536,7 +1536,7 @@ function Slide7Reach() {
 
       textRef.current.style.opacity = "1";
 
-      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.72) / (vr * 0.25)));
+      const contextRevealP = Math.max(0, Math.min(1, (p - vr * 0.88) / (vr * 0.15)));
       textRef.current.querySelectorAll<HTMLElement>(".reach-context").forEach((el) => {
         el.style.color = "#FFFFFF";
         el.style.opacity = String(contextRevealP);
@@ -1551,7 +1551,7 @@ function Slide7Reach() {
 
       const crescendo = textRef.current.querySelector<HTMLElement>(".reach-crescendo");
       if (crescendo) {
-        const cP = Math.max(0, Math.min(1, (p - vr * 0.88) / (vr * 0.2)));
+        const cP = Math.max(0, Math.min(1, (p - vr * 0.95) / (vr * 0.12)));
         crescendo.style.color = "#FFFFFF";
         crescendo.style.opacity = String(cP);
         crescendo.style.fontWeight = "700";
