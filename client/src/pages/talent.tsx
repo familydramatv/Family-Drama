@@ -52,7 +52,7 @@ export default function Talent() {
         className="relative px-4 sm:px-6 md:px-10 lg:px-16 pt-12 pb-6 sm:pt-8 sm:pb-8 md:py-12"
         style={{ paddingLeft: "clamp(1rem, 5vw + 10px, calc(4rem + 70px))" }}
       >
-        <nav className="flex flex-col gap-y-2 md:gap-y-0" data-testid="talent-list">
+        <nav className="flex flex-col" data-testid="talent-list">
           {directors.map((director, i) => {
             const isFirst = i === 0;
             const isLoaded = loadedIds.has(director.id);
@@ -65,7 +65,7 @@ export default function Talent() {
               >
                 <Link href={`/talent/${director.id}`} data-testid={`link-talent-${director.id}`}>
                   <span
-                    className="relative block py-1 sm:py-2 md:py-3 cursor-pointer transition-colors duration-300 tracking-tight leading-none font-light"
+                    className="relative block py-0 md:py-2 cursor-pointer transition-colors duration-300 tracking-tight leading-none font-light"
                     style={{
                       fontSize: "clamp(3rem, 7.2vw, 6rem)",
                       whiteSpace: "nowrap",
