@@ -1244,9 +1244,10 @@ function Slide4Manifesto() {
 }
 
 const coreBeliefLines = [
-  "Creativity isn't produced in a factory.",
-  "We're active partners.",
+  "Craft is non-negotiable.",
+  "Leading with empathy tells the best stories.",
   "Your problems are our problems.",
+  "Our collaborators are family.",
 ];
 
 function Slide5CoreBeliefs() {
