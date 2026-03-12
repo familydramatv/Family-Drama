@@ -672,7 +672,7 @@ function Slide2Difference() {
     <div ref={slide2ScrollRef} className="slide-lock-zone slide-lock-zone--slide2">
       <div ref={slide2StickyRef} className="slide slide-2-sticky" style={{ overflow: "visible" }} data-testid="slide-2-difference">
         <div className="slide-2-bg-mobile" style={{ display: "none" }}>
-          <img src="/images/about-abstract-3.png?v=2" alt="" />
+          <img src="/images/about-abstract-3.jpg" alt="" loading="lazy" decoding="async" />
         </div>
 
         <div
@@ -680,11 +680,11 @@ function Slide2Difference() {
           className="absolute top-[8vh] left-[calc(6vw+300px)] w-[37.5vw] h-[28vh] overflow-hidden slide-2-desktop-only slide-2-img-top"
           style={{ transform: `translateX(${0.6 * 100}vw)`, transition: "none", willChange: "transform", zIndex: 0 }}
         >
-          <img src="/images/about-slide2-camera.jpg" alt="" className="w-full h-full object-cover" style={{ transform: "scale(1.2)" }} />
+          <img src="/images/about-slide2-camera.jpg" alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" style={{ transform: "scale(1.2)" }} />
         </div>
 
         <div className="absolute left-[-5vw] top-[20%] w-[35vw] h-[60vh] overflow-hidden slide-2-desktop-only slide-2-img-bottom" style={{ zIndex: -1 }}>
-          <img src="/images/about-abstract-3.png?v=2" alt="" className="w-full h-full object-cover clip-reveal" />
+          <img src="/images/about-abstract-3.jpg" alt="" loading="lazy" decoding="async" className="w-full h-full object-cover clip-reveal" />
         </div>
 
         <div ref={bannerRef} className="slide-2-banner absolute top-[25%] z-10" style={{ left: "calc(15vw - 120px)", mixBlendMode: "difference", willChange: "transform" }}>

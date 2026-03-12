@@ -442,14 +442,14 @@ export const newsItems: NewsItem[] = [
     id: "hybrid-approach",
     source: "Forbes",
     title: "The Hybrid Approach: How Marketers Can Blend AI And Traditional Production",
-    image: "/images/about-hero.png",
+    image: "/images/about-hero-small.jpg",
     link: "#",
   },
   {
     id: "5-minutes-with-dustin",
     source: "Little Black Book",
     title: "President of Tool speaks about building a new framework for commercial production and the next golden age of AI",
-    image: "/images/about-abstract.png",
+    image: "/images/about-abstract.jpg",
     link: "#",
   },
 ];
@@ -468,14 +468,14 @@ export const services: Service[] = [
     title: "Ideation",
     bullets: ["Cultural Strategy", "Concept Development"],
     description: "We have a proven model of rapid ideation and strategy that allows us to consider creative, brand message and production logistics within a 3 week collaboration with our clients.",
-    image: "/images/about-abstract.png",
+    image: "/images/about-abstract.jpg",
   },
   {
     id: "content",
     title: "Content",
     bullets: ["Shoot Production", "Post Production", "Content Design (3D & 2D)", "AI Content & VFX Production"],
     description: "Twenty six years of creative production experience, creating long and short form branded content for some of the world's largest brands. Our range of production spans Super Bowl spots to celebrity driven content to long-form branded content.",
-    image: "/images/about-content.png",
+    image: "/images/about-content.jpg",
     muxVideoId: "75Ia9i67Bg022YDHoa13cBEUQWxi86W77OuyT02dYMWo4",
   },
   {
@@ -483,7 +483,7 @@ export const services: Service[] = [
     title: "Experience",
     bullets: ["Activations", "Event Logistics", "Experiential Tech", "Live Stream Events"],
     description: "Integrating creative technologies such as AR, AI and anything that can be dreamed into IRL and digital experiences.",
-    image: "/images/about-experience.png",
+    image: "/images/about-experience.jpg",
     muxVideoId: "Suz9ZUBQoxegDECIKhvGzyVHBQM9c02jdsM38JuH6qhE",
   },
   {
@@ -498,7 +498,7 @@ export const services: Service[] = [
     title: "3D",
     bullets: ["3D Design & Animation", "Game Engine Development", "MetaHuman Creation", "Immersive Environments"],
     description: "Creating 3D optimized for the web and interactive experiences.",
-    image: "/images/about-3d.png",
+    image: "/images/about-3d.jpg",
     muxVideoId: "aJOFI38nUnV5OuoOr9Px3qer901UXY5w2pncMsKtpQsE",
   },
 ];
