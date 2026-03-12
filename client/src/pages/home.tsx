@@ -7,7 +7,7 @@ import "@mux/mux-video";
 const homeProjects = [
   projects[5],  // European Wax Center - Keep Exploring
   projects[6],  // Crown Royal - Chopped & Screwed
-  projects[2],  // Porsche - Freedom
+  projects[17], // Essentia Water - Advice To Your Future Self
   projects[3],  // Dr. Teal's - Stay Hungry
   projects[0],  // LEGO - Play Unstoppable
   projects[4],  // Adyen - Tap to Pay

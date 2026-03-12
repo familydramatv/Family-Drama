@@ -360,6 +360,7 @@ export const projects: Project[] = [
     title: "Advice To Your Future Self",
     client: "Essentia Water",
     image: "",
+    homeVideoLoop: true,
     categories: ["featured", "content"],
     muxPlaybackId: "CN02yJ36du02TMHgr1hbYds5L0000zvmfLTsHDWOs6Sw6os",
     muxProjectPlaybackId: "JLgrZgcZ1aAaxU41hU8roEIsTvPbLpSzIpGy9paighM",
