@@ -70,16 +70,16 @@ export default function Navigation() {
       <motion.div
         className="fixed top-0 left-0 right-0 z-[10000] h-[100px] pointer-events-none"
         style={{ background: isLightNav ? "linear-gradient(to bottom, rgba(245,245,244,0.95) 0%, rgba(245,245,244,0) 100%)" : "linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)" }}
-        initial={{ opacity: 0 }}
+        initial={{ y: -100, opacity: 0 }}
         animate={{ y: hidden && !isOpen ? -100 : 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       />
       <motion.div
         className="fixed top-0 left-0 z-[10001] px-6 md:px-10 py-5"
         data-testid="header-nav"
-        initial={{ opacity: 0 }}
+        initial={{ y: -80, opacity: 0 }}
         animate={{ y: hidden && !isOpen ? -80 : 0, opacity: hidden && !isOpen ? 0 : 1 }}
-        transition={{ duration: 1.6, ease: [0.25, 0.1, 0.25, 1], delay: 0.1 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
       >
         <Link href="/" data-testid="link-home">
           <Logo className="h-[42px] md:h-[49px]" invert={isLightNav} />
@@ -90,9 +90,9 @@ export default function Navigation() {
         className={`group fixed top-5 right-6 md:right-10 z-[10002] p-2 w-[77px] h-[38px] flex items-center justify-end ${isLightNav ? "text-black" : "text-white"}`}
         data-testid="button-menu-toggle"
         aria-label="Toggle menu"
-        initial={{ opacity: 0 }}
+        initial={{ y: -80, opacity: 0 }}
         animate={{ y: hidden && !isOpen ? -80 : 0, opacity: hidden && !isOpen ? 0 : 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
       >
         <div className="relative w-[51px] flex flex-col items-end gap-[6px]">
           <span className={`block h-[1.5px] ${barColor} w-full transition-transform duration-300 group-hover:translate-x-1`} />
