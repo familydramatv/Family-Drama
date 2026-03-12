@@ -62,7 +62,7 @@ function ProjectThumbnail({ project, index }: { project: typeof projects[0]; ind
   );
 }
 
-type CardLayout = "full" | "wide" | "medium";
+type CardLayout = "full" | "tall" | "wide" | "medium";
 
 interface ShowcaseItem {
   type: "project";
@@ -79,7 +79,7 @@ const feed: FeedItem[] = [
   { type: "project", project: homeProjects[1], layout: "full" },
   { type: "project", project: homeProjects[2], layout: "medium", textSide: "right" },
   { type: "project", project: homeProjects[0], layout: "medium", textSide: "left" },
-  { type: "project", project: homeProjects[5], layout: "full" },
+  { type: "project", project: homeProjects[5], layout: "tall" },
   { type: "project", project: homeProjects[6], layout: "full" },
   { type: "project", project: homeProjects[7], layout: "wide" },
   { type: "project", project: homeProjects[8], layout: "full" },
@@ -97,13 +97,15 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const cardInView = useInView(cardRef, { once: false, margin: "-80px 0px" });
   const inView = useInView(textRef, { once: false, margin: "0px" });
 
-  const aspectClass = layout === "full"
+  const aspectClass = layout === "tall"
+    ? "aspect-[16/9]"
+    : layout === "full"
     ? "aspect-[16/9] md:aspect-[2.2/1]"
     : layout === "wide"
     ? "aspect-[16/10] md:aspect-[1.8/1]"
     : "aspect-[4/3] md:aspect-[16/10]";
 
-  const widthClass = layout === "full"
+  const widthClass = layout === "full" || layout === "tall"
     ? "w-full"
     : layout === "wide"
     ? "w-[90%] md:w-[85%]"
@@ -111,7 +113,8 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
 
   const defaultAlign = index % 2 === 0 ? "mr-auto" : "ml-auto";
   const alignClass = textSide === "right" ? "mr-auto" : textSide === "left" ? "ml-auto" : defaultAlign;
-  const bleedLeft = layout !== "full" && alignClass === "ml-auto";
+  const isFullWidth = layout === "full" || layout === "tall";
+  const bleedLeft = !isFullWidth && alignClass === "ml-auto";
 
   const textContent = (
     <>
@@ -172,14 +175,14 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
             <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
               <ProjectThumbnail project={project} index={index} />
             </div>
-            {layout === "full" ? (
+            {isFullWidth ? (
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
             ) : bleedLeft ? (
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[1]" />
             ) : (
               <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[1]" />
             )}
-            {layout === "full" && (
+            {isFullWidth && (
               <motion.div
                 ref={textRef}
                 className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
@@ -191,7 +194,7 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
             )}
           </motion.div>
 
-          {layout !== "full" && (
+          {!isFullWidth && (
             <motion.div
               ref={textRef}
               className="absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none"
