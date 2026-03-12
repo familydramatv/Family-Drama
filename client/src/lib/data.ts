@@ -545,7 +545,7 @@ export const directors: Director[] = [
   { id: "greenwood", name: "Greenwood", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
   { id: "nate-simmons", name: "Nate Simmons", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
   { id: "sarah-garza", name: "Sarah Garza", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
-  { id: "chris-strong", name: "Chris Strong", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
+  { id: "chris-strong", name: "Chris Strong", muxPlaybackId: "ZSEuY14DakxT1c1jomp7yEpori02q5txUnUtHmGcGq9A" },
 ];
 
 export function getProjectsByDirector(directorName: string): Project[] {
