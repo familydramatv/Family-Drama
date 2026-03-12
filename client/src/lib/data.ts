@@ -467,6 +467,22 @@ export const newsItems: NewsItem[] = [
     ],
   },
   {
+    id: "nyx-award-dr-teals",
+    source: "NYX Awards",
+    title: "Celebrating Our Grand Prize Win at NYX Awards with Dr Teal's x Aaron Donald Campaign",
+    image: "/images/dr-teals-aaron-donald.jpg",
+    link: "/news/nyx-award-dr-teals",
+    date: "March 11, 2026",
+    category: "NYX Awards",
+    isExternal: true,
+    subtitle: "Family Drama's Dr. Teal's campaign featuring Aaron Donald takes home the Grand Prize at the NYX Awards.",
+    externalUrl: "https://nyxawards.com/winner-info.php?id=5125",
+    body: [
+      { type: "paragraph", text: "Family Drama is proud to celebrate a Grand Prize win at the NYX Awards for our Dr. Teal's x Aaron Donald campaign. The recognition honors the team's work bringing together one of the NFL's most dominant players and one of the most beloved wellness brands in a campaign that combined athletic intensity with authentic storytelling." },
+      { type: "paragraph", text: "The NYX Awards recognize excellence in marketing, advertising, and communications across a broad range of categories. Earning the Grand Prize is a testament to the creative vision of our directors and the collaborative spirit between Family Drama, Dr. Teal's, and Aaron Donald's team." },
+    ],
+  },
+  {
     id: "grit-glory-si",
     source: "Sports Illustrated",
     title: "Sports Illustrated spotlights Grit & Glory: Journey To The Draft",
