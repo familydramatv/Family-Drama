@@ -79,7 +79,7 @@ const feed: FeedItem[] = [
   { type: "project", project: homeProjects[1], layout: "full" },
   { type: "project", project: homeProjects[2], layout: "medium", textSide: "right" },
   { type: "project", project: homeProjects[0], layout: "medium", textSide: "left" },
-  { type: "project", project: homeProjects[5], layout: "medium" },
+  { type: "project", project: homeProjects[5], layout: "full" },
   { type: "project", project: homeProjects[6], layout: "full" },
   { type: "project", project: homeProjects[7], layout: "wide" },
   { type: "project", project: homeProjects[8], layout: "full" },
