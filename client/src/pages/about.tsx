@@ -1005,6 +1005,7 @@ const scatterImages = [
 function SlideScatterCollage() {
   const slideRef = useRef<HTMLDivElement>(null);
   const imgRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [modalSrc, setModalSrc] = useState<string | null>(null);
 
   useEffect(() => {
     if (window.innerWidth <= 1024) return;
@@ -1063,6 +1064,7 @@ function SlideScatterCollage() {
             }}
             onMouseEnter={(e) => { if (window.innerWidth > 1024) e.currentTarget.style.transform = "scale(1.15)"; }}
             onMouseLeave={(e) => { if (window.innerWidth > 1024) e.currentTarget.style.transform = "scale(1)"; }}
+            onClick={() => { if (window.innerWidth <= 1024) setModalSrc(img.src); }}
           >
             <img
               src={img.src}
@@ -1078,6 +1080,33 @@ function SlideScatterCollage() {
           </div>
         </div>
       ))}
+
+      {modalSrc && (
+        <div
+          data-testid="collage-modal"
+          onClick={() => setModalSrc(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.95)",
+            zIndex: 99999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={modalSrc}
+            alt=""
+            style={{
+              maxWidth: "95vw",
+              maxHeight: "90vh",
+              objectFit: "contain",
+              display: "block",
+            }}
+          />
+        </div>
+      )}
     </section>
   );
 }
