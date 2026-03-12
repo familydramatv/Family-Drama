@@ -3,13 +3,13 @@ import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import logoImg from "@assets/fd-logo-2025_1771706568573.png";
 
-function Logo({ className }: { className?: string }) {
+function Logo({ className, invert }: { className?: string; invert?: boolean }) {
   return (
     <img
       src={logoImg}
       alt="Family Drama"
       className={`${className || ""} transition-opacity duration-300 hover:opacity-70`}
-      style={{ objectFit: "contain" }}
+      style={{ objectFit: "contain", filter: invert ? "invert(1)" : undefined }}
     />
   );
 }
@@ -29,6 +29,9 @@ export default function Navigation() {
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
   const [location] = useLocation();
+  const isLightNav = location.startsWith("/news");
+
+  const barColor = isLightNav ? "bg-black" : "bg-white";
 
   const handleLinkClick = (href: string) => {
     setIsOpen(false);
@@ -66,7 +69,7 @@ export default function Navigation() {
     <>
       <motion.div
         className="fixed top-0 left-0 right-0 z-[10000] h-[100px] pointer-events-none"
-        style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)" }}
+        style={{ background: isLightNav ? "linear-gradient(to bottom, rgba(245,245,244,0.95) 0%, rgba(245,245,244,0) 100%)" : "linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)" }}
         animate={{ y: hidden && !isOpen ? -100 : 0 }}
         transition={{ duration: 0.3 }}
       />
@@ -77,21 +80,21 @@ export default function Navigation() {
         transition={{ duration: 0.3 }}
       >
         <Link href="/" data-testid="link-home">
-          <Logo className="h-[42px] md:h-[49px]" />
+          <Logo className="h-[42px] md:h-[49px]" invert={isLightNav} />
         </Link>
       </motion.div>
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="group fixed top-5 right-6 md:right-10 z-[10002] text-white p-2 w-[77px] h-[38px] flex items-center justify-end"
+        className={`group fixed top-5 right-6 md:right-10 z-[10002] p-2 w-[77px] h-[38px] flex items-center justify-end ${isLightNav ? "text-black" : "text-white"}`}
         data-testid="button-menu-toggle"
         aria-label="Toggle menu"
         animate={{ y: hidden && !isOpen ? -80 : 0 }}
         transition={{ duration: 0.3 }}
       >
         <div className="relative w-[51px] flex flex-col items-end gap-[6px]">
-          <span className="block h-[1.5px] bg-white w-full transition-transform duration-300 group-hover:translate-x-1" />
+          <span className={`block h-[1.5px] ${barColor} w-full transition-transform duration-300 group-hover:translate-x-1`} />
           <motion.span
-            className="block h-[1.5px] bg-white transition-all duration-300 group-hover:-translate-x-1 group-hover:w-full"
+            className={`block h-[1.5px] ${barColor} transition-all duration-300 group-hover:-translate-x-1 group-hover:w-full`}
             initial={false}
             animate={{ width: isOpen ? "100%" : "71%" }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
