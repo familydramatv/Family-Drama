@@ -22,19 +22,33 @@ const placeholderColors = [
   "#2e1a1a", "#1a2e2d", "#2a1a2e", "#1e2e1a", "#2e1e1a",
 ];
 
+function VideoLoopThumbnail({ playbackId }: { playbackId: string }) {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.setAttribute("muted", "");
+    el.setAttribute("autoplay", "");
+    el.setAttribute("loop", "");
+    el.setAttribute("playsinline", "");
+    (el as HTMLVideoElement & { muted: boolean }).muted = true;
+    (el as HTMLVideoElement).play?.().catch(() => {});
+  }, [playbackId]);
+
+  return (
+    <mux-video
+      ref={ref}
+      playback-id={playbackId}
+      preload="auto"
+      style={{ width: "100%", height: "100%", objectFit: "cover" } as React.CSSProperties}
+    />
+  );
+}
+
 function ProjectThumbnail({ project, index }: { project: typeof projects[0]; index: number }) {
   if (project.homeVideoLoop && project.muxPlaybackId) {
-    return (
-      <mux-video
-        playback-id={project.muxPlaybackId}
-        preload="auto"
-        autoplay
-        muted
-        loop
-        playsinline
-        style={{ width: "100%", height: "100%", objectFit: "cover" } as React.CSSProperties}
-      />
-    );
+    return <VideoLoopThumbnail playbackId={project.muxPlaybackId} />;
   }
 
   const src = project.homeImage
