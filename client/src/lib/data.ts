@@ -337,6 +337,7 @@ export const projects: Project[] = [
     client: "Beats by Dre",
     director: "Ryan Bucci",
     image: "",
+    homeVideoLoop: true,
     categories: ["featured", "content"],
     muxPlaybackId: "8V00LG9VJsR5jHa00sv0001AVZhZzcsGa2v9kXfJGIMGMZ00",
     muxProjectPlaybackId: "u00oQXX5kmdwwyV9gIdq029NLmrNbwSJdkEXZPXbesPdc",
