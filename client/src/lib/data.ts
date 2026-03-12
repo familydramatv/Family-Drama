@@ -468,6 +468,23 @@ export const newsItems: NewsItem[] = [
     ],
   },
   {
+    id: "grit-glory-si",
+    source: "Sports Illustrated",
+    title: "Sports Illustrated spotlights Grit & Glory: Journey To The Draft",
+    image: "/images/grit-glory-si.jpg",
+    link: "/news/grit-glory-si",
+    date: "March 10, 2026",
+    category: "Sports Illustrated",
+    isExternal: true,
+    subtitle: "Sports Illustrated covers Family Drama's exclusive docuseries following Bo Nix's path from Oregon to the Denver Broncos.",
+    externalUrl: "https://www.si.com/college/oregon/football/bo-nix-nfl-draft-exclusive-docuseries-denver-broncos-dan-lanning",
+    body: [
+      { type: "paragraph", text: "Sports Illustrated spotlights Grit & Glory: Journey To The Draft, the exclusive docuseries produced by Family Drama that chronicled Bo Nix's remarkable path from his final season at Oregon through the NFL Draft and into his rookie year with the Denver Broncos." },
+      { type: "paragraph", text: "The series, which also featured Oregon head coach Dan Lanning, offered an unprecedented inside look at the highs and lows of the draft process — from All-American performances on the field to the high-stakes waiting game of draft night." },
+      { type: "paragraph", text: "The Sports Illustrated feature highlights how Family Drama's documentary approach brought authentic storytelling to the world of college and professional football, capturing moments that went far beyond traditional sports coverage." },
+    ],
+  },
+  {
     id: "hybrid-approach",
     source: "Forbes",
     title: "The Hybrid Approach: How Marketers Can Blend AI And Traditional Production",
