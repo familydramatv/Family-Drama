@@ -1115,3 +1115,9 @@
   }
 }
 
+@media (max-width: 767px) {
+  .page-talent .about-word {
+    padding: 0.15em 0;
+  }
+}
+

@@ -68,6 +68,7 @@ export default function Talent() {
                     className="relative block py-1 sm:py-2 md:py-3 cursor-pointer transition-colors duration-300 tracking-tight leading-none font-light"
                     style={{
                       fontSize: "clamp(3rem, 7.2vw, 6rem)",
+                      whiteSpace: "nowrap",
                       zIndex: hoveredId === director.id ? 30 : 10,
                       color: hoveredId === null
                         ? "rgba(255,255,255,0.5)"
