@@ -397,6 +397,7 @@ export const projects: Project[] = [
     client: "Cowboy",
     director: "Greenwood",
     image: "",
+    homeVideoLoop: true,
     categories: ["content"],
     muxPlaybackId: "YPq028Y1iVriWQtjGc300QzSvdY00n5n4Tf01r9SBhvzHvw",
     muxProjectPlaybackId: "8DdwKY9JLsWLfD47G9EGCs38syLNdlEmjnm69nBCOVI",

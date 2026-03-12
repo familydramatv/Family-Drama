@@ -14,7 +14,7 @@ const homeProjects = [
   projects[8],  // Verizon - Celebrate The Magic
   projects[15], // Beats by Dre - Be Heard
   projects[1],  // Toyota - Survivor
-  projects[16], // Vinted - Keep Searching
+  projects[20], // Cowboy - Posts From The City
 ].filter(Boolean);
 
 const placeholderColors = [
