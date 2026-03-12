@@ -842,7 +842,6 @@ function FilmstripSlides() {
       <Slide4Manifesto />
       <Slide5CoreBeliefs />
       <SlideScatterCollage />
-      <SlideFullPhoto />
       <Slide7Reach />
       <Slide9Impact />
       <Slide10Partners />
@@ -1501,25 +1500,6 @@ function Slide6Mission() {
   );
 }
 
-function SlideFullPhoto() {
-  return (
-    <section
-      className="filmstrip-slide"
-      style={{ width: "100vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
-      aria-label="Photo"
-      data-testid="slide-full-photo"
-    >
-      <img
-        src="/images/about-photo-fletch.jpg"
-        alt=""
-        loading="lazy"
-        decoding="async"
-        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
-      />
-    </section>
-  );
-}
-
 function Slide7Reach() {
   const slideRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -1630,10 +1610,12 @@ function Slide7Reach() {
           overflow: "hidden",
         }}
       >
-        <PlaceholderImage
-          label="PRODUCTION: On-location shoot"
-          color="#1A2B0D"
-          style={{ width: "100%", height: "100%" }}
+        <img
+          src="/images/about-photo-fletch.jpg"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
         />
       </div>
 
