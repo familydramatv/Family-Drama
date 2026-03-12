@@ -131,10 +131,12 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
   const isFullWidth = layout === "full" || layout === "tall";
   const bleedLeft = !isFullWidth && alignClass === "ml-auto";
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   const textContent = (
     <>
       <motion.h2
-        className="text-white tracking-tight"
+        className="text-white tracking-tight whitespace-nowrap md:whitespace-normal"
         style={{
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 600,
@@ -207,10 +209,14 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
       {!isFullWidth && (
         <motion.div
           ref={textRef}
-          className="absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none"
-          style={bleedLeft
-            ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%", textAlign: "left" }
-            : { right: layout === "wide" ? "-12%" : "-45%", left: "20%", textAlign: "right" }
+          className="absolute top-1/2 -translate-y-1/2 z-10 md:px-8 pointer-events-none"
+          style={isMobile
+            ? bleedLeft
+              ? { left: "-50%", textAlign: "left" as const }
+              : { right: "-50%", textAlign: "right" as const }
+            : bleedLeft
+              ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%", textAlign: "left" as const }
+              : { right: layout === "wide" ? "-12%" : "-45%", left: "20%", textAlign: "right" as const }
           }
           whileHover={{ y: -6 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
