@@ -13,7 +13,7 @@ const homeProjects = [
   projects[4],  // Adyen - Tap to Pay
   projects[8],  // Verizon - Celebrate The Magic
   projects[10], // Ferrari - Sedona
-  projects[14], // The Hour Glass - Maximilian Büsser
+  projects[1],  // Toyota - Survivor
   projects[16], // Vinted - Keep Searching
 ].filter(Boolean);
 
