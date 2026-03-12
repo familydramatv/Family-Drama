@@ -95,6 +95,7 @@ export const projects: Project[] = [
     id: "toyota-survivor",
     title: "Survivor",
     client: "Toyota",
+    director: "William Fradette",
     image: "",
     categories: ["featured", "content"],
     muxPlaybackId: "00daUhHraACCAGWIwUrI2OEAKtU01hsNL9LShB5yLHxvM",
