@@ -119,7 +119,7 @@ function useHorizontalScroll() {
     // Closing slide is 150vw wide; it centers when scrollX = wrapperMax - 0.25vw
     const closingTrigger = Math.max(0, wrapperMax - vw * 0.25);
     closingStartV.current = heroLockDist.current + slide2LockDist.current + closingTrigger;
-    maxVirtual.current = wrapperMax + heroLockDist.current + slide2LockDist.current + closingLockDist.current;
+    maxVirtual.current = closingStartV.current;
   }, []);
 
   useEffect(() => {
