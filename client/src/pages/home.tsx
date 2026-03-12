@@ -69,6 +69,7 @@ interface ShowcaseItem {
   project: typeof projects[0];
   layout: CardLayout;
   textSide?: "left" | "right";
+  noLink?: boolean;
 }
 
 type FeedItem = ShowcaseItem;
@@ -79,7 +80,7 @@ const feed: FeedItem[] = [
   { type: "project", project: homeProjects[1], layout: "full" },
   { type: "project", project: homeProjects[2], layout: "medium", textSide: "right" },
   { type: "project", project: homeProjects[0], layout: "medium", textSide: "left" },
-  { type: "project", project: homeProjects[5], layout: "tall" },
+  { type: "project", project: homeProjects[5], layout: "tall", noLink: true },
   { type: "project", project: homeProjects[6], layout: "full" },
   { type: "project", project: homeProjects[7], layout: "wide" },
   { type: "project", project: homeProjects[8], layout: "full" },
@@ -87,7 +88,7 @@ const feed: FeedItem[] = [
 ];
 
 function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
-  const { project, layout, textSide } = item;
+  const { project, layout, textSide, noLink } = item;
   const director = project.director || "";
   const client = project.client;
   const title = project.title;
@@ -158,58 +159,64 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
     </>
   );
 
+  const cardInner = (
+    <div className="relative">
+      <motion.div
+        className={`relative ${aspectClass} overflow-hidden ${noLink ? "" : "cursor-pointer group"}`}
+        data-testid={`card-home-project-${project.id}`}
+        initial={{ opacity: 0 }}
+        animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
+          <ProjectThumbnail project={project} index={index} />
+        </div>
+        {isFullWidth ? (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
+        ) : bleedLeft ? (
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[1]" />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[1]" />
+        )}
+        {isFullWidth && (
+          <motion.div
+            ref={textRef}
+            className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            {textContent}
+          </motion.div>
+        )}
+      </motion.div>
+
+      {!isFullWidth && (
+        <motion.div
+          ref={textRef}
+          className="absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none"
+          style={bleedLeft
+            ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%", textAlign: "left" }
+            : { right: layout === "wide" ? "-12%" : "-45%", left: "20%", textAlign: "right" }
+          }
+          whileHover={{ y: -6 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          {textContent}
+        </motion.div>
+      )}
+    </div>
+  );
+
   return (
     <div
       ref={cardRef}
-      className={`relative ${widthClass} ${layout !== "full" ? alignClass : ""}`}
+      className={`relative ${widthClass} ${isFullWidth ? "" : alignClass}`}
     >
-      <Link href={project.muxPlaybackId ? `/project/${project.id}` : "#"}>
-        <div className="relative">
-          <motion.div
-            className={`relative ${aspectClass} overflow-hidden cursor-pointer group`}
-            data-testid={`card-home-project-${project.id}`}
-            initial={{ opacity: 0 }}
-            animate={cardInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-105">
-              <ProjectThumbnail project={project} index={index} />
-            </div>
-            {isFullWidth ? (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-[1]" />
-            ) : bleedLeft ? (
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[1]" />
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[1]" />
-            )}
-            {isFullWidth && (
-              <motion.div
-                ref={textRef}
-                className="absolute bottom-0 left-0 right-0 p-5 md:p-8 lg:p-10 z-[2]"
-                whileHover={{ y: -6 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                {textContent}
-              </motion.div>
-            )}
-          </motion.div>
-
-          {!isFullWidth && (
-            <motion.div
-              ref={textRef}
-              className="absolute top-1/2 -translate-y-1/2 z-10 px-5 md:px-8 pointer-events-none"
-              style={bleedLeft
-                ? { left: layout === "wide" ? "-12%" : "-45%", right: "20%", textAlign: "left" }
-                : { right: layout === "wide" ? "-12%" : "-45%", left: "20%", textAlign: "right" }
-              }
-              whileHover={{ y: -6 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              {textContent}
-            </motion.div>
-          )}
-        </div>
-      </Link>
+      {noLink ? cardInner : (
+        <Link href={project.muxPlaybackId ? `/project/${project.id}` : "#"}>
+          {cardInner}
+        </Link>
+      )}
     </div>
   );
 }
