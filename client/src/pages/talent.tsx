@@ -30,7 +30,6 @@ export default function Talent() {
       const tryPlay = () => {
         const video = videoRefs.current[hoveredId] as HTMLVideoElement | null;
         if (video) {
-          video.currentTime = 0;
           video.play().catch(() => {});
         }
       };
@@ -41,7 +40,6 @@ export default function Talent() {
       if (id !== hoveredId && el) {
         const v = el as HTMLVideoElement;
         v.pause();
-        v.currentTime = 0;
       }
     });
   }, [hoveredId]);
