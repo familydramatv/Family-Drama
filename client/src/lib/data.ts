@@ -207,6 +207,7 @@ export const projects: Project[] = [
     client: "Adyen",
     director: "Greenwood",
     image: "",
+    homeImage: "/images/home/tap-to-pay.jpg",
     categories: ["featured", "content"],
     muxPlaybackId: "aJOFI38nUnV5OuoOr9Px3qer901UXY5w2pncMsKtpQsE",
     muxProjectPlaybackId: "15eUP7zo5W00fTSwV00C9013HS02EfpPFTUOQkp9zuy01gpU",
