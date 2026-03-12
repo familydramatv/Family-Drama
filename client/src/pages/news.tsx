@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 function NewsCard({ item }: { item: typeof newsItems[number] }) {
   return (
     <Link
-      href={item.link}
+      href={`/news/${item.id}`}
       className="group block"
       data-testid={`card-news-${item.id}`}
     >

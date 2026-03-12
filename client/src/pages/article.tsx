@@ -79,15 +79,19 @@ export default function Article() {
 
   return (
     <div className="min-h-screen bg-neutral-50" data-testid={`page-article-${article.id}`}>
-      <div className="max-w-3xl mx-auto px-6 md:px-12 pt-28 pb-24">
-        <Link
-          href="/news"
-          className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-neutral-900 transition-colors mb-12"
-          data-testid="link-back-to-news"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          News
-        </Link>
+      <div className="sticky top-0 z-10 bg-neutral-50/90 backdrop-blur-sm border-b border-neutral-100">
+        <div className="max-w-2xl mx-auto px-6 md:px-12 py-4">
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-neutral-900 transition-colors"
+            data-testid="link-back-to-news"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            News
+          </Link>
+        </div>
+      </div>
+      <div className="max-w-2xl mx-auto px-6 md:px-12 pt-12 pb-24">
 
         <div className="mb-8">
           <span
