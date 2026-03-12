@@ -227,9 +227,17 @@ export default function Project() {
     );
   }
 
+  const goBack = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      navigate("/work");
+    }
+  };
+
   const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      navigate("/work");
+      goBack();
     }
   };
 
@@ -243,7 +251,7 @@ export default function Project() {
   return (
     <div className="min-h-screen bg-black">
       <motion.button
-        onClick={() => navigate("/work")}
+        onClick={goBack}
         className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-10 h-10 flex items-center justify-center text-white hover:text-white transition-colors duration-300"
         initial={{ opacity: 0, rotate: -90 }}
         animate={{ opacity: 1, rotate: 0 }}
