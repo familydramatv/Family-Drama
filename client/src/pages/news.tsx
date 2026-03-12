@@ -1,20 +1,11 @@
 import { newsItems } from "@/lib/data";
+import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 
 function NewsCard({ item }: { item: typeof newsItems[number] }) {
-  const hasRealLink = item.link && item.link !== "#";
-  const Tag = hasRealLink ? "a" : "div";
-  const linkProps = hasRealLink
-    ? {
-        href: item.link,
-        target: item.isExternal ? "_blank" : undefined,
-        rel: item.isExternal ? "noopener noreferrer" : undefined,
-      }
-    : {};
-
   return (
-    <Tag
-      {...linkProps}
+    <Link
+      href={item.link}
       className="group block"
       data-testid={`card-news-${item.id}`}
     >
@@ -55,7 +46,7 @@ function NewsCard({ item }: { item: typeof newsItems[number] }) {
           {item.title}
         </h3>
       </div>
-    </Tag>
+    </Link>
   );
 }
 

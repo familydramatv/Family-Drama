@@ -15,6 +15,7 @@ import Talent from "@/pages/talent";
 import DirectorPage from "@/pages/director";
 import Careers from "@/pages/careers";
 import News from "@/pages/news";
+import Article from "@/pages/article";
 import NotFound from "@/pages/not-found";
 
 const TransitionContext = createContext<{
@@ -115,6 +116,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/careers" component={Careers} />
       <Route path="/news" component={News} />
+      <Route path="/news/:id" component={Article} />
       <Route component={NotFound} />
     </Switch>
   );
