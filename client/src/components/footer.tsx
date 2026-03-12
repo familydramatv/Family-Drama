@@ -37,15 +37,15 @@ export default function Footer() {
           <div>
             <h4 className="text-white/40 text-xs uppercase tracking-widest mb-4">Follow</h4>
             <div className="flex items-center gap-4">
-              <a href="https://www.linkedin.com/company/family-drama/" target="_blank" rel="noopener noreferrer" className="text-white/50 transition-opacity hover:opacity-70" aria-label="LinkedIn" data-testid="link-footer-linkedin">
+              <span className="text-white/50" data-testid="link-footer-linkedin">
                 <SiLinkedin className="w-4 h-4" />
-              </a>
-              <a href="https://www.instagram.com/familydrama/" target="_blank" rel="noopener noreferrer" className="text-white/50 transition-opacity hover:opacity-70" aria-label="Instagram" data-testid="link-footer-instagram">
+              </span>
+              <span className="text-white/50" data-testid="link-footer-instagram">
                 <SiInstagram className="w-4 h-4" />
-              </a>
-              <a href="https://www.facebook.com/familydrama" target="_blank" rel="noopener noreferrer" className="text-white/50 transition-opacity hover:opacity-70" aria-label="Facebook" data-testid="link-footer-facebook">
+              </span>
+              <span className="text-white/50" data-testid="link-footer-facebook">
                 <SiFacebook className="w-4 h-4" />
-              </a>
+              </span>
             </div>
           </div>
         </div>
