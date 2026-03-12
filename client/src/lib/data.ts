@@ -484,6 +484,21 @@ export const newsItems: NewsItem[] = [
     ],
   },
   {
+    id: "grit-glory-prnewswire",
+    source: "PR Newswire",
+    title: "Bolt TV Announces Original Series with Quarterback Bo Nix \"Grit & Glory: Journey To The Draft\"",
+    image: "/images/grit-glory-promo.jpg",
+    link: "/news/grit-glory-prnewswire",
+    date: "March 8, 2026",
+    category: "PR Newswire",
+    isExternal: true,
+    subtitle: "Bolt TV launches an exclusive documentary series following collegiate quarterback Bo Nix as he prepares for the NFL Draft.",
+    externalUrl: "https://www.prnewswire.com/news-releases/bolt-tv-announces-original-series-with-quarterback-bo-nix-grit--glory-journey-to-the-draft-302129545.html",
+    body: [
+      { type: "paragraph", text: "Bolt TV is thrilled to announce the launch of its original documentary series with Quarterback Bo Nix \"Grit & Glory: Journey To The Draft\", directed by Nate Simmons and produced by Bolt TV. The series offers an exclusive inside look into the life of collegiate quarterback Bo Nix as he prepares for the biggest night of his career: the NFL Draft." },
+    ],
+  },
+  {
     id: "hybrid-approach",
     source: "Forbes",
     title: "The Hybrid Approach: How Marketers Can Blend AI And Traditional Production",
