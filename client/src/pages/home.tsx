@@ -227,7 +227,10 @@ function ProjectCard({ item, index }: { item: ShowcaseItem; index: number }) {
       className={`relative ${widthClass} ${isFullWidth ? "" : alignClass}`}
     >
       {noLink ? cardInner : (
-        <Link href={project.muxPlaybackId ? `/project/${project.id}` : "#"}>
+        <Link
+          href={project.muxPlaybackId ? `/project/${project.id}` : "#"}
+          onClick={() => sessionStorage.setItem("homeScrollY", String(window.scrollY))}
+        >
           {cardInner}
         </Link>
       )}
@@ -355,6 +358,16 @@ function HeroTypography() {
 }
 
 export default function Home() {
+  useEffect(() => {
+    const saved = sessionStorage.getItem("homeScrollY");
+    if (saved) {
+      sessionStorage.removeItem("homeScrollY");
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: Number(saved), behavior: "instant" });
+      });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-black">
       <HeroTypography />
