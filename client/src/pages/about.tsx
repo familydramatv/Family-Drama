@@ -1161,10 +1161,12 @@ function Slide4Manifesto() {
           opacity: 0,
         }}
       >
-        <PlaceholderImage
-          label="ACTION: Camera operator tracking shot through set"
-          color="#3B2A0D"
-          style={{ width: "100%", height: "100%" }}
+        <img
+          src="/images/about-services-photo.jpg"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </div>
 
