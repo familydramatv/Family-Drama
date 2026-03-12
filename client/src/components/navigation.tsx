@@ -72,14 +72,14 @@ export default function Navigation() {
         style={{ background: isLightNav ? "linear-gradient(to bottom, rgba(245,245,244,0.95) 0%, rgba(245,245,244,0) 100%)" : "linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)" }}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: hidden && !isOpen ? -100 : 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       />
       <motion.div
         className="fixed top-0 left-0 z-[10001] px-6 md:px-10 py-5"
         data-testid="header-nav"
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: hidden && !isOpen ? -80 : 0, opacity: hidden && !isOpen ? 0 : 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
       >
         <Link href="/" data-testid="link-home">
           <Logo className="h-[42px] md:h-[49px]" invert={isLightNav} />
@@ -92,7 +92,7 @@ export default function Navigation() {
         aria-label="Toggle menu"
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: hidden && !isOpen ? -80 : 0, opacity: hidden && !isOpen ? 0 : 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
       >
         <div className="relative w-[51px] flex flex-col items-end gap-[6px]">
           <span className={`block h-[1.5px] ${barColor} w-full transition-transform duration-300 group-hover:translate-x-1`} />
