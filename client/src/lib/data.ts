@@ -638,6 +638,7 @@ export const offices: Office[] = [
     city: "Austin",
     locations: [
       { label: "Austin", address: "111 Sandra Muraida Way, Suite 100\nAustin, Texas 78703", mapLink: "https://maps.google.com/?q=111+Sandra+Muraida+Way+Suite+100+Austin+TX+78703" },
+      { label: "HQ", address: "3003 South Loop West, Suite 108\nHouston, TX 77054", mapLink: "https://maps.google.com/?q=3003+South+Loop+West+Suite+108+Houston+TX+77054" },
     ],
   },
   {
