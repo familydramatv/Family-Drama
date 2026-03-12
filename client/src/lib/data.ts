@@ -637,20 +637,19 @@ export const offices: Office[] = [
   {
     city: "Austin",
     locations: [
-      { label: "Austin", address: "1201 West 5th Street\nAustin, TX 78703", mapLink: "https://maps.google.com/?q=1201+West+5th+Street+Austin+TX+78703" },
-      { label: "HQ", address: "3003 South Loop West, Suite 108\nHouston, TX 77054", mapLink: "https://maps.google.com/?q=3003+South+Loop+West+Suite+108+Houston+TX+77054" },
+      { label: "Austin", address: "111 Sandra Muraida Way, Suite 100\nAustin, Texas 78703", mapLink: "https://maps.google.com/?q=111+Sandra+Muraida+Way+Suite+100+Austin+TX+78703" },
     ],
   },
   {
     city: "Los Angeles",
     locations: [
-      { label: "Los Angeles", address: "1201 West 5th Street\nLos Angeles, CA 90017", mapLink: "https://maps.google.com/?q=1201+West+5th+Street+Los+Angeles+CA+90017" },
+      { label: "Los Angeles", address: "1370 N. Saint Andrews Place\nLos Angeles, CA 90028", mapLink: "https://maps.google.com/?q=1370+N+Saint+Andrews+Place+Los+Angeles+CA+90028" },
     ],
   },
   {
     city: "London",
     locations: [
-      { label: "London", address: "1201 West 5th Street\nLos Angeles, CA 90017", mapLink: "https://maps.google.com/?q=1201+West+5th+Street+Los+Angeles+CA+90017" },
+      { label: "London", address: "79-81 Borough Rd\nLondon SE1 1DN, UK", mapLink: "https://maps.google.com/?q=79-81+Borough+Rd+London+SE1+1DN" },
     ],
   },
 ];
