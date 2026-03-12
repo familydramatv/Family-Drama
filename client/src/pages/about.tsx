@@ -1637,10 +1637,12 @@ function Slide7Reach() {
       >
         <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>Based in </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Texas, </span>
-        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>with productions spanning </span>
+        <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>with production teams spanning </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Los Angeles, </span>
         <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>New York, </span>
-        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Miami </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Miami, </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>Mexico, </span>
+        <span className="city-name" style={{ color: "#FFFFFF", fontWeight: 700 }}>London </span>
         <span className="reach-context" style={{ color: "rgb(0,0,0)" }}>and locations worldwide, </span>
         <span className="reach-crescendo" style={{ color: "rgb(0,0,0)", display: "block", marginTop: "20px", fontWeight: 700 }}>
           WE GO WHERE THE STORY TAKES US.
