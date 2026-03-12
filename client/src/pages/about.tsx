@@ -842,6 +842,7 @@ function FilmstripSlides() {
       <Slide4Manifesto />
       <Slide5CoreBeliefs />
       <SlideScatterCollage />
+      <SlideFullPhoto />
       <Slide7Reach />
       <Slide9Impact />
       <Slide10Partners />
@@ -1496,6 +1497,25 @@ function Slide6Mission() {
         <span className="context-word" style={{ color: "rgb(0,0,0)" }}> and </span>
         <span className="keyword" style={{ color: "#FFFFFF", fontWeight: 700 }}>entertainment.</span>
       </div>
+    </section>
+  );
+}
+
+function SlideFullPhoto() {
+  return (
+    <section
+      className="filmstrip-slide"
+      style={{ width: "100vw", height: "100vh", flexShrink: 0, position: "relative", overflow: "hidden" }}
+      aria-label="Photo"
+      data-testid="slide-full-photo"
+    >
+      <img
+        src="/images/about-photo-fletch.jpg"
+        alt=""
+        loading="lazy"
+        decoding="async"
+        style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+      />
     </section>
   );
 }
