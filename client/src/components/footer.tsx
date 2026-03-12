@@ -55,9 +55,9 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Family Drama. All rights reserved.
           </p>
           <div className="flex items-center gap-6 flex-wrap">
-            <a href="https://www.linkedin.com/company/family-drama/jobs/" target="_blank" rel="noopener noreferrer" className="text-white/30 text-xs transition-opacity hover:opacity-70" data-testid="link-footer-careers">
+            <Link href="/careers" className="text-white/30 text-xs transition-opacity hover:opacity-70" data-testid="link-footer-careers">
               Careers
-            </a>
+            </Link>
           </div>
         </div>
       </div>
