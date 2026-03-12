@@ -451,6 +451,23 @@ export const projects: Project[] = [
 
 export const newsItems: NewsItem[] = [
   {
+    id: "chris-strong-joins",
+    source: "Family Drama",
+    title: "Family Drama Welcomes Director Chris Strong to its US Commercial Roster",
+    image: "/images/chris-strong-bolt.jpg",
+    link: "/news/chris-strong-joins",
+    date: "March 12, 2026",
+    category: "Family Drama",
+    subtitle: "Award-winning director Chris Strong joins Family Drama for US commercial representation, bringing his dynamic visual style and diverse media experience to the roster.",
+    body: [
+      { type: "paragraph", text: "Family Drama is thrilled to announce the addition of award-winning director Chris Strong to its roster for US commercial representation. Known for his dynamic and visually striking films, Chris brings a wealth of experience spanning a diverse range of media, including commercials, branded content, AR/VR, music videos, and experiential media." },
+      { type: "paragraph", text: "With a portfolio that boasts work for top-tier brands and recognition from prestigious award shows, including two Cannes Lions and two London International Awards, Chris's innovative approach to filmmaking blends artistry with strategic insight. His ability to craft compelling narratives across location-based shoots, animation, and post-production makes him a perfect fit for Family Drama's expanding team of creative talent." },
+      { type: "paragraph", text: "\"We are incredibly excited to welcome Chris to the FD family, his wealth of experience and vision positions Bolt to uniquely serve our clients globally.\" says Nate Simmons, Founder & Executive Producer. \"His ability to push creative boundaries and deliver fresh, vibrant content aligns perfectly with our vision to create work that resonates with audiences across all platforms and grow this division through 2025.\"" },
+      { type: "paragraph", text: "From big-brand campaigns to immersive experiences, Chris's work demonstrates his versatility and keen eye for detail. His unique directorial style is sure to elevate the commercial offerings Family Drama provides to clients in the US. \"I'm so excited to join forces with the folks over at Family Drama. I'm really looking forward to us creating some amazing work together!\" says Chris Strong." },
+      { type: "paragraph", text: "We look forward to seeing the incredible work that Chris will create with us in the future." },
+    ],
+  },
+  {
     id: "hybrid-approach",
     source: "Forbes",
     title: "The Hybrid Approach: How Marketers Can Blend AI And Traditional Production",
