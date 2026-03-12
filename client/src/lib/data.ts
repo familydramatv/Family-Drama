@@ -541,7 +541,7 @@ export interface Director {
 }
 
 export const directors: Director[] = [
-  { id: "jake-rosenberg", name: "Jake Rosenberg", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
+  { id: "jake-rosenberg", name: "Jake Rosenberg", muxPlaybackId: "93HWnl2uR8DZJpoxn25SJiIvRPyL6FvmfnXbXdz01UxE" },
   { id: "greenwood", name: "Greenwood", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
   { id: "nate-simmons", name: "Nate Simmons", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
   { id: "sarah-garza", name: "Sarah Garza", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
