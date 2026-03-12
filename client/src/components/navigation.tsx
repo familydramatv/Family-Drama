@@ -79,7 +79,7 @@ export default function Navigation() {
         data-testid="header-nav"
         initial={{ opacity: 0 }}
         animate={{ y: hidden && !isOpen ? -80 : 0, opacity: hidden && !isOpen ? 0 : 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+        transition={{ duration: 1.6, ease: [0.25, 0.1, 0.25, 1], delay: 0.1 }}
       >
         <Link href="/" data-testid="link-home">
           <Logo className="h-[42px] md:h-[49px]" invert={isLightNav} />
