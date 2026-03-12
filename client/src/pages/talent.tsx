@@ -49,10 +49,10 @@ export default function Talent() {
   return (
     <div className="min-h-screen bg-black pt-[40px] md:pt-[56px]" data-testid="page-talent">
       <div
-        className="relative px-4 sm:px-6 md:px-10 lg:px-16 py-6 sm:py-8 md:py-12"
+        className="relative px-4 sm:px-6 md:px-10 lg:px-16 pt-12 pb-6 sm:pt-8 sm:pb-8 md:py-12"
         style={{ paddingLeft: "clamp(1rem, 5vw + 10px, calc(4rem + 70px))" }}
       >
-        <nav className="flex flex-col" data-testid="talent-list">
+        <nav className="flex flex-col gap-y-2 md:gap-y-0" data-testid="talent-list">
           {directors.map((director, i) => {
             const isFirst = i === 0;
             const isLoaded = loadedIds.has(director.id);
