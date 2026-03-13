@@ -661,14 +661,15 @@ export const offices: Office[] = [
 export interface Director {
   id: string;
   name: string;
-  muxPlaybackId: string;
+  muxPlaybackId?: string;
+  previewImage?: string;
 }
 
 export const directors: Director[] = [
   { id: "jake-rosenberg", name: "Jake Rosenberg", muxPlaybackId: "93HWnl2uR8DZJpoxn25SJiIvRPyL6FvmfnXbXdz01UxE" },
   { id: "greenwood", name: "Greenwood", muxPlaybackId: "aJOFI38nUnV5OuoOr9Px3qer901UXY5w2pncMsKtpQsE" },
   { id: "nate-simmons", name: "Nate Simmons", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
-  { id: "sarah-garza", name: "Sarah Garza", muxPlaybackId: "kD00BLaKnOKzRLFtGMpuczU00OdAjPCYmrvcpMwWq7mDQ" },
+  { id: "sarah-garza", name: "Sarah Garza", previewImage: "/images/sarah-garza-preview.jpg" },
   { id: "chris-strong", name: "Chris Strong", muxPlaybackId: "ZSEuY14DakxT1c1jomp7yEpori02q5txUnUtHmGcGq9A" },
 ];
 

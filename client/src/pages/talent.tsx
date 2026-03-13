@@ -27,6 +27,8 @@ export default function Talent() {
 
   useEffect(() => {
     if (hoveredId) {
+      const dir = directors.find((d) => d.id === hoveredId);
+      if (!dir?.muxPlaybackId) return;
       const tryPlay = () => {
         const video = videoRefs.current[hoveredId] as HTMLVideoElement | null;
         if (video) {
@@ -111,7 +113,13 @@ export default function Talent() {
                     zIndex: 20,
                   }}
                 >
-                  {isLoaded && (
+                  {isLoaded && director.previewImage ? (
+                    <img
+                      src={director.previewImage}
+                      alt={director.name}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  ) : isLoaded && director.muxPlaybackId ? (
                     <mux-video
                       ref={(el: HTMLElement | null) => { videoRefs.current[director.id] = el; }}
                       playback-id={director.muxPlaybackId}
@@ -120,7 +128,7 @@ export default function Talent() {
                       loop
                       style={{ width: "100%", height: "100%", objectFit: "cover" }}
                     />
-                  )}
+                  ) : null}
                 </div>
               </div>
             );
