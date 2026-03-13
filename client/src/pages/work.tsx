@@ -262,7 +262,7 @@ export default function Work() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 px-4 sm:px-[35px] py-0"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 px-4 sm:px-[35px] pt-0 pb-16 md:pb-24"
           data-testid="grid-work-projects"
         >
           {activeCategory === "ai" ? (
