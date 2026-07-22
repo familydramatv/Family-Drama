@@ -390,7 +390,7 @@
 }
 
 /* ========================================
-   ABOUT PAGE — HORIZONTAL SCROLL SYSTEM
+   ABOUT PAGE - HORIZONTAL SCROLL SYSTEM
    ======================================== */
 .page-about {
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -449,7 +449,7 @@
 }
 
 /* ========================================
-   TYPOGRAPHY SCALE — min(vw, vh) display
+   TYPOGRAPHY SCALE - min(vw, vh) display
    ======================================== */
 .-t-200 { font-size: min(14.2857vw, 25vh); line-height: 0.85; letter-spacing: -0.02em; }
 .-t-150 { font-size: min(10.7143vw, 18.75vh); line-height: 0.88; letter-spacing: -0.02em; }
@@ -463,7 +463,7 @@
 .-t-16  { font-size: 16px; line-height: 1.6; }
 
 /* ========================================
-   ANIMATION SYSTEM — CSS transitions only
+   ANIMATION SYSTEM - CSS transitions only
    ======================================== */
 
 /* In-view reveal */
@@ -1165,3 +1165,802 @@
   margin-top: 0;
 }
 
+/* Programmatic SEO pages, intentionally scoped so the existing site is untouched. */
+.pseo-page {
+  --pseo-paper: #f0efe9;
+  --pseo-muted: rgba(240, 239, 233, 0.62);
+  --pseo-faint: rgba(240, 239, 233, 0.36);
+  --pseo-line: rgba(240, 239, 233, 0.16);
+  min-height: 100vh;
+  overflow: hidden;
+  background: #000;
+  color: var(--pseo-paper);
+  font-family: 'Ritmica', sans-serif;
+}
+
+.pseo-page *,
+.pseo-page *::before,
+.pseo-page *::after {
+  box-sizing: border-box;
+}
+
+.pseo-page a:focus-visible {
+  outline: 2px solid var(--pseo-paper);
+  outline-offset: 5px;
+}
+
+.pseo-hero,
+.pseo-work,
+.pseo-market,
+.pseo-capabilities,
+.pseo-process,
+.pseo-faq,
+.pseo-related,
+.pseo-index-list,
+.pseo-service-directory,
+.pseo-closing {
+  width: min(100%, 1600px);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 3vw, 3rem);
+}
+
+.pseo-hero {
+  min-height: min(900px, 96vh);
+  padding-top: clamp(7.5rem, 12vw, 10rem);
+  padding-bottom: clamp(4rem, 8vw, 8rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pseo-breadcrumbs {
+  margin-bottom: clamp(3.5rem, 8vw, 8rem);
+}
+
+.pseo-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.8rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--pseo-faint);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pseo-breadcrumbs li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.pseo-breadcrumbs li:not(:last-child)::after {
+  content: "/";
+  color: rgba(240, 239, 233, 0.2);
+}
+
+.pseo-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 240ms ease;
+}
+
+.pseo-breadcrumbs a:hover {
+  color: var(--pseo-paper);
+}
+
+.pseo-eyebrow {
+  margin: 0 0 1rem;
+  color: var(--pseo-faint);
+  font-size: clamp(0.7rem, 0.8vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.pseo-hero h1 {
+  margin: 0;
+  color: var(--pseo-paper);
+  font-size: clamp(3.25rem, 10.2vw, 10.5rem);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.pseo-hero h1 span {
+  display: block;
+  will-change: transform;
+}
+
+.pseo-hero h1 span:nth-child(even) {
+  padding-left: clamp(1rem, 9vw, 9rem);
+}
+
+.pseo-hero-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(15rem, 0.45fr);
+  gap: clamp(2rem, 7vw, 8rem);
+  align-items: end;
+  margin-top: clamp(3rem, 7vw, 7rem);
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-hero-intro > p {
+  max-width: 61rem;
+  margin: 0;
+  color: var(--pseo-muted);
+  font-size: clamp(1.1rem, 1.65vw, 1.65rem);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.pseo-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.pseo-action-primary,
+.pseo-action-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    opacity 240ms cubic-bezier(0.25, 1, 0.5, 1),
+    background 240ms cubic-bezier(0.25, 1, 0.5, 1),
+    color 240ms cubic-bezier(0.25, 1, 0.5, 1),
+    transform 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pseo-action-primary {
+  padding: 0.8rem 1.15rem;
+  background: var(--pseo-paper);
+  color: #090909;
+}
+
+.pseo-action-secondary {
+  color: var(--pseo-muted);
+}
+
+.pseo-action-primary:hover,
+.pseo-action-secondary:hover {
+  opacity: 0.68;
+}
+
+.pseo-action-primary:active,
+.pseo-action-secondary:active {
+  transform: scale(0.97);
+}
+
+.pseo-section-heading {
+  max-width: 52rem;
+  margin-bottom: clamp(2.25rem, 5vw, 5rem);
+}
+
+.pseo-section-heading-wide {
+  max-width: 82rem;
+}
+
+.pseo-section-heading h2,
+.pseo-market h2,
+.pseo-related h2,
+.pseo-closing h2 {
+  margin: 0;
+  color: var(--pseo-paper);
+  font-size: clamp(2.6rem, 6vw, 6.6rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.pseo-work {
+  padding-top: clamp(2rem, 4vw, 4rem);
+  padding-bottom: clamp(6rem, 12vw, 13rem);
+}
+
+.pseo-work-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3.5rem, 7vw, 8rem);
+}
+
+.pseo-work-card {
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pseo-work-card:nth-child(2),
+.pseo-work-card:nth-child(3) {
+  width: min(76%, 1050px);
+}
+
+.pseo-work-card:nth-child(2) {
+  margin-left: auto;
+}
+
+.pseo-work-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 2.2 / 1;
+  background: #111;
+}
+
+.pseo-work-card:not(:first-child) .pseo-work-media {
+  aspect-ratio: 16 / 10;
+}
+
+.pseo-work-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.34), transparent 48%);
+  pointer-events: none;
+}
+
+.pseo-work-media img,
+.pseo-work-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), opacity 350ms ease;
+}
+
+.pseo-work-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  opacity: 0;
+  --media-object-fit: cover;
+  --media-object-position: 50% 50%;
+  animation: pseo-video-in 350ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.pseo-work-video::part(video) {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  object-fit: cover !important;
+}
+
+@keyframes pseo-video-in {
+  to { opacity: 1; }
+}
+
+.pseo-work-card:hover img,
+.pseo-work-card:hover .pseo-work-video {
+  transform: scale(1.05);
+}
+
+.pseo-work-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding-top: 1rem;
+  transition: transform 400ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.pseo-work-card:hover .pseo-work-meta {
+  transform: translate3d(0, -6px, 0);
+}
+
+.pseo-work-meta h3,
+.pseo-work-meta p {
+  margin: 0;
+}
+
+.pseo-work-meta h3 {
+  color: var(--pseo-paper);
+  font-size: clamp(1.35rem, 2.4vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.pseo-work-meta p {
+  color: var(--pseo-faint);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.pseo-market {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+  gap: clamp(3rem, 9vw, 11rem);
+  padding-top: clamp(6rem, 11vw, 12rem);
+  padding-bottom: clamp(6rem, 11vw, 12rem);
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-market-standalone {
+  margin-top: clamp(2rem, 4vw, 5rem);
+}
+
+.pseo-market-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding-top: 2rem;
+}
+
+.pseo-market-copy p {
+  margin: 0;
+  color: var(--pseo-muted);
+  font-size: clamp(1.05rem, 1.35vw, 1.35rem);
+  line-height: 1.58;
+}
+
+.pseo-capabilities,
+.pseo-process,
+.pseo-faq,
+.pseo-related,
+.pseo-index-list,
+.pseo-service-directory {
+  padding-top: clamp(6rem, 11vw, 12rem);
+  padding-bottom: clamp(6rem, 11vw, 12rem);
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-capability-list article {
+  display: grid;
+  grid-template-columns: minmax(3rem, 0.25fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2.4rem) 0;
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-capability-list article:last-child {
+  border-bottom: 1px solid var(--pseo-line);
+}
+
+.pseo-capability-list article > span,
+.pseo-process li > span,
+.pseo-service-directory a > span:first-child {
+  color: var(--pseo-faint);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+.pseo-capability-list h3,
+.pseo-process h3,
+.pseo-faq h3 {
+  margin: 0;
+  color: var(--pseo-paper);
+  font-size: clamp(1.6rem, 3.2vw, 3.7rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.pseo-capability-list p,
+.pseo-process p,
+.pseo-faq p {
+  max-width: 50rem;
+  margin: 0.85rem 0 0;
+  color: var(--pseo-muted);
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.pseo-process ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--pseo-line);
+  border-left: 1px solid var(--pseo-line);
+}
+
+.pseo-process li {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 1rem;
+  min-height: 19rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  border-right: 1px solid var(--pseo-line);
+  border-bottom: 1px solid var(--pseo-line);
+}
+
+.pseo-process h3 {
+  font-size: clamp(1.5rem, 2.6vw, 2.9rem);
+}
+
+.pseo-faq-list {
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-faq-list article {
+  display: grid;
+  grid-template-columns: minmax(18rem, 0.8fr) minmax(20rem, 1.2fr);
+  gap: clamp(2rem, 8vw, 9rem);
+  padding: clamp(2rem, 4vw, 3.5rem) 0;
+  border-bottom: 1px solid var(--pseo-line);
+}
+
+.pseo-faq h3 {
+  font-size: clamp(1.35rem, 2.5vw, 2.7rem);
+  line-height: 1.08;
+}
+
+.pseo-faq p {
+  margin-top: 0;
+}
+
+.pseo-related {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(20rem, 1.25fr);
+  gap: clamp(3rem, 8vw, 10rem);
+}
+
+.pseo-related h2 {
+  font-size: clamp(2.4rem, 5vw, 5.5rem);
+}
+
+.pseo-related-links {
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-related-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--pseo-line);
+  color: var(--pseo-paper);
+  font-size: clamp(1.1rem, 1.9vw, 1.8rem);
+  text-decoration: none;
+  transition: opacity 240ms ease;
+}
+
+.pseo-related-links a:hover {
+  opacity: 0.55;
+}
+
+.pseo-related-links a span:last-child,
+.pseo-service-directory a > span:last-child {
+  transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pseo-related-links a:hover span:last-child,
+.pseo-service-directory a:hover > span:last-child {
+  transform: translate3d(4px, -4px, 0);
+}
+
+.pseo-closing {
+  min-height: min(900px, 92vh);
+  padding-top: clamp(7rem, 14vw, 15rem);
+  padding-bottom: clamp(5rem, 10vw, 10rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-closing h2 {
+  font-size: clamp(3.6rem, 10vw, 11rem);
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+}
+
+.pseo-closing h2 span {
+  display: block;
+}
+
+.pseo-closing h2 span:last-child {
+  padding-left: clamp(1rem, 10vw, 10rem);
+}
+
+.pseo-closing > a {
+  align-self: flex-end;
+  margin-top: clamp(2rem, 5vw, 5rem);
+  color: var(--pseo-paper);
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  text-underline-offset: 0.35rem;
+}
+
+.pseo-city-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--pseo-line);
+  border-left: 1px solid var(--pseo-line);
+}
+
+.pseo-city-grid a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 5.5rem;
+  padding: 1.4rem;
+  border-right: 1px solid var(--pseo-line);
+  border-bottom: 1px solid var(--pseo-line);
+  color: var(--pseo-paper);
+  font-size: clamp(1.1rem, 1.9vw, 1.8rem);
+  text-decoration: none;
+  transition: background 240ms ease, color 240ms ease;
+}
+
+.pseo-city-grid a span:last-child {
+  color: var(--pseo-faint);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+}
+
+.pseo-city-grid a:hover {
+  background: var(--pseo-paper);
+  color: #090909;
+}
+
+.pseo-city-grid a:hover span:last-child {
+  color: rgba(9, 9, 9, 0.45);
+}
+
+.pseo-city-grid-large a {
+  min-height: 7rem;
+}
+
+.pseo-service-directory > div:last-child {
+  border-top: 1px solid var(--pseo-line);
+}
+
+.pseo-service-directory a {
+  display: grid;
+  grid-template-columns: 3rem minmax(13rem, 0.7fr) minmax(18rem, 1.3fr) 2rem;
+  gap: clamp(1rem, 4vw, 4rem);
+  align-items: center;
+  min-height: 8rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--pseo-line);
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 240ms ease;
+}
+
+.pseo-service-directory a:hover {
+  opacity: 0.55;
+}
+
+.pseo-service-directory h3,
+.pseo-service-directory p {
+  margin: 0;
+}
+
+.pseo-service-directory h3 {
+  color: var(--pseo-paper);
+  font-size: clamp(1.45rem, 2.7vw, 3rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.pseo-service-directory p {
+  color: var(--pseo-muted);
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  line-height: 1.5;
+}
+
+.pseo-service-directory a > span:last-child {
+  color: var(--pseo-faint);
+  font-size: 1.2rem;
+  text-align: right;
+}
+
+.pseo-not-found {
+  min-height: 75vh;
+  padding: 12rem 2rem 6rem;
+  text-align: center;
+}
+
+.pseo-not-found h1 {
+  margin: 0 0 2rem;
+  font-size: clamp(3rem, 8vw, 8rem);
+  text-transform: uppercase;
+}
+
+.pseo-not-found a {
+  color: var(--pseo-paper);
+}
+
+/* Motion is opt-in after hydration so pre-rendered SEO content stays visible without JS. */
+.pseo-motion-active .pseo-reveal-target {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  transition:
+    opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--pseo-reveal-delay, 0ms);
+}
+
+.pseo-motion-active .pseo-reveal-target.is-pseo-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.pseo-motion-active .pseo-motion-card {
+  opacity: 0;
+  transition-delay: var(--pseo-reveal-delay, 0ms);
+}
+
+.pseo-motion-active .pseo-motion-card.is-pseo-visible {
+  opacity: 1;
+}
+
+.pseo-motion-active .pseo-motion-card .pseo-work-meta h3,
+.pseo-motion-active .pseo-motion-card .pseo-work-meta p {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pseo-motion-active .pseo-motion-card .pseo-work-meta p {
+  transition-delay: 150ms;
+}
+
+.pseo-motion-active .pseo-motion-card.is-pseo-visible .pseo-work-meta h3,
+.pseo-motion-active .pseo-motion-card.is-pseo-visible .pseo-work-meta p {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (max-width: 900px) {
+  .pseo-hero {
+    min-height: auto;
+  }
+
+  .pseo-hero-intro,
+  .pseo-market,
+  .pseo-related {
+    grid-template-columns: 1fr;
+  }
+
+  .pseo-hero-intro {
+    gap: 2rem;
+  }
+
+  .pseo-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .pseo-work-card:nth-child(2),
+  .pseo-work-card:nth-child(3) {
+    width: 86%;
+  }
+
+  .pseo-faq-list article {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .pseo-city-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pseo-service-directory a {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem;
+  }
+
+  .pseo-service-directory a p {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .pseo-hero,
+  .pseo-work,
+  .pseo-market,
+  .pseo-capabilities,
+  .pseo-process,
+  .pseo-faq,
+  .pseo-related,
+  .pseo-index-list,
+  .pseo-service-directory,
+  .pseo-closing {
+    padding-inline: 1.1rem;
+  }
+
+  .pseo-hero h1 {
+    font-size: clamp(3rem, 16vw, 5.5rem);
+    line-height: 0.87;
+  }
+
+  .pseo-hero h1 span:nth-child(even) {
+    padding-left: 0.8rem;
+  }
+
+  .pseo-work-card:nth-child(2),
+  .pseo-work-card:nth-child(3) {
+    width: 100%;
+  }
+
+  .pseo-work-meta {
+    display: block;
+  }
+
+  .pseo-work-meta p {
+    margin-top: 0.4rem;
+    text-align: left;
+  }
+
+  .pseo-market {
+    gap: 1.5rem;
+  }
+
+  .pseo-market-copy {
+    padding-top: 0;
+  }
+
+  .pseo-capability-list article {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+
+  .pseo-process ol {
+    grid-template-columns: 1fr;
+  }
+
+  .pseo-process li {
+    min-height: auto;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+
+  .pseo-city-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pseo-city-grid a,
+  .pseo-city-grid-large a {
+    min-height: 4.75rem;
+  }
+
+  .pseo-service-directory a {
+    min-height: 6rem;
+  }
+
+  .pseo-closing h2 {
+    font-size: clamp(3.1rem, 15vw, 6rem);
+  }
+
+  .pseo-closing h2 span:last-child {
+    padding-left: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pseo-page *,
+  .pseo-page *::before,
+  .pseo-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .pseo-work-video {
+    display: none;
+  }
+
+  .pseo-hero h1 span {
+    will-change: auto;
+  }
+}

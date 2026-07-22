@@ -498,7 +498,7 @@ export const newsItems: NewsItem[] = [
     externalUrl: "https://www.si.com/college/oregon/football/bo-nix-nfl-draft-exclusive-docuseries-denver-broncos-dan-lanning",
     body: [
       { type: "paragraph", text: "Sports Illustrated spotlights Grit & Glory: Journey To The Draft, the exclusive docuseries produced by Family Drama that chronicled Bo Nix's remarkable path from his final season at Oregon through the NFL Draft and into his rookie year with the Denver Broncos." },
-      { type: "paragraph", text: "The series, which also featured Oregon head coach Dan Lanning, offered an unprecedented inside look at the highs and lows of the draft process — from All-American performances on the field to the high-stakes waiting game of draft night." },
+      { type: "paragraph", text: "The series, which also featured Oregon head coach Dan Lanning, offered an unprecedented inside look at the highs and lows of the draft process, from All-American performances on the field to the high-stakes waiting game of draft night." },
       { type: "paragraph", text: "The Sports Illustrated feature highlights how Family Drama's documentary approach brought authentic storytelling to the world of college and professional football, capturing moments that went far beyond traditional sports coverage." },
     ],
   },
@@ -532,7 +532,7 @@ export const newsItems: NewsItem[] = [
     body: [
       { type: "paragraph", text: "AI was a major focus for Family Drama in 2025, as the production company launched a consulting service that works with brands and agencies to modernize their marketing content creation workflow with AI." },
       { type: "paragraph", text: "AI was also central to brand projects, which invited consumers to create their own personalized content experiences, made possible by Family Drama's custom AI pipeline, game engine layers, and virtual production." },
-      { type: "paragraph", text: "Along with employing creative technology, Family Drama also made some standout content pieces, many of which leaned into humor and cultural relevance — a hallmark of the company's directorial roster." },
+      { type: "paragraph", text: "Along with employing creative technology, Family Drama also made some standout content pieces, many of which leaned into humor and cultural relevance, a hallmark of the company's directorial roster." },
     ],
   },
   {
@@ -550,7 +550,7 @@ export const newsItems: NewsItem[] = [
     body: [
       { type: "paragraph", text: "Family Drama has quietly crossed a significant milestone: one billion cumulative views across its digital campaigns. The achievement reflects the production company's strategic pivot toward content designed specifically for digital platforms, rather than simply repurposing broadcast spots." },
       { type: "paragraph", text: "The billion-view mark was reached through a combination of branded content series, social-first campaigns, and interactive digital experiences produced for clients including major Fortune 500 brands across consumer goods, technology, and entertainment." },
-      { type: "paragraph", text: "\"Views are just one metric, but reaching a billion tells us something important — the content we're making is resonating with real audiences, not just winning awards,\" the team shared. \"That's always been the goal.\"" },
+      { type: "paragraph", text: "\"Views are just one metric, but reaching a billion tells us something important: the content we're making is resonating with real audiences, not just winning awards,\" the team shared. \"That's always been the goal.\"" },
     ],
   },
   {
@@ -566,14 +566,14 @@ export const newsItems: NewsItem[] = [
     body: [
       { type: "paragraph", text: "In an industry where directors are often treated as interchangeable commodities, Family Drama has built its reputation on doing the opposite. The company's roster is deliberately small, and its commitment to each director is deliberately deep." },
       { type: "subheading", text: "The Development Philosophy" },
-      { type: "paragraph", text: "\"We don't sign directors to fill slots,\" explains co-founder Nick Simmons. \"Every director on our roster represents a creative voice we believe in. And once they're part of the family, we invest in them — not just in terms of business development, but in terms of creative growth.\"" },
+      { type: "paragraph", text: "\"We don't sign directors to fill slots,\" explains co-founder Nick Simmons. \"Every director on our roster represents a creative voice we believe in. And once they're part of the family, we invest in them, not just in terms of business development, but in terms of creative growth.\"" },
       { type: "image", src: "/images/about-hero-small.jpg", caption: "Family Drama's directors bring diverse perspectives to every project" },
       { type: "paragraph", text: "That investment takes many forms. For emerging directors, it might mean funding passion projects that stretch their creative muscles. For established directors, it might mean facilitating collaborations with other artists, technologists, or storytellers outside the advertising world." },
       { type: "subheading", text: "Diversity of Voice" },
-      { type: "paragraph", text: "Central to Family Drama's roster philosophy is diversity — not just demographic diversity, but diversity of creative perspective. The company actively seeks directors whose work challenges conventions and brings fresh viewpoints to commercial storytelling." },
-      { type: "paragraph", text: "\"The brands we work with are trying to reach real, diverse audiences,\" Simmons notes. \"To do that authentically, you need directors who bring genuinely different perspectives to the work. That's not a checkbox exercise — it's a creative imperative.\"" },
+      { type: "paragraph", text: "Central to Family Drama's roster philosophy is diversity. That means not just demographic diversity, but diversity of creative perspective. The company actively seeks directors whose work challenges conventions and brings fresh viewpoints to commercial storytelling." },
+      { type: "paragraph", text: "\"The brands we work with are trying to reach real, diverse audiences,\" Simmons notes. \"To do that authentically, you need directors who bring genuinely different perspectives to the work. That's not a checkbox exercise. It's a creative imperative.\"" },
       { type: "image", src: "/images/about-abstract.jpg", caption: "Creative development session" },
-      { type: "paragraph", text: "The approach has paid off. Family Drama's directors have collectively generated over a billion views, won numerous industry awards, and built lasting relationships with clients who return again and again — not for the company name on the door, but for the specific creative voices behind the camera." },
+      { type: "paragraph", text: "The approach has paid off. Family Drama's directors have collectively generated over a billion views, won numerous industry awards, and built lasting relationships with clients who return again and again, not for the company name on the door, but for the specific creative voices behind the camera." },
     ],
   },
 ];

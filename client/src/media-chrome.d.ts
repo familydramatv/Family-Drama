@@ -35,6 +35,10 @@ declare global {
           preload?: string;
           muted?: boolean;
           autoPlay?: boolean;
+          autoplay?: boolean;
+          class?: string;
+          controls?: boolean;
+          loop?: boolean;
         },
         HTMLElement
       >;

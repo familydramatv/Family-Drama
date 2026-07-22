@@ -17,6 +17,13 @@ import Careers from "@/pages/careers";
 import News from "@/pages/news";
 import Article from "@/pages/article";
 import NotFound from "@/pages/not-found";
+import {
+  CityRoute,
+  LocationsRoute,
+  ServiceCityRoute,
+  ServiceRoute,
+  ServicesRoute,
+} from "@/pages/pseo";
 
 const TransitionContext = createContext<{
   navigateTo: (href: string) => void;
@@ -117,6 +124,11 @@ function Router() {
       <Route path="/careers" component={Careers} />
       <Route path="/news" component={News} />
       <Route path="/news/:id" component={Article} />
+      <Route path="/services" component={ServicesRoute} />
+      <Route path="/services/:service" component={ServiceRoute} />
+      <Route path="/locations" component={LocationsRoute} />
+      <Route path="/locations/:city" component={CityRoute} />
+      <Route path="/:service/:city" component={ServiceCityRoute} />
       <Route component={NotFound} />
     </Switch>
   );
