@@ -10,6 +10,7 @@ import {
   SITE_URL,
   cityPageDescription,
   cityPageTitle,
+  cityNameWithState,
   cityPath,
   getSeoCity,
   getSeoService,
@@ -79,6 +80,21 @@ function serviceNameInSentence(service: SeoService) {
     .replace(/\b3d\b/g, "3D")
     .replace(/\bai\b/g, "AI")
     .replace(/\bb2b\b/g, "B2B");
+}
+
+function fittedLineSize(line: string) {
+  if (line.length >= 17) return "extra-long";
+  if (line.length >= 14) return "long";
+  if (line.length >= 11) return "medium";
+  return "short";
+}
+
+function heroLineWordFit(line: string) {
+  const longestWord = Math.max(...line.split(/\s+/).map((word) => word.length));
+  if (longestWord >= 15) return "extra-long";
+  if (longestWord >= 12) return "long";
+  if (longestWord >= 10) return "medium";
+  return "short";
 }
 
 function PseoPage({
@@ -195,7 +211,7 @@ export function serviceCitySchema(service: SeoService, city: SeoCity) {
       {
         "@type": "Service",
         "@id": `${absoluteUrl(serviceCityPath(service, city))}#service`,
-        name: `${service.name} in ${city.name}, ${city.stateCode}`,
+        name: `${service.name} in ${cityNameWithState(city)}`,
         description: serviceCityDescription(service, city),
         serviceType: service.keywordVariants,
         provider: { "@id": `${SITE_URL}/#organization` },
@@ -272,7 +288,22 @@ function Hero({
       <Breadcrumbs items={breadcrumbs} />
       <p className="pseo-eyebrow">{eyebrow}</p>
       <h1>
-        {lines.map((line) => <span key={line}>{line}</span>)}
+        {lines.map((line) => {
+          const isLocationLine = line.startsWith("IN ");
+          const isSupportingLine = line === "BY FAMILY DRAMA";
+          const isFittedLine = isLocationLine || isSupportingLine;
+
+          return (
+            <span
+              className={`pseo-hero-line${isFittedLine ? " pseo-hero-fitted-line" : ""}${isLocationLine ? " pseo-hero-location-line" : ""}`}
+              data-fit={isFittedLine ? fittedLineSize(line) : undefined}
+              data-word-fit={heroLineWordFit(line)}
+              key={line}
+            >
+              {line}
+            </span>
+          );
+        })}
       </h1>
       <div className="pseo-hero-intro">
         <p>{description}</p>
@@ -537,7 +568,7 @@ export function ServiceCityPageContent({ service, city }: { service: SeoService;
   return (
     <PseoPage pageType="service-city" motionKey={serviceCityPath(service, city)}>
       <Hero
-        eyebrow={`${city.name}, ${city.stateCode} · ${service.name}`}
+        eyebrow={`${cityNameWithState(city)} · ${service.name}`}
         lines={[service.name, `IN ${city.name}`]}
         description={`${service.overview} In ${city.name}, we shape that system around the market, the locations, and the production realities of the brief.`}
         breadcrumbs={[

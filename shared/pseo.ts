@@ -543,6 +543,10 @@ export function serviceCityPath(service: SeoService, city: SeoCity): string {
   return `/${service.slug}/${city.slug}`;
 }
 
+export function cityNameWithState(city: SeoCity): string {
+  return city.name.endsWith(`, ${city.stateCode}`) ? city.name : `${city.name}, ${city.stateCode}`;
+}
+
 export function isServiceCityIndexable(service: SeoService, city: SeoCity): boolean {
   return service.launch && city.launch;
 }
@@ -552,7 +556,7 @@ export function serviceCityTitle(service: SeoService, city: SeoCity): string {
 }
 
 export function serviceCityDescription(service: SeoService, city: SeoCity): string {
-  return `${service.name} in ${city.name}, ${city.stateCode}, from Family Drama. Creative development, production, and delivery for ambitious brand campaigns. Start a project.`;
+  return `${service.name} in ${cityNameWithState(city)}, from Family Drama. Creative development, production, and delivery for ambitious brand campaigns. Start a project.`;
 }
 
 export function servicePageTitle(service: SeoService): string {
@@ -564,7 +568,7 @@ export function servicePageDescription(service: SeoService): string {
 }
 
 export function cityPageTitle(city: SeoCity): string {
-  return `Production Services ${city.name}, ${city.stateCode} | Family Drama`;
+  return `Production Services ${cityNameWithState(city)} | Family Drama`;
 }
 
 export function cityPageDescription(city: SeoCity): string {
