@@ -11,6 +11,7 @@ import {
   cityPageDescription,
   cityPageTitle,
   cityNameWithState,
+  cityNameWithoutState,
   cityPath,
   getSeoCity,
   getSeoService,
@@ -452,7 +453,7 @@ function MarketSection({ service, city }: { service: SeoService; city: SeoCity }
   return (
     <section className="pseo-market" aria-labelledby="market-heading">
       <div className="pseo-market-lead">
-        <p className="pseo-eyebrow">{city.name}, {city.stateCode}</p>
+        <p className="pseo-eyebrow">{cityNameWithState(city)}</p>
         <h2 id="market-heading">Production built for the market, not pasted onto it.</h2>
       </div>
       <div className="pseo-market-copy">
@@ -608,7 +609,7 @@ export function ServicePageContent({ service }: { service: SeoService }) {
         <div className="pseo-city-grid">
           {seoCities.map((city) => (
             <a href={serviceCityPath(service, city)} key={city.slug}>
-              <span>{city.name}</span><span>{city.stateCode}</span>
+              <span>{cityNameWithoutState(city)}</span><span>{city.stateCode}</span>
             </a>
           ))}
         </div>
@@ -706,7 +707,7 @@ export function LocationsPageContent() {
         <div className="pseo-city-grid pseo-city-grid-large">
           {seoCities.map((city) => (
             <a href={cityPath(city)} key={city.slug}>
-              <span>{city.name}</span><span>{city.stateCode}</span>
+              <span>{cityNameWithoutState(city)}</span><span>{city.stateCode}</span>
             </a>
           ))}
         </div>

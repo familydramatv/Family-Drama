@@ -543,8 +543,13 @@ export function serviceCityPath(service: SeoService, city: SeoCity): string {
   return `/${service.slug}/${city.slug}`;
 }
 
+export function cityNameWithoutState(city: SeoCity): string {
+  const stateSuffix = `, ${city.stateCode}`;
+  return city.name.endsWith(stateSuffix) ? city.name.slice(0, -stateSuffix.length) : city.name;
+}
+
 export function cityNameWithState(city: SeoCity): string {
-  return city.name.endsWith(`, ${city.stateCode}`) ? city.name : `${city.name}, ${city.stateCode}`;
+  return `${cityNameWithoutState(city)}, ${city.stateCode}`;
 }
 
 export function isServiceCityIndexable(service: SeoService, city: SeoCity): boolean {
