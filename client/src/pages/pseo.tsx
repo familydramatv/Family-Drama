@@ -151,36 +151,77 @@ function PseoPage({
     });
 
     const hero = root.querySelector<HTMLElement>(".pseo-hero");
-    const heroLines = Array.from(root.querySelectorAll<HTMLElement>(".pseo-hero h1 > span"));
+    const heroHeading = root.querySelector<HTMLElement>(".pseo-hero h1");
+    const heroWords = Array.from(root.querySelectorAll<HTMLElement>(".pseo-hero-word"));
+    let heroMotionLines = heroWords.map((_, index) => index);
     let scrollFrame = 0;
+    let measureFrame = 0;
     const updateHero = () => {
       scrollFrame = 0;
       if (!hero) return;
       const rect = hero.getBoundingClientRect();
       const progress = Math.max(0, -rect.top / Math.max(rect.height * 0.8, 1));
-      heroLines.forEach((line, index) => {
-        const direction = index % 2 === 0 ? -1 : 1;
-        line.style.transform = `translate3d(${progress * direction * 120}vw, 0, 0)`;
+      heroWords.forEach((word, index) => {
+        const direction = heroMotionLines[index] % 2 === 0 ? -1 : 1;
+        word.style.transform = `translate3d(${progress * direction * 120}vw, 0, 0)`;
       });
+    };
+    const measureHeroLines = () => {
+      measureFrame = 0;
+      if (!heroHeading || heroWords.length === 0) return;
+
+      heroWords.forEach((word) => word.style.removeProperty("transform"));
+      const headingTop = heroHeading.getBoundingClientRect().top;
+      const wordTops = heroWords.map((word) =>
+        Math.round(word.getBoundingClientRect().top - headingTop),
+      );
+      const lineTops = [...wordTops]
+        .sort((a, b) => a - b)
+        .filter((top, index, tops) => index === 0 || Math.abs(top - tops[index - 1]) > 2);
+
+      heroMotionLines = wordTops.map((wordTop) => {
+        const lineIndex = lineTops.findIndex((lineTop) => Math.abs(lineTop - wordTop) <= 2);
+        return lineIndex === -1 ? 0 : lineIndex;
+      });
+      updateHero();
+    };
+    const requestHeroMeasure = () => {
+      if (measureFrame) window.cancelAnimationFrame(measureFrame);
+      measureFrame = window.requestAnimationFrame(measureHeroLines);
     };
     const onScroll = () => {
       if (scrollFrame) return;
       scrollFrame = window.requestAnimationFrame(updateHero);
     };
-    updateHero();
+    measureHeroLines();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", requestHeroMeasure);
+
+    const resizeObserver = heroHeading && "ResizeObserver" in window
+      ? new ResizeObserver(requestHeroMeasure)
+      : null;
+    if (resizeObserver && heroHeading) resizeObserver.observe(heroHeading);
+
+    let effectActive = true;
+    document.fonts?.ready.then(() => {
+      if (effectActive) requestHeroMeasure();
+    });
 
     return () => {
+      effectActive = false;
       observer.disconnect();
+      resizeObserver?.disconnect();
       window.cancelAnimationFrame(observeFrame);
       if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+      if (measureFrame) window.cancelAnimationFrame(measureFrame);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", requestHeroMeasure);
       root.classList.remove("pseo-motion-active");
       observedElements.forEach((element) => {
         element.classList.remove("pseo-reveal-target", "pseo-motion-card", "is-pseo-visible");
         element.style.removeProperty("--pseo-reveal-delay");
       });
-      heroLines.forEach((line) => line.style.removeProperty("transform"));
+      heroWords.forEach((word) => word.style.removeProperty("transform"));
     };
   }, [motionKey]);
 
@@ -301,7 +342,12 @@ function Hero({
               data-word-fit={heroLineWordFit(line)}
               key={line}
             >
-              {line}
+              {line.split(/\s+/).map((word, index) => (
+                <React.Fragment key={`${word}-${index}`}>
+                  {index > 0 ? " " : null}
+                  <span className="pseo-hero-word">{word}</span>
+                </React.Fragment>
+              ))}
             </span>
           );
         })}
