@@ -561,15 +561,15 @@ export function serviceCityTitle(service: SeoService, city: SeoCity): string {
 }
 
 export function serviceCityDescription(service: SeoService, city: SeoCity): string {
-  return `${service.name} in ${cityNameWithState(city)}, from Family Drama. Creative development, production, and delivery for ambitious brand campaigns. Start a project.`;
+  return `${service.name} in ${cityNameWithState(city)}, from Family Drama. Creative development, production, post, and delivery for ambitious brand teams.`;
 }
 
 export function servicePageTitle(service: SeoService): string {
-  return `${service.name} Services | Family Drama`;
+  return `${service.seoTitle} Services | Family Drama`;
 }
 
 export function servicePageDescription(service: SeoService): string {
-  return `${service.summary} Explore Family Drama's approach, selected work, full capabilities, and production coverage across the United States.`;
+  return `Family Drama ${service.name.toLowerCase()} for brand campaigns. Explore capabilities, selected work, process, and nationwide production coverage.`;
 }
 
 export function cityPageTitle(city: SeoCity): string {
@@ -577,5 +577,5 @@ export function cityPageTitle(city: SeoCity): string {
 }
 
 export function cityPageDescription(city: SeoCity): string {
-  return `Commercial, branded, social, photography, post, and experiential production in ${city.name}. Explore Family Drama's capabilities and start a project.`;
+  return `Commercial, branded, social, photography, post, and experiential production in ${city.name}. Explore Family Drama's nationwide capabilities and start a project.`;
 }

@@ -32,6 +32,10 @@ import {
   type SeoCity,
   type SeoService,
 } from "../shared/pseo";
+import {
+  getStaticSiteSeoPages,
+  type SitemapGroup,
+} from "../client/src/lib/site-seo";
 
 const publicDirectory = path.resolve("dist/public");
 const defaultImage = `${SITE_URL}/images/og-image.jpg`;
@@ -39,12 +43,14 @@ const indexRobots = "index, follow, max-image-preview:large, max-snippet:-1, max
 
 interface PageDefinition {
   path: string;
+  canonicalPath: string;
   title: string;
   description: string;
   robots: string;
   jsonLd: Record<string, unknown>;
   markup: string;
   includeInSitemap: boolean;
+  sitemapGroup: SitemapGroup;
 }
 
 function absoluteUrl(urlPath: string): string {
@@ -63,6 +69,21 @@ function escapeAttribute(value: string): string {
     .replaceAll(">", "&gt;");
 }
 
+function staticPageFallback(title: string, description: string): string {
+  return `<main class="seo-static-fallback">
+    <a href="/" aria-label="Family Drama home">Family Drama</a>
+    <h1>${escapeAttribute(title.split(" | ")[0])}</h1>
+    <p>${escapeAttribute(description)}</p>
+    <nav aria-label="Primary">
+      <a href="/work">Work</a>
+      <a href="/services">Services</a>
+      <a href="/locations">Locations</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </main>`;
+}
+
 function escapeXml(value: string): string {
   return escapeAttribute(value).replaceAll("'", "&apos;");
 }
@@ -78,7 +99,7 @@ function setMeta(html: string, attribute: "name" | "property", key: string, cont
 }
 
 function buildDocument(template: string, page: PageDefinition): string {
-  const canonical = absoluteUrl(page.path);
+  const canonical = absoluteUrl(page.canonicalPath);
   const serializedSchema = JSON.stringify(page.jsonLd).replaceAll("<", "\\u003c");
   let html = template.replace(/<title>.*?<\/title>/i, `<title>${escapeAttribute(page.title)}</title>`);
 
@@ -97,7 +118,7 @@ function buildDocument(template: string, page: PageDefinition): string {
   html = html.replace(/\s*<link\s+rel=["']preload["']\s+as=["']image["'][^>]*>/gi, "");
   html = html.replace(
     "</head>",
-    `    <link rel="canonical" href="${escapeAttribute(canonical)}" />\n    <script type="application/ld+json">${serializedSchema}</script>\n  </head>`,
+    `    <link rel="canonical" href="${escapeAttribute(canonical)}" />\n    <script type="application/ld+json" data-family-drama-seo="true">${serializedSchema}</script>\n  </head>`,
   );
   html = html.replace('<div id="root"></div>', `<div id="root">${page.markup}</div>`);
   return html;
@@ -114,8 +135,20 @@ function collectionSchema(
 
 function createDefinitions(): PageDefinition[] {
   const pages: PageDefinition[] = [
+    ...getStaticSiteSeoPages().map((page) => ({
+      path: page.path,
+      canonicalPath: page.canonicalPath,
+      title: page.title,
+      description: page.description,
+      robots: page.robots || indexRobots,
+      jsonLd: page.jsonLd || {},
+      markup: staticPageFallback(page.title, page.description),
+      includeInSitemap: page.includeInSitemap,
+      sitemapGroup: page.sitemapGroup,
+    })),
     {
       path: "/services",
+      canonicalPath: "/services",
       title: SERVICES_TITLE,
       description: SERVICES_DESCRIPTION,
       robots: indexRobots,
@@ -125,9 +158,11 @@ function createDefinitions(): PageDefinition[] {
       ]),
       markup: render(ServicesPageContent, {}),
       includeInSitemap: true,
+      sitemapGroup: "services",
     },
     {
       path: "/locations",
+      canonicalPath: "/locations",
       title: LOCATIONS_TITLE,
       description: LOCATIONS_DESCRIPTION,
       robots: indexRobots,
@@ -137,6 +172,7 @@ function createDefinitions(): PageDefinition[] {
       ]),
       markup: render(LocationsPageContent, {}),
       includeInSitemap: true,
+      sitemapGroup: "locations",
     },
   ];
 
@@ -146,6 +182,7 @@ function createDefinitions(): PageDefinition[] {
     const urlPath = servicePath(service);
     pages.push({
       path: urlPath,
+      canonicalPath: urlPath,
       title,
       description,
       robots: indexRobots,
@@ -156,6 +193,7 @@ function createDefinitions(): PageDefinition[] {
       ]),
       markup: render(ServicePageContent, { service }),
       includeInSitemap: true,
+      sitemapGroup: "services",
     });
   }
 
@@ -165,6 +203,7 @@ function createDefinitions(): PageDefinition[] {
     const urlPath = cityPath(city);
     pages.push({
       path: urlPath,
+      canonicalPath: urlPath,
       title,
       description,
       robots: indexRobots,
@@ -175,6 +214,7 @@ function createDefinitions(): PageDefinition[] {
       ]),
       markup: render(CityPageContent, { city }),
       includeInSitemap: true,
+      sitemapGroup: "locations",
     });
   }
 
@@ -183,12 +223,14 @@ function createDefinitions(): PageDefinition[] {
       const indexable = isServiceCityIndexable(service, city);
       pages.push({
         path: serviceCityPath(service, city),
+        canonicalPath: serviceCityPath(service, city),
         title: serviceCityTitle(service, city),
         description: serviceCityDescription(service, city),
         robots: indexable ? indexRobots : "noindex, follow, max-image-preview:large",
         jsonLd: serviceCitySchema(service, city),
         markup: render(ServiceCityPageContent, { service, city }),
         includeInSitemap: indexable,
+        sitemapGroup: "service-locations",
       });
     }
   }
@@ -196,13 +238,18 @@ function createDefinitions(): PageDefinition[] {
   return pages;
 }
 
-function createSitemap(pages: PageDefinition[]): string {
-  const existingRoutes = ["/", "/work", "/talent", "/about", "/contact", "/news", "/careers"];
-  const urls = [...existingRoutes, ...pages.filter((page) => page.includeInSitemap).map((page) => page.path)];
+function createSitemap(urls: string[]): string {
   const entries = Array.from(new Set(urls))
     .map((urlPath) => `  <url><loc>${escapeXml(absoluteUrl(urlPath))}</loc></url>`)
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`;
+}
+
+function createSitemapIndex(sitemapNames: string[]): string {
+  const entries = sitemapNames
+    .map((name) => `  <sitemap><loc>${escapeXml(absoluteUrl(`/${name}`))}</loc></sitemap>`)
+    .join("\n");
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</sitemapindex>\n`;
 }
 
 export async function generateSeoPages() {
@@ -210,20 +257,35 @@ export async function generateSeoPages() {
   const pages = createDefinitions();
 
   for (const page of pages) {
-    const relativePath = `${page.path.replace(/^\//, "")}.html`;
+    const relativePath = page.path === "/" ? "index.html" : `${page.path.replace(/^\//, "")}.html`;
     const outputPath = path.join(publicDirectory, relativePath);
     await mkdir(path.dirname(outputPath), { recursive: true });
     await writeFile(outputPath, buildDocument(template, page), "utf8");
   }
 
-  await writeFile(path.join(publicDirectory, "sitemap.xml"), createSitemap(pages), "utf8");
+  const sitemapFiles: Array<{ file: string; group: SitemapGroup }> = [
+    { file: "sitemap-core.xml", group: "core" },
+    { file: "sitemap-services.xml", group: "services" },
+    { file: "sitemap-locations.xml", group: "locations" },
+    { file: "sitemap-service-locations.xml", group: "service-locations" },
+  ];
+  for (const sitemap of sitemapFiles) {
+    const urls = pages
+      .filter((page) => page.includeInSitemap && page.sitemapGroup === sitemap.group)
+      .map((page) => page.canonicalPath);
+    await writeFile(path.join(publicDirectory, sitemap.file), createSitemap(urls), "utf8");
+  }
+  await writeFile(
+    path.join(publicDirectory, "sitemap.xml"),
+    createSitemapIndex(sitemapFiles.map((sitemap) => sitemap.file)),
+    "utf8",
+  );
   await writeFile(
     path.join(publicDirectory, "robots.txt"),
-    `User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
+    `User-agent: OAI-SearchBot\nAllow: /\nDisallow: /api/\n\nUser-agent: ChatGPT-User\nAllow: /\nDisallow: /api/\n\nUser-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
     "utf8",
   );
 
   const indexablePages = pages.filter((page) => page.includeInSitemap).length;
-  console.log(`generated ${pages.length} pSEO pages (${indexablePages} indexable, ${pages.length - indexablePages} staged)`);
+  console.log(`generated ${pages.length} SEO pages (${indexablePages} indexable, ${pages.length - indexablePages} staged)`);
 }
-

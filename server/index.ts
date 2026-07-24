@@ -5,6 +5,22 @@ import { createServer } from "http";
 
 const app = express();
 const httpServer = createServer(app);
+app.set("trust proxy", 1);
+
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production" && req.hostname.toLowerCase() === "familydrama.tv") {
+    return res.redirect(308, `https://www.familydrama.tv${req.originalUrl}`);
+  }
+
+  const queryIndex = req.originalUrl.indexOf("?");
+  const requestPath = queryIndex === -1 ? req.originalUrl : req.originalUrl.slice(0, queryIndex);
+  if (requestPath.length > 1 && requestPath.endsWith("/")) {
+    const query = queryIndex === -1 ? "" : req.originalUrl.slice(queryIndex);
+    return res.redirect(308, `${requestPath.replace(/\/+$/, "")}${query}`);
+  }
+
+  return next();
+});
 
 declare module "http" {
   interface IncomingMessage {

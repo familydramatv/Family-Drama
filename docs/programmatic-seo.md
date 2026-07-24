@@ -65,7 +65,10 @@ The build currently creates:
 - 920 service/market pages
 - 920 indexable service/market pages
 - 0 staged service/market pages
-- 992 sitemap URLs after the seven existing primary site routes are included
+- 2 national directory pages
+- 42 indexable core, portfolio, director, and news URLs
+- 1,027 total URLs across four sitemap files
+- 5 noindex utility or filtered-work routes outside the sitemap
 
 All configured service and market combinations are approved for indexing. Google's spam policies call out city-targeted doorway pages and scaled pages made mainly to manipulate rankings, so every page still needs useful service detail, honest market context, selected work, clear internal relationships, and ongoing improvement based on real search and lead data.
 
@@ -80,13 +83,20 @@ The source of truth is `shared/pseo.ts`.
 3. Confirm the page gives a buyer something materially different from a city-name swap.
 4. Set the service or city's `launch` value to `true`.
 5. Run `npm run check` and `npm run build`.
-6. Confirm the URL is included in `dist/public/sitemap.xml` and its HTML robots directive is `index, follow`.
+6. Confirm the URL is included in the appropriate sitemap file referenced by `dist/public/sitemap.xml` and its HTML robots directive is `index, follow`.
 
 Because a service/city page becomes indexable only when both records have `launch: true`, expansion stays controlled from one data file.
 
 ## Deployment and search launch
 
-Railway continues to run the existing build and start commands. During `npm run build`, the project now pre-renders the SEO documents and creates `robots.txt` and `sitemap.xml`. The Express server maps clean URLs to those documents while the React app preserves the existing interactive experience.
+Railway continues to run the existing build and start commands. During `npm run build`, the project now pre-renders the SEO documents and creates `robots.txt`, a sitemap index, and four focused sitemap files. The Express server maps clean URLs to those documents while the React app preserves the existing interactive experience.
+
+The sitemap index contains:
+
+- `sitemap-core.xml` for primary, portfolio, director, and news pages
+- `sitemap-services.xml` for the service directory and service hubs
+- `sitemap-locations.xml` for the location directory and market hubs
+- `sitemap-service-locations.xml` for service/market landing pages
 
 After deployment:
 
@@ -96,7 +106,7 @@ After deployment:
 4. Watch indexing, impressions, non-brand queries, qualified form/email leads, and cannibalization by service and market.
 5. Add case-specific proof and refine weak pages before enabling additional launch flags.
 
-Google's current AI-search guidance says standard crawlability and SEO fundamentals still apply and emphasizes unique, first-hand, non-commodity content. It does not require a special AI schema or `llms.txt`, so this implementation concentrates on crawlable HTML, clear entities, useful copy, strong media, and structured internal relationships.
+Google's current AI-search guidance says standard crawlability and SEO fundamentals still apply and emphasizes unique, first-hand, non-commodity content. It does not require a special AI schema or `llms.txt`, so this implementation concentrates on crawlable HTML, clear entities, useful copy, strong media, and structured internal relationships. `robots.txt` also explicitly permits OpenAI's OAI-SearchBot and ChatGPT-User crawlers.
 
 ## Motion and interaction
 

@@ -2,20 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "wouter";
 import { projects, getMuxThumbnail } from "@/lib/data";
+import { homepageShowcaseProjectIds } from "@/lib/showcase";
 import "@mux/mux-video";
 
-const homeProjects = [
-  projects[5],  // European Wax Center - Keep Exploring
-  projects[6],  // Crown Royal - Chopped & Screwed
-  projects[17], // Essentia Water - Advice To Your Future Self
-  projects[3],  // Dr. Teal's - Stay Hungry
-  projects[0],  // LEGO - Play Unstoppable
-  projects[4],  // Adyen - Tap to Pay
-  projects[8],  // Verizon - Celebrate The Magic
-  projects[15], // Beats by Dre - Be Heard
-  projects[1],  // Toyota - Survivor
-  projects[20], // Cowboy - Posts From The City
-].filter(Boolean);
+const homeProjects = homepageShowcaseProjectIds
+  .map((id) => projects.find((project) => project.id === id))
+  .filter((project): project is typeof projects[number] => Boolean(project));
 
 const placeholderColors = [
   "#1a1a2e", "#2d1b2e", "#1b2e1a", "#2e2a1a", "#1a2a2e",
@@ -89,11 +81,11 @@ interface ShowcaseItem {
 type FeedItem = ShowcaseItem;
 
 const feed: FeedItem[] = [
-  { type: "project", project: homeProjects[4], layout: "full" },
-  { type: "project", project: homeProjects[3], layout: "medium" },
-  { type: "project", project: homeProjects[1], layout: "full" },
-  { type: "project", project: homeProjects[2], layout: "medium", textSide: "right" },
-  { type: "project", project: homeProjects[0], layout: "medium", textSide: "left" },
+  { type: "project", project: homeProjects[0], layout: "full" },
+  { type: "project", project: homeProjects[1], layout: "medium" },
+  { type: "project", project: homeProjects[2], layout: "full" },
+  { type: "project", project: homeProjects[3], layout: "medium", textSide: "right" },
+  { type: "project", project: homeProjects[4], layout: "medium", textSide: "left" },
   { type: "project", project: homeProjects[5], layout: "tall", noLink: true },
   { type: "project", project: homeProjects[6], layout: "medium", textSide: "left" },
   { type: "project", project: homeProjects[7], layout: "medium", textSide: "right" },
@@ -253,9 +245,9 @@ const heroLines = [
 ];
 
 function HeroTypography() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLHeadingElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const spanRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [fontSizes, setFontSizes] = useState<number[]>(heroLines.map(() => 10));
   const [scales, setScales] = useState<number[]>(heroLines.map(() => 1));
@@ -321,9 +313,10 @@ function HeroTypography() {
       className="relative flex flex-col justify-start overflow-hidden bg-black"
       data-testid="section-hero"
     >
-      <div
+      <h1
         ref={containerRef}
         style={{
+          margin: 0,
           padding: "80px 32px 20px",
           fontFamily: "'Ritmica', sans-serif",
           fontWeight: 500,
@@ -337,10 +330,10 @@ function HeroTypography() {
         }}
       >
         {heroLines.map((line, i) => (
-          <div
+          <span
             key={i}
             ref={(el) => { lineRefs.current[i] = el; }}
-            style={{ willChange: "transform" }}
+            style={{ display: "block", willChange: "transform" }}
             data-testid={`text-headline-${i}`}
           >
             <span
@@ -356,9 +349,9 @@ function HeroTypography() {
             >
               {line}
             </span>
-          </div>
+          </span>
         ))}
-      </div>
+      </h1>
     </section>
   );
 }

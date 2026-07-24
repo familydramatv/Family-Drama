@@ -4,8 +4,10 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import SeoHead from "@/components/seo-head";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
+import { getSitewideSeo } from "@/lib/site-seo";
 import Home from "@/pages/home";
 import Work from "@/pages/work";
 import ProjectPage from "@/pages/project";
@@ -134,11 +136,29 @@ function Router() {
   );
 }
 
+function SitewideSeo() {
+  const [location] = useLocation();
+  const seo = getSitewideSeo(location);
+  if (!seo) return null;
+
+  return (
+    <SeoHead
+      title={seo.title}
+      description={seo.description}
+      canonicalPath={seo.canonicalPath}
+      image={seo.image}
+      robots={seo.robots}
+      jsonLd={seo.jsonLd}
+    />
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="min-h-screen bg-black">
+          <SitewideSeo />
           <PageTransitionOverlay />
           <Navigation />
           <main>

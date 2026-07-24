@@ -33,6 +33,7 @@ declare global {
           slot?: string;
           streamType?: string;
           preload?: string;
+          poster?: string;
           muted?: boolean;
           autoPlay?: boolean;
           autoplay?: boolean;

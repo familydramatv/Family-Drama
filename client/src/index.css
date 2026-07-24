@@ -202,13 +202,49 @@
     @apply border-border;
   }
 
-  body {
+body {
     @apply font-sans antialiased bg-background text-foreground;
   }
 
   ::selection {
     background: rgba(255, 255, 255, 0.15);
   }
+}
+
+.seo-static-fallback {
+  min-height: 100vh;
+  padding: clamp(7rem, 14vw, 14rem) clamp(1.25rem, 5vw, 5rem);
+  background: #000;
+  color: #f2f0eb;
+}
+
+.seo-static-fallback > a,
+.seo-static-fallback nav a {
+  color: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.seo-static-fallback h1 {
+  max-width: 16ch;
+  margin: 2rem 0 1rem;
+  font-size: clamp(3rem, 9vw, 9rem);
+  font-weight: 700;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.seo-static-fallback p {
+  max-width: 44rem;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.seo-static-fallback nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-top: 3rem;
 }
 
 @layer utilities {
@@ -1439,6 +1475,24 @@
   margin-left: auto;
 }
 
+.pseo-services-showcase .pseo-work-card:nth-child(4n + 1),
+.pseo-services-showcase .pseo-work-card:nth-child(4n + 4) {
+  width: 100%;
+  margin-inline: 0;
+}
+
+.pseo-services-showcase .pseo-work-card:nth-child(4n + 2) {
+  width: min(76%, 1050px);
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.pseo-services-showcase .pseo-work-card:nth-child(4n + 3) {
+  width: min(68%, 950px);
+  margin-right: auto;
+  margin-left: 0;
+}
+
 .pseo-work-media {
   position: relative;
   overflow: hidden;
@@ -1448,6 +1502,11 @@
 
 .pseo-work-card:not(:first-child) .pseo-work-media {
   aspect-ratio: 16 / 10;
+}
+
+.pseo-services-showcase .pseo-work-card:nth-child(4n + 1) .pseo-work-media,
+.pseo-services-showcase .pseo-work-card:nth-child(4n + 4) .pseo-work-media {
+  aspect-ratio: 2.2 / 1;
 }
 
 .pseo-work-media::after {
@@ -1895,6 +1954,15 @@
     width: 86%;
   }
 
+  .pseo-services-showcase .pseo-work-card {
+    width: 86%;
+  }
+
+  .pseo-services-showcase .pseo-work-card:nth-child(4n + 1),
+  .pseo-services-showcase .pseo-work-card:nth-child(4n + 4) {
+    width: 100%;
+  }
+
   .pseo-faq-list article {
     grid-template-columns: 1fr;
     gap: 1.2rem;
@@ -1955,6 +2023,11 @@
   .pseo-work-card:nth-child(2),
   .pseo-work-card:nth-child(3) {
     width: 100%;
+  }
+
+  .pseo-services-showcase .pseo-work-card {
+    width: 100%;
+    margin-inline: 0;
   }
 
   .pseo-work-meta {

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "wouter";
 import SeoHead from "@/components/seo-head";
 import { getMuxThumbnail, projects, type Project } from "@/lib/data";
+import { homepageShowcaseProjectIds } from "@/lib/showcase";
 import {
   LOCATIONS_DESCRIPTION,
   LOCATIONS_TITLE,
@@ -406,6 +407,7 @@ function PseoVideoLoop({ playbackId }: { playbackId: string }) {
       ref={videoRef}
       playback-id={playbackId}
       preload="metadata"
+      poster={getMuxThumbnail(playbackId, 0, 1400)}
       class="pseo-work-video"
       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" } as React.CSSProperties}
       aria-hidden="true"
@@ -413,20 +415,28 @@ function PseoVideoLoop({ playbackId }: { playbackId: string }) {
   );
 }
 
-function ProjectMedia({ project, eager }: { project: Project; eager?: boolean }) {
+function ProjectMedia({
+  project,
+  eager,
+  playVideo = false,
+}: {
+  project: Project;
+  eager?: boolean;
+  playVideo?: boolean;
+}) {
   const [showVideo, setShowVideo] = useState(false);
   const src = project.homeImage
     || (project.muxPlaybackId ? getMuxThumbnail(project.muxPlaybackId, project.thumbnailTime || 0, 1400) : project.image);
 
   useEffect(() => {
     if (
-      project.homeVideoLoop
+      (playVideo || project.homeVideoLoop)
       && project.muxPlaybackId
       && !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
       setShowVideo(true);
     }
-  }, [project.homeVideoLoop, project.muxPlaybackId]);
+  }, [playVideo, project.homeVideoLoop, project.muxPlaybackId]);
 
   return (
     <>
@@ -438,6 +448,34 @@ function ProjectMedia({ project, eager }: { project: Project; eager?: boolean })
       />
       {showVideo && project.muxPlaybackId ? <PseoVideoLoop playbackId={project.muxPlaybackId} /> : null}
     </>
+  );
+}
+
+function ServicesShowcase() {
+  const selectedProjects = homepageShowcaseProjectIds
+    .map((id) => projects.find((project) => project.id === id))
+    .filter((project): project is Project => Boolean(project));
+
+  return (
+    <section className="pseo-work pseo-services-showcase" aria-labelledby="services-work-heading">
+      <div className="pseo-section-heading pseo-section-heading-wide">
+        <p className="pseo-eyebrow">Production in motion</p>
+        <h2 id="services-work-heading">Work across every screen</h2>
+      </div>
+      <div className="pseo-work-list">
+        {selectedProjects.map((project, index) => (
+          <a href={`/project/${project.id}`} className="pseo-work-card" key={project.id}>
+            <div className="pseo-work-media">
+              <ProjectMedia project={project} eager={index === 0} playVideo />
+            </div>
+            <div className="pseo-work-meta">
+              <h3>{project.title}</h3>
+              <p>{project.client}{project.director ? ` · Directed by ${project.director}` : ""}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -674,6 +712,7 @@ export function ServicesPageContent() {
         description="Strategy, creative, production, post, technology, and experiences connected under one production company. Explore the capability that fits the brief, then see how Family Drama delivers it in your market."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Services" }]}
       />
+      <ServicesShowcase />
       <section className="pseo-service-directory" aria-labelledby="service-directory-heading">
         <div className="pseo-section-heading pseo-section-heading-wide">
           <p className="pseo-eyebrow">One team, many forms</p>

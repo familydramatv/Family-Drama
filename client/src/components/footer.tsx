@@ -20,6 +20,8 @@ export default function Footer() {
             <h4 className="text-white/40 text-xs uppercase tracking-widest mb-4">Navigation</h4>
             <nav className="flex flex-col gap-2">
               <Link href="/work" data-testid="link-footer-work"><span className="text-white/60 text-sm transition-opacity hover:opacity-70">Work</span></Link>
+              <Link href="/services" data-testid="link-footer-services"><span className="text-white/60 text-sm transition-opacity hover:opacity-70">Services</span></Link>
+              <Link href="/locations" data-testid="link-footer-locations"><span className="text-white/60 text-sm transition-opacity hover:opacity-70">Locations</span></Link>
               <Link href="/about" data-testid="link-footer-about"><span className="text-white/60 text-sm transition-opacity hover:opacity-70">About</span></Link>
               <Link href="/contact" data-testid="link-footer-contact"><span className="text-white/60 text-sm transition-opacity hover:opacity-70">Contact</span></Link>
             </nav>

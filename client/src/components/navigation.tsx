@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import logoImg from "@assets/fd-logo-2025_1771706568573.png";
+
+const logoImg = "/images/family-drama-wordmark.webp";
 
 function Logo({ className, invert }: { className?: string; invert?: boolean }) {
   return (

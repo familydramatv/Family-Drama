@@ -77,11 +77,16 @@ export default function SeoHead({
     canonical.href = canonicalUrl;
 
     if (serializedJsonLd) {
-      const script = document.createElement("script");
-      script.type = "application/ld+json";
-      script.setAttribute("data-family-drama-seo", "true");
+      let script = document.head.querySelector<HTMLScriptElement>(
+        'script[type="application/ld+json"][data-family-drama-seo]',
+      );
+      if (!script) {
+        script = document.createElement("script");
+        script.type = "application/ld+json";
+        script.setAttribute("data-family-drama-seo", "true");
+        document.head.appendChild(script);
+      }
       script.textContent = serializedJsonLd;
-      document.head.appendChild(script);
     }
 
     return () => {
